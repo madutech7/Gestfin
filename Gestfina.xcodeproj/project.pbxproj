@@ -1,0 +1,366 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AA00000000000000000001 /* GestfinaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000001; };
+		AA00000000000000000002 /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000002; };
+		AA00000000000000000003 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000003; };
+		AA00000000000000000004 /* Budget.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000004; };
+		AA00000000000000000005 /* FinanceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000005; };
+		AA00000000000000000006 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000006; };
+		AA00000000000000000007 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000007; };
+		AA00000000000000000008 /* TransactionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000008; };
+		AA00000000000000000009 /* AddTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000009; };
+		AA0000000000000000000A /* BudgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0000000000000000000A; };
+		AA0000000000000000000B /* StatisticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0000000000000000000B; };
+		AA0000000000000000000C /* TransactionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0000000000000000000C; };
+		AA0000000000000000000D /* GlassModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0000000000000000000D; };
+		AA0000000000000000000E /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0000000000000000000E; };
+		AA0000000000000000000F /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0000000000000000000F; };
+		AA00000000000000000010 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000010; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		FA00000000000000000001 /* GestfinaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestfinaApp.swift; sourceTree = "<group>"; };
+		FA00000000000000000002 /* Transaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transaction.swift; sourceTree = "<group>"; };
+		FA00000000000000000003 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
+		FA00000000000000000004 /* Budget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Budget.swift; sourceTree = "<group>"; };
+		FA00000000000000000005 /* FinanceViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinanceViewModel.swift; sourceTree = "<group>"; };
+		FA00000000000000000006 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		FA00000000000000000007 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		FA00000000000000000008 /* TransactionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsView.swift; sourceTree = "<group>"; };
+		FA00000000000000000009 /* AddTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTransactionView.swift; sourceTree = "<group>"; };
+		FA0000000000000000000A /* BudgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetView.swift; sourceTree = "<group>"; };
+		FA0000000000000000000B /* StatisticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsView.swift; sourceTree = "<group>"; };
+		FA0000000000000000000C /* TransactionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionRow.swift; sourceTree = "<group>"; };
+		FA0000000000000000000D /* GlassModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassModifiers.swift; sourceTree = "<group>"; };
+		FA0000000000000000000E /* Color+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extensions.swift"; sourceTree = "<group>"; };
+		FA0000000000000000000F /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
+		FA00000000000000000010 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FA00000000000000000020 /* Gestfina.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gestfina.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		DA00000000000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		CA00000000000000000001 /* Root */ = {
+			isa = PBXGroup;
+			children = (
+				CA00000000000000000002 /* Gestfina */,
+				CA00000000000000000008 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		CA00000000000000000002 /* Gestfina */ = {
+			isa = PBXGroup;
+			children = (
+				FA00000000000000000001 /* GestfinaApp.swift */,
+				CA00000000000000000003 /* Models */,
+				CA00000000000000000004 /* ViewModels */,
+				CA00000000000000000005 /* Views */,
+				CA00000000000000000006 /* Components */,
+				CA00000000000000000007 /* Extensions */,
+				FA00000000000000000010 /* Assets.xcassets */,
+			);
+			path = Gestfina;
+			sourceTree = "<group>";
+		};
+		CA00000000000000000003 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				FA00000000000000000002 /* Transaction.swift */,
+				FA00000000000000000003 /* Category.swift */,
+				FA00000000000000000004 /* Budget.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		CA00000000000000000004 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				FA00000000000000000005 /* FinanceViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		CA00000000000000000005 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				FA00000000000000000006 /* MainTabView.swift */,
+				FA00000000000000000007 /* DashboardView.swift */,
+				FA00000000000000000008 /* TransactionsView.swift */,
+				FA00000000000000000009 /* AddTransactionView.swift */,
+				FA0000000000000000000A /* BudgetView.swift */,
+				FA0000000000000000000B /* StatisticsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		CA00000000000000000006 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				FA0000000000000000000C /* TransactionRow.swift */,
+				FA0000000000000000000D /* GlassModifiers.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		CA00000000000000000007 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				FA0000000000000000000E /* Color+Extensions.swift */,
+				FA0000000000000000000F /* Date+Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		CA00000000000000000008 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FA00000000000000000020 /* Gestfina.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		EA00000000000000000001 /* Gestfina */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BA00000000000000000001 /* Build configuration list for PBXNativeTarget "Gestfina" */;
+			buildPhases = (
+				DA00000000000000000002 /* Sources */,
+				DA00000000000000000001 /* Frameworks */,
+				DA00000000000000000003 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Gestfina;
+			productName = Gestfina;
+			productReference = FA00000000000000000020 /* Gestfina.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EA00000000000000000002 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 1540;
+				TargetAttributes = {
+					EA00000000000000000001 = {
+						CreatedOnToolsVersion = 15.4;
+					};
+				};
+			};
+			buildConfigurationList = BA00000000000000000002 /* Build configuration list for PBXProject "Gestfina" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = fr;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				fr,
+				Base,
+			);
+			mainGroup = CA00000000000000000001 /* Root */;
+			productRefGroup = CA00000000000000000008 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				EA00000000000000000001 /* Gestfina */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		DA00000000000000000003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA00000000000000000010 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		DA00000000000000000002 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA00000000000000000001 /* GestfinaApp.swift in Sources */,
+				AA00000000000000000002 /* Transaction.swift in Sources */,
+				AA00000000000000000003 /* Category.swift in Sources */,
+				AA00000000000000000004 /* Budget.swift in Sources */,
+				AA00000000000000000005 /* FinanceViewModel.swift in Sources */,
+				AA00000000000000000006 /* MainTabView.swift in Sources */,
+				AA00000000000000000007 /* DashboardView.swift in Sources */,
+				AA00000000000000000008 /* TransactionsView.swift in Sources */,
+				AA00000000000000000009 /* AddTransactionView.swift in Sources */,
+				AA0000000000000000000A /* BudgetView.swift in Sources */,
+				AA0000000000000000000B /* StatisticsView.swift in Sources */,
+				AA0000000000000000000C /* TransactionRow.swift in Sources */,
+				AA0000000000000000000D /* GlassModifiers.swift in Sources */,
+				AA0000000000000000000E /* Color+Extensions.swift in Sources */,
+				AA0000000000000000000F /* Date+Extensions.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		CC00000000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		CC00000000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		CC00000000000000000003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = GestFina;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.madu.gestfina;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CC00000000000000000004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = GestFina;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.madu.gestfina;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		BA00000000000000000001 /* Build configuration list for PBXNativeTarget "Gestfina" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CC00000000000000000003 /* Debug */,
+				CC00000000000000000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BA00000000000000000002 /* Build configuration list for PBXProject "Gestfina" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CC00000000000000000001 /* Debug */,
+				CC00000000000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = EA00000000000000000002 /* Project object */;
+}
