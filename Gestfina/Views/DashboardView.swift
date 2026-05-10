@@ -203,11 +203,13 @@ struct DashboardView: View {
                 Text(title)
                     .font(.system(size: 12))
                     .foregroundColor(.secondary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
                 Text(amount)
                     .font(.system(size: 16, weight: .bold, design: .rounded))
                     .foregroundColor(.primary)
                     .lineLimit(1)
-                    .minimumScaleFactor(0.7)
+                    .minimumScaleFactor(0.4)
             }
             Spacer()
         }

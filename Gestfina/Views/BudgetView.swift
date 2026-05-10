@@ -170,6 +170,8 @@ struct BudgetView: View {
                         Text(viewModel.formatAmount(totalBudget))
                             .font(.system(size: 22, weight: .bold, design: .rounded))
                             .foregroundColor(.primary)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.4)
                     }
                     HStack(spacing: 20) {
                         VStack(alignment: .leading, spacing: 1) {
@@ -177,12 +179,16 @@ struct BudgetView: View {
                             Text(viewModel.formatAmount(totalSpent))
                                 .font(.system(size: 14, weight: .semibold, design: .rounded))
                                 .foregroundColor(.appRed)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.4)
                         }
                         VStack(alignment: .leading, spacing: 1) {
                             Text("Restant").font(.system(size: 11)).foregroundColor(.secondary)
                             Text(viewModel.formatAmount(remaining))
                                 .font(.system(size: 14, weight: .semibold, design: .rounded))
                                 .foregroundColor(.appGreen)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.4)
                         }
                     }
                 }
@@ -237,9 +243,13 @@ struct BudgetCard: View {
                     Text(viewModel.formatAmount(progress.spent))
                         .font(.system(size: 15, weight: .bold, design: .rounded))
                         .foregroundColor(.primary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.5)
                     Text("/ \(budget.formattedLimit)")
                         .font(.system(size: 11))
                         .foregroundColor(.secondary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.5)
                 }
             }
             

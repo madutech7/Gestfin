@@ -55,6 +55,8 @@ struct TransactionRow: View {
             Text(transaction.formattedAmount)
                 .font(.system(size: 15, weight: .bold, design: .rounded))
                 .foregroundColor(transaction.type == .income ? .appGreen : .appRed)
+                .lineLimit(1)
+                .minimumScaleFactor(0.4)
         }
         .padding(14)
         .background(Color(UIColor.secondarySystemGroupedBackground))

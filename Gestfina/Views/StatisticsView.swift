@@ -121,11 +121,13 @@ struct StatisticsView: View {
                 Text(title)
                     .font(.system(size: 11))
                     .foregroundColor(.secondary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
                 Text(value)
                     .font(.system(size: 16, weight: .bold, design: .rounded))
                     .foregroundColor(.primary)
                     .lineLimit(1)
-                    .minimumScaleFactor(0.7)
+                    .minimumScaleFactor(0.4)
             }
             Spacer()
         }
