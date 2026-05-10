@@ -68,20 +68,30 @@ struct TransactionsView: View {
                 // Transactions
                 if viewModel.filteredTransactions.isEmpty {
                     Section {
-                        VStack(spacing: 14) {
-                            Image(systemName: "tray")
-                                .font(.system(size: 44))
-                                .foregroundColor(.secondary)
+                        VStack(spacing: 16) {
+                            ZStack {
+                                Circle()
+                                    .fill(Color.appPurple.opacity(0.1))
+                                    .frame(width: 80, height: 80)
+                                Image(systemName: "tray.fill")
+                                    .font(.system(size: 36))
+                                    .foregroundColor(.appPurple)
+                                    .shadow(color: Color.appPurple.opacity(0.5), radius: 10, x: 0, y: 5)
+                            }
                             Text("Aucune transaction")
-                                .font(.system(size: 17, weight: .semibold))
+                                .font(.system(size: 20, weight: .bold, design: .rounded))
                                 .foregroundColor(.primary)
-                            Text("Ajoutez votre première transaction\nvia le bouton +")
-                                .font(.system(size: 14))
+                            Text("Ajoutez votre première transaction via le bouton + pour l'afficher ici.")
+                                .font(.system(size: 15))
                                 .foregroundColor(.secondary)
                                 .multilineTextAlignment(.center)
+                                .padding(.horizontal, 20)
                         }
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 50)
+                        .padding(.vertical, 60)
+                        .background(Color(UIColor.secondarySystemGroupedBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: 24))
+                        .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.2 : 0.03), radius: 10, x: 0, y: 4)
                     }
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
@@ -105,6 +115,17 @@ struct TransactionsView: View {
                 }
             }
             .listStyle(.insetGrouped)
+            .background(
+                ZStack {
+                    Color(UIColor.systemGroupedBackground).ignoresSafeArea()
+                    Circle()
+                        .fill(Color.appGreen.opacity(colorScheme == .dark ? 0.05 : 0.03))
+                        .frame(width: 300, height: 300)
+                        .blur(radius: 60)
+                        .offset(x: 150, y: -200)
+                }
+            )
+            .scrollContentBackground(.hidden)
             .searchable(text: $viewModel.searchText, prompt: "Rechercher une transaction")
             .navigationTitle("Transactions")
             .navigationBarTitleDisplayMode(.large)

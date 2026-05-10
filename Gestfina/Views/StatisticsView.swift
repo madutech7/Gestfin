@@ -59,6 +59,17 @@ struct StatisticsView: View {
                 }
             }
             .listStyle(.insetGrouped)
+            .background(
+                ZStack {
+                    Color(UIColor.systemGroupedBackground).ignoresSafeArea()
+                    Circle()
+                        .fill(Color.appCyan.opacity(colorScheme == .dark ? 0.05 : 0.03))
+                        .frame(width: 300, height: 300)
+                        .blur(radius: 60)
+                        .offset(x: -150, y: 150)
+                }
+            )
+            .scrollContentBackground(.hidden)
             .navigationTitle("Statistiques")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {

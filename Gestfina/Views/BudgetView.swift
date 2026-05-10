@@ -27,20 +27,32 @@ struct BudgetView: View {
                 // Liste des budgets
                 if viewModel.budgets.isEmpty {
                     Section {
-                        VStack(spacing: 14) {
-                            Image(systemName: "chart.pie")
-                                .font(.system(size: 44))
-                                .foregroundColor(.secondary)
+                        VStack(spacing: 16) {
+                            ZStack {
+                                Circle()
+                                    .fill(Color.appBlue.opacity(0.1))
+                                    .frame(width: 80, height: 80)
+                                Image(systemName: "chart.pie.fill")
+                                    .font(.system(size: 36))
+                                    .foregroundColor(.appBlue)
+                                    .shadow(color: Color.appBlue.opacity(0.5), radius: 10, x: 0, y: 5)
+                            }
+                            
                             Text("Aucun budget défini")
-                                .font(.system(size: 17, weight: .semibold))
+                                .font(.system(size: 20, weight: .bold, design: .rounded))
                                 .foregroundColor(.primary)
-                            Text("Créez votre premier budget pour\ncommencer à suivre vos dépenses.")
-                                .font(.system(size: 14))
+                            
+                            Text("Créez votre premier budget pour commencer à suivre vos dépenses intelligemment.")
+                                .font(.system(size: 15))
                                 .foregroundColor(.secondary)
                                 .multilineTextAlignment(.center)
+                                .padding(.horizontal, 20)
                         }
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 50)
+                        .padding(.vertical, 60)
+                        .background(Color(UIColor.secondarySystemGroupedBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: 24))
+                        .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.2 : 0.03), radius: 10, x: 0, y: 4)
                     }
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
@@ -75,6 +87,17 @@ struct BudgetView: View {
                 }
             }
             .listStyle(.insetGrouped)
+            .background(
+                ZStack {
+                    Color(UIColor.systemGroupedBackground).ignoresSafeArea()
+                    Circle()
+                        .fill(Color.appOrange.opacity(colorScheme == .dark ? 0.05 : 0.03))
+                        .frame(width: 300, height: 300)
+                        .blur(radius: 60)
+                        .offset(x: -150, y: 200)
+                }
+            )
+            .scrollContentBackground(.hidden)
             .navigationTitle("Budgets")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
