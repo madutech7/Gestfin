@@ -38,7 +38,7 @@ struct AddTransactionView: View {
                 // MARK: - Montant
                 Section {
                     HStack {
-                        Text("€")
+                        Text(viewModel.currencySymbol)
                             .font(.system(size: 22, weight: .semibold, design: .rounded))
                             .foregroundColor(.secondary)
                         TextField("0,00", text: $amountText)

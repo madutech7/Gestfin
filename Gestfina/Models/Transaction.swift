@@ -65,10 +65,12 @@ struct Transaction: Identifiable, Codable, Equatable {
     var formattedAmount: String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
-        formatter.currencyCode = "EUR"
+        let currencyCode = UserDefaults.standard.string(forKey: "gestfina_currency") ?? "EUR"
+        formatter.currencyCode = currencyCode
         formatter.locale = Locale(identifier: "fr_FR")
         let prefix = type == .income ? "+" : "-"
-        return "\(prefix)\(formatter.string(from: NSNumber(value: amount)) ?? "0,00 €")"
+        let symbol = AppCurrency.all.first(where: { $0.code == currencyCode })?.symbol ?? "€"
+        return "\(prefix)\(formatter.string(from: NSNumber(value: amount)) ?? "0,00 \(symbol)")"
     }
 }
 

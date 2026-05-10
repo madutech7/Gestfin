@@ -285,10 +285,12 @@ class NotificationManager: ObservableObject {
         
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
-        formatter.currencyCode = "EUR"
+        let currencyCode = UserDefaults.standard.string(forKey: "gestfina_currency") ?? "EUR"
+        formatter.currencyCode = currencyCode
         formatter.locale = Locale(identifier: "fr_FR")
-        let spentStr = formatter.string(from: NSNumber(value: spent)) ?? "\(spent)€"
-        let limitStr = formatter.string(from: NSNumber(value: limit)) ?? "\(limit)€"
+        let symbol = AppCurrency.all.first(where: { $0.code == currencyCode })?.symbol ?? "€"
+        let spentStr = formatter.string(from: NSNumber(value: spent)) ?? "\(spent) \(symbol)"
+        let limitStr = formatter.string(from: NSNumber(value: limit)) ?? "\(limit) \(symbol)"
         
         let content = UNMutableNotificationContent()
         content.sound = .default
@@ -369,136 +371,58 @@ struct LockScreenView: View {
     
     var body: some View {
         ZStack {
-            // Fond dégradé subtil
-            LinearGradient(
-                colors: colorScheme == .dark
-                    ? [Color(hex: "0F172A"), Color(hex: "1E293B")]
-                    : [Color(hex: "F8FAFF"), Color(hex: "EEF2FF")],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .ignoresSafeArea()
+            // Effet de flou matériel (comme iOS natif)
+            if colorScheme == .dark {
+                Color.black.ignoresSafeArea()
+            } else {
+                Color(UIColor.systemGroupedBackground).ignoresSafeArea()
+            }
             
-            // Orbes de couleur subtils
-            Circle()
-                .fill(Color.appBlue.opacity(0.08))
-                .frame(width: 350, height: 350)
-                .blur(radius: 80)
-                .offset(x: -80, y: -200)
-            
-            Circle()
-                .fill(Color.appPurple.opacity(0.06))
-                .frame(width: 300, height: 300)
-                .blur(radius: 80)
-                .offset(x: 100, y: 250)
-            
-            VStack(spacing: 0) {
-                Spacer()
-                
-                // Logo + Nom app
-                VStack(spacing: 20) {
-                    // Icône de l'app
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 28)
-                            .fill(
-                                LinearGradient(
-                                    colors: [Color.appBlue, Color.appPurple],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                )
-                            )
-                            .frame(width: 110, height: 110)
-                            .shadow(color: Color.appBlue.opacity(0.35), radius: 30, y: 12)
-                        
-                        Image(systemName: "chart.line.uptrend.xyaxis")
-                            .font(.system(size: 50, weight: .medium))
-                            .foregroundColor(.white)
-                    }
+            VStack(spacing: 24) {
+                Image(systemName: "lock.fill")
+                    .font(.system(size: 60, weight: .regular))
+                    .foregroundColor(colorScheme == .dark ? .white : .black)
                     .scaleEffect(logoScale)
                     .opacity(logoOpacity)
-                    
-                    VStack(spacing: 8) {
-                        Text("Gestfina")
-                            .font(.system(size: 36, weight: .bold, design: .rounded))
-                            .foregroundColor(.primary)
-                        
-                        Text("Vos finances en sécurité")
-                            .font(.system(size: 15, weight: .medium))
-                            .foregroundColor(.secondary)
-                    }
+                
+                Text("Gestfina est verrouillé")
+                    .font(.system(size: 20, weight: .semibold))
+                    .foregroundColor(.primary)
                     .opacity(logoOpacity)
+                
+                if let error = authManager.authError {
+                    Text(error)
+                        .font(.system(size: 14))
+                        .foregroundColor(.appRed)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 32)
+                        .offset(x: shakeOffset)
                 }
                 
-                Spacer()
-                
-                // Zone d'authentification
-                VStack(spacing: 24) {
-                    // Message d'erreur
-                    if let error = authManager.authError {
-                        Text(error)
-                            .font(.system(size: 14, weight: .medium))
-                            .foregroundColor(.appRed)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal, 32)
-                            .transition(.opacity.combined(with: .move(edge: .top)))
-                            .offset(x: shakeOffset)
-                    }
-                    
-                    // Bouton principal biométrie
-                    Button {
-                        authManager.authenticate()
-                    } label: {
-                        HStack(spacing: 14) {
-                            Image(systemName: authManager.biometricIcon)
-                                .font(.system(size: 22, weight: .medium))
-                            
-                            Text("Déverrouiller avec \(authManager.biometricName)")
-                                .font(.system(size: 17, weight: .semibold))
-                        }
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 18)
-                        .background(
-                            RoundedRectangle(cornerRadius: 18)
-                                .fill(
-                                    LinearGradient(
-                                        colors: [Color.appBlue, Color.appPurple],
-                                        startPoint: .leading,
-                                        endPoint: .trailing
-                                    )
-                                )
-                        )
-                        .shadow(color: Color.appBlue.opacity(0.4), radius: 16, y: 6)
-                        .scaleEffect(authManager.isAuthenticating ? 0.97 : 1)
-                        .animation(.spring(response: 0.2), value: authManager.isAuthenticating)
-                    }
-                    .padding(.horizontal, 32)
-                    
-                    // Sous-texte fallback
-                    Button {
-                        authManager.authenticate()
-                    } label: {
-                        Text("Utiliser le code de l'appareil")
-                            .font(.system(size: 14, weight: .medium))
-                            .foregroundColor(.secondary)
-                    }
+                Button {
+                    authManager.authenticate()
+                } label: {
+                    Text("Utiliser \(authManager.biometricName)")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(.appBlue)
+                        .padding(.top, 16)
                 }
-                .padding(.bottom, 60)
+                .opacity(authManager.authError != nil ? 1 : 0)
             }
         }
         .onAppear {
-            withAnimation(.spring(response: 0.6, dampingFraction: 0.7).delay(0.1)) {
+            withAnimation(.easeOut(duration: 0.3)) {
                 logoScale = 1
                 logoOpacity = 1
             }
             // Déclenchement automatique de Face ID à l'ouverture
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                 authManager.authenticate()
             }
         }
-        .onChange(of: authManager.authError) { error in
-            if error != nil {
-                withAnimation(.spring(response: 0.15, dampingFraction: 0.3).repeatCount(4, autoreverses: true)) {
+        .onChange(of: authManager.authError) {
+            if authManager.authError != nil {
+                withAnimation(.spring(response: 0.2, dampingFraction: 0.3).repeatCount(3, autoreverses: true)) {
                     shakeOffset = 10
                 }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {

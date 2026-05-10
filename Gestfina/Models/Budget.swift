@@ -49,9 +49,11 @@ struct Budget: Identifiable, Codable, Equatable {
     var formattedLimit: String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
-        formatter.currencyCode = "EUR"
+        let currencyCode = UserDefaults.standard.string(forKey: "gestfina_currency") ?? "EUR"
+        formatter.currencyCode = currencyCode
         formatter.locale = Locale(identifier: "fr_FR")
-        return formatter.string(from: NSNumber(value: limit)) ?? "0,00 €"
+        let symbol = AppCurrency.all.first(where: { $0.code == currencyCode })?.symbol ?? "€"
+        return formatter.string(from: NSNumber(value: limit)) ?? "0,00 \(symbol)"
     }
 }
 
