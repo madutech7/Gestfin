@@ -20,25 +20,25 @@ extension Color {
     static let appCyan = Color(hex: "22D3EE")
     static let appPink = Color(hex: "F472B6")
     
-    // MARK: - Fond Liquid Glass (très sombre, profond)
+    // MARK: - Fond clair / Blanc
     
-    static let backgroundPrimary = Color(hex: "050810")
-    static let backgroundSecondary = Color(hex: "0C1022")
-    static let backgroundTertiary = Color(hex: "141836")
-    static let surfaceColor = Color(hex: "1A1F3D")
+    static let backgroundPrimary = Color.white
+    static let backgroundSecondary = Color(hex: "F8FAFC")
+    static let backgroundTertiary = Color(hex: "F1F5F9")
+    static let surfaceColor = Color.white
     
     // MARK: - Glass surfaces
     
-    static let glassLight = Color.white.opacity(0.06)
-    static let glassMedium = Color.white.opacity(0.10)
-    static let glassStrong = Color.white.opacity(0.15)
-    static let glassBorder = Color.white.opacity(0.12)
+    static let glassLight = Color.black.opacity(0.02)
+    static let glassMedium = Color.black.opacity(0.04)
+    static let glassStrong = Color.black.opacity(0.08)
+    static let glassBorder = Color.black.opacity(0.06)
     
     // MARK: - Texte
     
-    static let textPrimary = Color(hex: "F1F5F9")
-    static let textSecondary = Color(hex: "94A3B8")
-    static let textTertiary = Color(hex: "475569")
+    static let textPrimary = Color(hex: "0F172A")
+    static let textSecondary = Color(hex: "475569")
+    static let textTertiary = Color(hex: "94A3B8")
     
     // MARK: - Gradients premium
     

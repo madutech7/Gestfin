@@ -16,7 +16,6 @@ struct GestfinaApp: App {
         WindowGroup {
             MainTabView()
                 .environmentObject(viewModel)
-                .preferredColorScheme(.dark)
         }
     }
 }

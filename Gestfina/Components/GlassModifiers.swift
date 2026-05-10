@@ -2,12 +2,12 @@
 //  GlassModifiers.swift
 //  Gestfina
 //
-//  Effets Liquid Glass inspirés d'iOS 26
+//  Effets visuels professionnels - Style iOS 17/18
 //
 
 import SwiftUI
 
-// MARK: - Liquid Glass Card Modifier
+// MARK: - Professional Card Modifier
 
 struct LiquidGlassCard: ViewModifier {
     var cornerRadius: CGFloat = 24
@@ -17,61 +17,20 @@ struct LiquidGlassCard: ViewModifier {
     func body(content: Content) -> some View {
         content
             .background(
-                ZStack {
-                    // Base glass fill
-                    RoundedRectangle(cornerRadius: cornerRadius)
-                        .fill(.ultraThinMaterial)
-                        .opacity(0.85)
-                    
-                    // Subtle color tint
-                    RoundedRectangle(cornerRadius: cornerRadius)
-                        .fill(
-                            LinearGradient(
-                                colors: [
-                                    Color.white.opacity(opacity),
-                                    Color.white.opacity(opacity * 0.3)
-                                ],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                    
-                    // Top highlight reflection
-                    RoundedRectangle(cornerRadius: cornerRadius)
-                        .fill(
-                            LinearGradient(
-                                stops: [
-                                    .init(color: Color.white.opacity(0.12), location: 0),
-                                    .init(color: Color.white.opacity(0.04), location: 0.3),
-                                    .init(color: Color.clear, location: 0.5)
-                                ],
-                                startPoint: .top,
-                                endPoint: .bottom
-                            )
-                        )
-                }
+                RoundedRectangle(cornerRadius: cornerRadius)
+                    .fill(Color(UIColor.secondarySystemGroupedBackground))
             )
             .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius)
-                    .stroke(
-                        LinearGradient(
-                            colors: [
-                                Color.white.opacity(borderOpacity),
-                                Color.white.opacity(borderOpacity * 0.3),
-                                Color.white.opacity(borderOpacity * 0.1)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
-                        lineWidth: 0.8
-                    )
+                    .stroke(Color.black.opacity(0.04), lineWidth: 1)
             )
             .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
-            .shadow(color: .black.opacity(0.15), radius: 16, x: 0, y: 8)
+            .shadow(color: Color.black.opacity(0.03), radius: 10, x: 0, y: 4)
+            .shadow(color: Color.black.opacity(0.02), radius: 3, x: 0, y: 1)
     }
 }
 
-// MARK: - Liquid Glass Floating Modifier (pour le tab bar)
+// MARK: - Floating Modifier (pour le tab bar - gardé si utilisé ailleurs)
 
 struct LiquidGlassFloating: ViewModifier {
     var cornerRadius: CGFloat = 32
@@ -79,58 +38,19 @@ struct LiquidGlassFloating: ViewModifier {
     func body(content: Content) -> some View {
         content
             .background(
-                ZStack {
-                    // Frosted blur
-                    RoundedRectangle(cornerRadius: cornerRadius)
-                        .fill(.ultraThinMaterial)
-                    
-                    // Glass shimmer
-                    RoundedRectangle(cornerRadius: cornerRadius)
-                        .fill(
-                            LinearGradient(
-                                colors: [
-                                    Color.white.opacity(0.15),
-                                    Color.white.opacity(0.05),
-                                    Color.white.opacity(0.02)
-                                ],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                    
-                    // Internal glow
-                    RoundedRectangle(cornerRadius: cornerRadius)
-                        .fill(
-                            RadialGradient(
-                                colors: [Color.white.opacity(0.06), Color.clear],
-                                center: .top,
-                                startRadius: 0,
-                                endRadius: 80
-                            )
-                        )
-                }
+                RoundedRectangle(cornerRadius: cornerRadius)
+                    .fill(.regularMaterial)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius)
-                    .stroke(
-                        LinearGradient(
-                            colors: [
-                                Color.white.opacity(0.3),
-                                Color.white.opacity(0.08),
-                                Color.white.opacity(0.15)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
-                        lineWidth: 0.6
-                    )
+                    .stroke(Color.black.opacity(0.05), lineWidth: 0.5)
             )
             .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
-            .shadow(color: .black.opacity(0.25), radius: 24, x: 0, y: 12)
+            .shadow(color: Color.black.opacity(0.08), radius: 20, x: 0, y: 8)
     }
 }
 
-// MARK: - Liquid Glass Button
+// MARK: - Professional Button
 
 struct LiquidGlassButton: ViewModifier {
     var isActive: Bool = false
@@ -139,34 +59,18 @@ struct LiquidGlassButton: ViewModifier {
     func body(content: Content) -> some View {
         content
             .background(
-                ZStack {
-                    if isActive {
-                        Capsule()
-                            .fill(activeColor.opacity(0.25))
-                        Capsule()
-                            .fill(.ultraThinMaterial)
-                            .opacity(0.5)
-                    } else {
-                        Capsule()
-                            .fill(.ultraThinMaterial)
-                            .opacity(0.4)
-                    }
-                }
+                Capsule()
+                    .fill(isActive ? activeColor.opacity(0.15) : Color(UIColor.tertiarySystemGroupedBackground))
             )
             .overlay(
                 Capsule()
-                    .stroke(
-                        isActive
-                        ? activeColor.opacity(0.4)
-                        : Color.white.opacity(0.1),
-                        lineWidth: 0.6
-                    )
+                    .stroke(isActive ? activeColor.opacity(0.3) : Color.black.opacity(0.05), lineWidth: 1)
             )
             .clipShape(Capsule())
     }
 }
 
-// MARK: - Animated Gradient Border
+// MARK: - Subtle Gradient Border
 
 struct AnimatedGlassBorder: ViewModifier {
     @State private var rotation: Double = 0
@@ -175,24 +79,18 @@ struct AnimatedGlassBorder: ViewModifier {
     
     func body(content: Content) -> some View {
         content
+            // Effet plus professionnel: bordure simple ou gradient très fin
             .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius)
                     .stroke(
-                        AngularGradient(
-                            colors: colors,
-                            center: .center,
-                            angle: .degrees(rotation)
+                        LinearGradient(
+                            colors: [Color.appBlue.opacity(0.5), Color.appPurple.opacity(0.5)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
                         ),
-                        lineWidth: 1.5
+                        lineWidth: 1
                     )
-                    .opacity(0.5)
-                    .blur(radius: 0.5)
             )
-            .onAppear {
-                withAnimation(.linear(duration: 4).repeatForever(autoreverses: false)) {
-                    rotation = 360
-                }
-            }
     }
 }
 
@@ -208,7 +106,7 @@ struct ShimmerEffect: ViewModifier {
                     LinearGradient(
                         colors: [
                             .clear,
-                            Color.white.opacity(0.08),
+                            Color.white.opacity(0.4),
                             .clear
                         ],
                         startPoint: .leading,
@@ -249,22 +147,22 @@ struct FloatingAnimation: ViewModifier {
 
 extension View {
     
-    /// Applique l'effet Liquid Glass à une carte
+    /// Applique un style de carte professionnel
     func liquidGlass(cornerRadius: CGFloat = 24, opacity: Double = 0.08) -> some View {
         modifier(LiquidGlassCard(cornerRadius: cornerRadius, opacity: opacity))
     }
     
-    /// Applique l'effet Liquid Glass flottant (tab bar, bottom sheets)
+    /// Applique un effet flottant matériel
     func liquidGlassFloating(cornerRadius: CGFloat = 32) -> some View {
         modifier(LiquidGlassFloating(cornerRadius: cornerRadius))
     }
     
-    /// Bouton en Liquid Glass
+    /// Bouton professionnel
     func liquidGlassButton(isActive: Bool = false, activeColor: Color = .appBlue) -> some View {
         modifier(LiquidGlassButton(isActive: isActive, activeColor: activeColor))
     }
     
-    /// Bordure animée avec gradient rotatif
+    /// Bordure gradient subtile
     func animatedGlassBorder(cornerRadius: CGFloat = 24, colors: [Color] = [.appBlue, .appPurple, .appGreen, .appBlue]) -> some View {
         modifier(AnimatedGlassBorder(cornerRadius: cornerRadius, colors: colors))
     }

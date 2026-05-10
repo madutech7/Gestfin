@@ -40,13 +40,7 @@ class FinanceViewModel: ObservableObject {
         loadBudgets()
         loadUserName()
         
-        // Charger les données d'exemple si première utilisation
-        if transactions.isEmpty {
-            transactions = Transaction.sampleData
-        }
-        if budgets.isEmpty {
-            budgets = Budget.sampleData
-        }
+        // Pas de données mock - l'utilisateur commence avec une application vide
     }
     
     // MARK: - Période de temps
@@ -322,7 +316,7 @@ class FinanceViewModel: ObservableObject {
     
     /// Réinitialiser toutes les données
     func resetAllData() {
-        transactions = Transaction.sampleData
-        budgets = Budget.sampleData
+        transactions = []
+        budgets = []
     }
 }
