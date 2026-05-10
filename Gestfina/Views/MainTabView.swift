@@ -2,7 +2,7 @@
 //  MainTabView.swift
 //  Gestfina
 //
-//  Navigation native avec Tab Bar transparent (effet Contacts/Téléphone)
+//  Navigation native avec Tab Bar — 5 onglets + Réglages
 //
 
 import SwiftUI
@@ -12,39 +12,25 @@ struct MainTabView: View {
     @State private var showAddTransaction = false
     @EnvironmentObject var viewModel: FinanceViewModel
     
+    let authManager: AuthenticationManager
+    let notifManager: NotificationManager
+    
     enum Tab: String, CaseIterable {
-        case dashboard = "Accueil"
+        case dashboard    = "Accueil"
         case transactions = "Transactions"
-        case add = "Ajouter"
-        case budget = "Budget"
-        case statistics = "Stats"
-        
-        var icon: String {
-            switch self {
-            case .dashboard: return "house"
-            case .transactions: return "arrow.left.arrow.right"
-            case .add: return "plus.circle.fill"
-            case .budget: return "chart.pie"
-            case .statistics: return "chart.bar.xaxis"
-            }
-        }
-        
-        var iconFilled: String {
-            switch self {
-            case .dashboard: return "house.fill"
-            case .transactions: return "arrow.left.arrow.right"
-            case .add: return "plus.circle.fill"
-            case .budget: return "chart.pie.fill"
-            case .statistics: return "chart.bar.xaxis"
-            }
-        }
+        case add          = "Ajouter"
+        case budget       = "Budget"
+        case statistics   = "Stats"
     }
     
-    init() {
-        // Apparence native iOS pour la Tab Bar (transparence et effet de flou)
+    init(authManager: AuthenticationManager, notifManager: NotificationManager) {
+        self.authManager  = authManager
+        self.notifManager = notifManager
+        
+        // Tab Bar apparence native (translucide avec flou iOS)
         let appearance = UITabBarAppearance()
-        appearance.configureWithDefaultBackground() // Effet "Liquid Glass" natif
-        UITabBar.appearance().standardAppearance = appearance
+        appearance.configureWithDefaultBackground()
+        UITabBar.appearance().standardAppearance   = appearance
         UITabBar.appearance().scrollEdgeAppearance = appearance
     }
     
@@ -53,6 +39,8 @@ struct MainTabView: View {
             get: { selectedTab },
             set: { newTab in
                 if newTab == .add {
+                    let impact = UIImpactFeedbackGenerator(style: .medium)
+                    impact.impactOccurred()
                     showAddTransaction = true
                 } else {
                     selectedTab = newTab
@@ -61,32 +49,32 @@ struct MainTabView: View {
         )) {
             DashboardView()
                 .tabItem {
-                    Label(Tab.dashboard.rawValue, systemImage: selectedTab == .dashboard ? Tab.dashboard.iconFilled : Tab.dashboard.icon)
+                    Label("Accueil", systemImage: selectedTab == .dashboard ? "house.fill" : "house")
                 }
                 .tag(Tab.dashboard)
             
             TransactionsView()
                 .tabItem {
-                    Label(Tab.transactions.rawValue, systemImage: selectedTab == .transactions ? Tab.transactions.iconFilled : Tab.transactions.icon)
+                    Label("Transactions", systemImage: "arrow.left.arrow.right")
                 }
                 .tag(Tab.transactions)
             
-            // Onglet Ajouter
+            // Onglet central "+" déclencheur
             Color.clear
                 .tabItem {
-                    Label(Tab.add.rawValue, systemImage: Tab.add.icon)
+                    Label("Ajouter", systemImage: "plus.circle.fill")
                 }
                 .tag(Tab.add)
             
             BudgetView()
                 .tabItem {
-                    Label(Tab.budget.rawValue, systemImage: selectedTab == .budget ? Tab.budget.iconFilled : Tab.budget.icon)
+                    Label("Budget", systemImage: selectedTab == .budget ? "chart.pie.fill" : "chart.pie")
                 }
                 .tag(Tab.budget)
             
-            StatisticsView()
+            SettingsView(authManager: authManager, notifManager: notifManager)
                 .tabItem {
-                    Label(Tab.statistics.rawValue, systemImage: selectedTab == .statistics ? Tab.statistics.iconFilled : Tab.statistics.icon)
+                    Label("Réglages", systemImage: selectedTab == .statistics ? "gearshape.fill" : "gearshape")
                 }
                 .tag(Tab.statistics)
         }
@@ -102,7 +90,6 @@ struct MainTabView: View {
 }
 
 #Preview {
-    MainTabView()
+    MainTabView(authManager: AuthenticationManager(), notifManager: NotificationManager())
         .environmentObject(FinanceViewModel())
 }
-

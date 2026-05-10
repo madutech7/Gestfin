@@ -223,6 +223,33 @@ class FinanceViewModel: ObservableObject {
         withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
             transactions.append(transaction)
         }
+        // Notification confirmation
+        let notif = NotificationManager.shared
+        notif.sendTransactionAdded(
+            title: transaction.title,
+            amount: transaction.formattedAmount,
+            type: transaction.type.rawValue
+        )
+        // Vérifier les alertes budget
+        checkBudgetAlerts(for: transaction)
+    }
+    
+    /// Vérifie si un budget est dépassé après une transaction
+    private func checkBudgetAlerts(for transaction: Transaction) {
+        guard transaction.type == .expense else { return }
+        
+        let affectedBudgets = budgets.filter { $0.category == transaction.category && $0.isActive }
+        let notif = NotificationManager.shared
+        
+        for budget in affectedBudgets {
+            let progress = budgetProgress(for: budget)
+            notif.sendBudgetAlert(
+                category: budget.category.rawValue,
+                percentage: progress.percentage,
+                spent: progress.spent,
+                limit: budget.limit
+            )
+        }
     }
     
     /// Supprimer une transaction
