@@ -30,8 +30,8 @@ struct AddTransactionView: View {
                         }
                     }
                     .pickerStyle(.segmented)
-                    .onChange(of: selectedType) { newType in
-                        selectedCategory = newType == .income ? .salary : .food
+                    .onChange(of: selectedType) {
+                        selectedCategory = selectedType == .income ? .salary : .food
                     }
                 }
                 
