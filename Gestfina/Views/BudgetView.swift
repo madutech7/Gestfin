@@ -2,7 +2,7 @@
 //  BudgetView.swift
 //  Gestfina
 //
-//  Gestion des budgets — Style iOS natif professionnel
+//  Gestion des budgets — avec édition et suppression
 //
 
 import SwiftUI
@@ -10,6 +10,7 @@ import SwiftUI
 struct BudgetView: View {
     @EnvironmentObject var viewModel: FinanceViewModel
     @State private var showAddBudget = false
+    @State private var budgetToEdit: Budget? = nil
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
@@ -54,6 +55,14 @@ struct BudgetView: View {
                             .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
                             .listRowBackground(Color.clear)
                             .listRowSeparator(.hidden)
+                            .swipeActions(edge: .leading, allowsFullSwipe: false) {
+                                Button {
+                                    budgetToEdit = budget
+                                } label: {
+                                    Label("Modifier", systemImage: "pencil")
+                                }
+                                .tint(.appBlue)
+                            }
                             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                                 Button(role: .destructive) {
                                     viewModel.deleteBudget(budget)
@@ -78,8 +87,16 @@ struct BudgetView: View {
                     }
                 }
             }
+            // Ajout d'un budget
             .sheet(isPresented: $showAddBudget) {
-                AddBudgetSheet(viewModel: viewModel)
+                BudgetFormSheet(viewModel: viewModel, budgetToEdit: nil)
+                    .presentationDetents([.medium])
+                    .presentationDragIndicator(.visible)
+                    .presentationCornerRadius(32)
+            }
+            // Édition d'un budget
+            .sheet(item: $budgetToEdit) { budget in
+                BudgetFormSheet(viewModel: viewModel, budgetToEdit: budget)
                     .presentationDetents([.medium])
                     .presentationDragIndicator(.visible)
                     .presentationCornerRadius(32)
@@ -89,10 +106,9 @@ struct BudgetView: View {
     
     private var overviewCard: some View {
         let totalBudget = viewModel.budgets.filter(\.isActive).reduce(0) { $0 + $1.limit }
-        let totalSpent = viewModel.budgets.filter(\.isActive).reduce(0) { $0 + viewModel.budgetProgress(for: $1).spent }
-        let pct = totalBudget > 0 ? (totalSpent / totalBudget) * 100 : 0
-        let remaining = max(totalBudget - totalSpent, 0)
-        let progressColor: Color = pct > 90 ? .appRed : pct > 70 ? .appOrange : .appGreen
+        let totalSpent  = viewModel.budgets.filter(\.isActive).reduce(0) { $0 + viewModel.budgetProgress(for: $1).spent }
+        let pct         = totalBudget > 0 ? (totalSpent / totalBudget) * 100 : 0
+        let remaining   = max(totalBudget - totalSpent, 0)
         
         return VStack(spacing: 20) {
             HStack(spacing: 24) {
@@ -211,24 +227,32 @@ struct BudgetCard: View {
                         .fill(Color.secondary.opacity(0.12))
                         .frame(height: 7)
                     RoundedRectangle(cornerRadius: 4)
-                        .fill(LinearGradient(colors: [progressColor, progressColor.opacity(0.7)], startPoint: .leading, endPoint: .trailing))
-                        .frame(width: geo.size.width * CGFloat(progress.percentage / 100), height: 7)
+                        .fill(LinearGradient(
+                            colors: [progressColor, progressColor.opacity(0.7)],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        ))
+                        .frame(width: geo.size.width * CGFloat(min(progress.percentage, 100) / 100), height: 7)
                         .animation(.spring(response: 0.6), value: progress.percentage)
                 }
             }
             .frame(height: 7)
             
             HStack {
-                Label {
-                    Text("\(Int(progress.percentage))% utilisé")
-                        .font(.system(size: 12, weight: .medium))
-                        .foregroundColor(progress.percentage > 90 ? .appRed : .secondary)
-                } icon: {
-                    if progress.percentage > 90 {
+                if progress.percentage > 90 {
+                    Label {
+                        Text("\(Int(progress.percentage))% utilisé")
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundColor(.appRed)
+                    } icon: {
                         Image(systemName: "exclamationmark.circle.fill")
                             .foregroundColor(.appRed)
                             .font(.system(size: 12))
                     }
+                } else {
+                    Text("\(Int(progress.percentage))% utilisé")
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundColor(.secondary)
                 }
                 Spacer()
                 Text("Il reste \(viewModel.formatAmount(max(budget.limit - progress.spent, 0)))")
@@ -248,15 +272,20 @@ struct BudgetCard: View {
     }
 }
 
-// MARK: - Add Budget Sheet
+// MARK: - Budget Form Sheet (Ajout ET Édition)
 
-struct AddBudgetSheet: View {
+struct BudgetFormSheet: View {
     @ObservedObject var viewModel: FinanceViewModel
     @Environment(\.dismiss) var dismiss
+    
+    let budgetToEdit: Budget?   // nil = nouveau budget
+    
     @State private var category: TransactionCategory = .food
-    @State private var limitText = ""
+    @State private var limitText: String = ""
     @State private var period: BudgetPeriod = .monthly
     @FocusState private var limitFocused: Bool
+    
+    private var isEditing: Bool { budgetToEdit != nil }
     
     private var canSave: Bool {
         (Double(limitText.replacingOccurrences(of: ",", with: ".")) ?? 0) > 0
@@ -275,9 +304,9 @@ struct AddBudgetSheet: View {
                     .frame(height: 130)
                 }
                 
-                Section(header: Text("Limite mensuelle")) {
+                Section(header: Text("Limite")) {
                     HStack {
-                        Text("€")
+                        Text(viewModel.currencySymbol)
                             .font(.system(size: 20, weight: .semibold, design: .rounded))
                             .foregroundColor(.secondary)
                         TextField("0,00", text: $limitText)
@@ -297,7 +326,7 @@ struct AddBudgetSheet: View {
                     .pickerStyle(.segmented)
                 }
             }
-            .navigationTitle("Nouveau budget")
+            .navigationTitle(isEditing ? "Modifier le budget" : "Nouveau budget")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -307,18 +336,33 @@ struct AddBudgetSheet: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         let limit = Double(limitText.replacingOccurrences(of: ",", with: ".")) ?? 0
-                        viewModel.addBudget(Budget(category: category, limit: limit, period: period))
+                        if isEditing, var updated = budgetToEdit {
+                            updated.category = category
+                            updated.limit    = limit
+                            updated.period   = period
+                            viewModel.updateBudget(updated)
+                        } else {
+                            viewModel.addBudget(Budget(category: category, limit: limit, period: period))
+                        }
                         let impact = UIImpactFeedbackGenerator(style: .medium)
                         impact.impactOccurred()
                         dismiss()
                     } label: {
-                        Text("Ajouter").fontWeight(.semibold)
+                        Text(isEditing ? "Enregistrer" : "Ajouter")
+                            .fontWeight(.semibold)
                     }
                     .disabled(!canSave)
                 }
                 ToolbarItemGroup(placement: .keyboard) {
                     Spacer()
                     Button("OK") { limitFocused = false }
+                }
+            }
+            .onAppear {
+                if let b = budgetToEdit {
+                    category  = b.category
+                    limitText = String(format: "%.2f", b.limit).replacingOccurrences(of: ".", with: ",")
+                    period    = b.period
                 }
             }
         }

@@ -25,13 +25,21 @@ class FinanceViewModel: ObservableObject {
     @Published var searchText: String = ""
     @Published var selectedFilter: TransactionType? = nil
     @Published var userName: String = "Madu"
-    @Published var currency: String = "EUR"
+    @Published var currency: String = "EUR" {
+        didSet { UserDefaults.standard.set(currency, forKey: "gestfina_currency") }
+    }
+    
+    /// Symbole de la devise active
+    var currencySymbol: String {
+        AppCurrency.all.first(where: { $0.code == currency })?.symbol ?? "€"
+    }
     
     // MARK: - Keys de stockage
     
     private let transactionsKey = "gestfina_transactions"
-    private let budgetsKey = "gestfina_budgets"
-    private let userNameKey = "gestfina_username"
+    private let budgetsKey       = "gestfina_budgets"
+    private let userNameKey      = "gestfina_username"
+    private let currencyKey      = "gestfina_currency"
     
     // MARK: - Init
     
@@ -39,7 +47,9 @@ class FinanceViewModel: ObservableObject {
         loadTransactions()
         loadBudgets()
         loadUserName()
-        
+        if let saved = UserDefaults.standard.string(forKey: currencyKey) {
+            currency = saved
+        }
         // Pas de données mock - l'utilisateur commence avec une application vide
     }
     

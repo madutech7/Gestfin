@@ -48,7 +48,10 @@ struct StatisticsView: View {
                 
                 // Top dépenses
                 if !viewModel.expensesByCategory.isEmpty {
-                    Section(header: Text("🏆 Top dépenses")) {
+                    Section(header:
+                    Label("Top dépenses", systemImage: "trophy.fill")
+                        .foregroundColor(.primary)
+                ) {
                         ForEach(Array(viewModel.expensesByCategory.prefix(5).enumerated()), id: \.element.category) { index, item in
                             topCategoryRow(index: index, item: item)
                         }

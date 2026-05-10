@@ -106,12 +106,12 @@ class NotificationManager: ObservableObject {
         content.sound = .default
         
         if percentage >= 100 {
-            content.title = "🚨 Budget dépassé — \(category)"
-            content.body = "Vous avez dépensé \(spentStr) sur un budget de \(limitStr). Limite atteinte !"
+            content.title = "Budget dépassé — \(category)"
+            content.body  = "Vous avez dépensé \(spentStr) sur un budget de \(limitStr). Limite atteinte !"
             content.badge = 1
         } else if percentage >= 80 {
-            content.title = "⚠️ Budget presque atteint — \(category)"
-            content.body = "Il vous reste seulement \(Int(100 - percentage))% de votre budget \(category) (\(spentStr) / \(limitStr))."
+            content.title = "Budget presque atteint — \(category)"
+            content.body  = "Il vous reste \(Int(100 - percentage))% de votre budget \(category) (\(spentStr) / \(limitStr))."
         } else {
             return
         }
@@ -128,8 +128,8 @@ class NotificationManager: ObservableObject {
         cancelDailyReminder()
         
         let content = UNMutableNotificationContent()
-        content.title = "💰 Gestfina — Suivi du jour"
-        content.body = "N'oubliez pas d'enregistrer vos dépenses du jour pour garder vos finances à jour."
+        content.title = "Gestfina — Suivi du jour"
+        content.body  = "N'oubliez pas d'enregistrer vos dépenses du jour pour garder vos finances à jour."
         content.sound = .default
         
         var dateComponents = DateComponents()
@@ -152,9 +152,8 @@ class NotificationManager: ObservableObject {
         guard isNotificationsEnabled else { return }
         
         let content = UNMutableNotificationContent()
-        let emoji = type == "Revenu" ? "💚" : "💸"
-        content.title = "\(emoji) Transaction enregistrée"
-        content.body = "\(title) — \(amount)"
+        content.title = "Transaction enregistrée"
+        content.body  = "\(title) — \(amount)"
         content.sound = .default
         
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
