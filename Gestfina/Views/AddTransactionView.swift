@@ -123,14 +123,7 @@ struct AddTransactionView: View {
                 }
             }
             .background(
-                ZStack {
-                    Color(UIColor.systemGroupedBackground).ignoresSafeArea()
-                    Circle()
-                        .fill(Color.appBlue.opacity(0.04))
-                        .frame(width: 300, height: 300)
-                        .blur(radius: 60)
-                        .offset(x: -150, y: -200)
-                }
+                AnimatedMeshBackground(color1: .appBlue, color2: .appCyan)
             )
             .scrollContentBackground(.hidden)
             .navigationTitle("Nouvelle transaction")

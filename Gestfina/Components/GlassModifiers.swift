@@ -203,3 +203,36 @@ class Haptics {
         generator.selectionChanged()
     }
 }
+
+// MARK: - Animated Ambient Background
+
+struct AnimatedMeshBackground: View {
+    @Environment(\.colorScheme) var colorScheme
+    @State private var appear = false
+    
+    var color1: Color
+    var color2: Color
+    
+    var body: some View {
+        ZStack {
+            Color(UIColor.systemGroupedBackground).ignoresSafeArea()
+            
+            Circle()
+                .fill(color1.opacity(colorScheme == .dark ? 0.08 : 0.05))
+                .frame(width: 300, height: 300)
+                .blur(radius: 60)
+                .offset(x: appear ? 150 : -150, y: appear ? 100 : -200)
+            
+            Circle()
+                .fill(color2.opacity(colorScheme == .dark ? 0.08 : 0.05))
+                .frame(width: 300, height: 300)
+                .blur(radius: 60)
+                .offset(x: appear ? -150 : 150, y: appear ? -100 : 200)
+        }
+        .onAppear {
+            withAnimation(.easeInOut(duration: 10).repeatForever(autoreverses: true)) {
+                appear = true
+            }
+        }
+    }
+}

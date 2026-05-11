@@ -117,14 +117,7 @@ struct TransactionsView: View {
             .listStyle(.insetGrouped)
             .safeAreaInset(edge: .bottom) { Color.clear.frame(height: 90) }
             .background(
-                ZStack {
-                    Color(UIColor.systemGroupedBackground).ignoresSafeArea()
-                    Circle()
-                        .fill(Color.appGreen.opacity(colorScheme == .dark ? 0.05 : 0.03))
-                        .frame(width: 300, height: 300)
-                        .blur(radius: 60)
-                        .offset(x: 150, y: -200)
-                }
+                AnimatedMeshBackground(color1: .appGreen, color2: .appBlue)
             )
             .scrollContentBackground(.hidden)
             .searchable(text: $viewModel.searchText, prompt: "Rechercher une transaction")

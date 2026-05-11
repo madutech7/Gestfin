@@ -62,14 +62,7 @@ struct StatisticsView: View {
             .listStyle(.insetGrouped)
             .safeAreaInset(edge: .bottom) { Color.clear.frame(height: 90) }
             .background(
-                ZStack {
-                    Color(UIColor.systemGroupedBackground).ignoresSafeArea()
-                    Circle()
-                        .fill(Color.appCyan.opacity(colorScheme == .dark ? 0.05 : 0.03))
-                        .frame(width: 300, height: 300)
-                        .blur(radius: 60)
-                        .offset(x: -150, y: 150)
-                }
+                AnimatedMeshBackground(color1: .appCyan, color2: .appPurple)
             )
             .scrollContentBackground(.hidden)
             .navigationTitle("Statistiques")
@@ -134,9 +127,13 @@ struct StatisticsView: View {
             Spacer()
         }
         .padding(14)
-        .background(Color(UIColor.secondarySystemGroupedBackground))
+        .background(Material.ultraThinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.2 : 0.03), radius: 4, x: 0, y: 2)
+        .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.2 : 0.05), radius: 8, x: 0, y: 4)
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color.white.opacity(colorScheme == .dark ? 0.1 : 0.5), lineWidth: 1)
+        )
     }
     
     // MARK: - Chart View
