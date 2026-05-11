@@ -20,36 +20,57 @@ struct DashboardView: View {
     var body: some View {
         NavigationView {
             ScrollView(showsIndicators: false) {
-                VStack(spacing: 0) {
-                    // Wave-style gradient header
-                    headerSection
-                    
-                    // Quick Stats
-                    quickStatsRow
+                VStack(spacing: 24) {
+                    // Solde principal
+                    balanceSection
                         .padding(.horizontal, 20)
-                        .padding(.top, 20)
+                        .padding(.top, 4)
+                    
+                    // Revenus / Dépenses
+                    flowCardsRow
+                        .padding(.horizontal, 20)
                     
                     // Graphique
                     weeklyChartSection
                         .padding(.horizontal, 20)
-                        .padding(.top, 16)
                     
                     // Catégories
                     categoryBreakdown
                         .padding(.horizontal, 20)
-                        .padding(.top, 16)
                     
                     // Transactions récentes
                     recentTransactionsSection
                         .padding(.horizontal, 20)
-                        .padding(.top, 16)
                     
                     Spacer(minLength: 40)
                 }
             }
             .background(Color(UIColor.systemGroupedBackground))
-            .ignoresSafeArea(edges: .top)
-            .navigationBarHidden(true)
+            .navigationTitle("Bonjour, \(viewModel.userName)")
+            .navigationBarTitleDisplayMode(.large)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    HStack(spacing: 16) {
+                        Button {
+                            Haptics.play(.light)
+                            withAnimation(.spring(response: 0.3)) { balanceVisible.toggle() }
+                        } label: {
+                            Image(systemName: balanceVisible ? "eye" : "eye.slash")
+                                .font(.system(size: 16, weight: .medium))
+                                .foregroundColor(.secondary)
+                        }
+                        
+                        Button {
+                            Haptics.play(.light)
+                            showSettings = true
+                        } label: {
+                            Image(systemName: "gearshape")
+                                .font(.system(size: 16, weight: .medium))
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                }
+            }
             .onAppear {
                 withAnimation(.spring(response: 0.7, dampingFraction: 0.8).delay(0.1)) {
                     animateIn = true
@@ -64,218 +85,80 @@ struct DashboardView: View {
         }
     }
     
-    // MARK: - Header Section (Wave-inspired)
+    // MARK: - Solde Principal
     
-    private var headerSection: some View {
-        ZStack(alignment: .bottom) {
-            // Grand fond gradient
-            LinearGradient(
-                colors: [Color(hex: "007AFF"), Color(hex: "0A84FF"), Color(hex: "34AADC")],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .frame(height: 340)
-            .overlay(
-                // Orbes décoratifs subtils
-                ZStack {
-                    Circle()
-                        .fill(Color.white.opacity(0.08))
-                        .frame(width: 200, height: 200)
-                        .blur(radius: 30)
-                        .offset(x: 120, y: -60)
-                    Circle()
-                        .fill(Color.white.opacity(0.06))
-                        .frame(width: 160, height: 160)
-                        .blur(radius: 25)
-                        .offset(x: -100, y: 40)
-                }
-            )
+    private var balanceSection: some View {
+        VStack(spacing: 8) {
+            Text("Solde total")
+                .font(.subheadline)
+                .foregroundColor(.secondary)
             
-            VStack(spacing: 0) {
-                // Top bar: gear + nom + eye
-                HStack {
-                    Button {
-                        Haptics.play(.light)
-                        showSettings = true
-                    } label: {
-                        Image(systemName: "gearshape.fill")
-                            .font(.system(size: 22, weight: .medium))
-                            .foregroundColor(.white.opacity(0.9))
-                            .frame(width: 44, height: 44)
-                            .background(Color.white.opacity(0.15))
-                            .clipShape(Circle())
-                    }
-                    
-                    Spacer()
-                    
-                    Text("SamaXaalis")
-                        .font(.system(size: 18, weight: .bold, design: .rounded))
-                        .foregroundColor(.white)
-                    
-                    Spacer()
-                    
-                    Button {
-                        Haptics.play(.light)
-                        withAnimation(.spring(response: 0.3)) { balanceVisible.toggle() }
-                    } label: {
-                        Image(systemName: balanceVisible ? "eye.fill" : "eye.slash.fill")
-                            .font(.system(size: 18, weight: .medium))
-                            .foregroundColor(.white.opacity(0.9))
-                            .frame(width: 44, height: 44)
-                            .background(Color.white.opacity(0.15))
-                            .clipShape(Circle())
-                    }
-                }
-                .padding(.horizontal, 20)
-                .padding(.top, 60)
-                
-                Spacer()
-                
-                // Balance card flottante
-                balanceCard
-                    .padding(.horizontal, 20)
-                    .padding(.bottom, -30)
-            }
-            .frame(height: 340)
-        }
-        .padding(.bottom, 30)
-    }
-    
-    // MARK: - Balance Card
-    
-    private var balanceCard: some View {
-        VStack(spacing: 16) {
-            VStack(spacing: 6) {
-                Text("Solde Total")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                
-                Text(balanceVisible ? viewModel.formatAmount(viewModel.totalBalance) : "••••••")
-                    .font(.system(size: 36, weight: .bold, design: .rounded))
-                    .foregroundColor(.primary)
-                    .contentTransition(.numericText())
-                    .animation(.spring(response: 0.3), value: viewModel.totalBalance)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.5)
-            }
+            Text(balanceVisible ? viewModel.formatAmount(viewModel.totalBalance) : "••••••")
+                .font(.system(size: 40, weight: .bold, design: .rounded))
+                .foregroundColor(.primary)
+                .contentTransition(.numericText())
+                .animation(.spring(response: 0.3), value: viewModel.totalBalance)
+                .lineLimit(1)
+                .minimumScaleFactor(0.4)
             
-            HStack(spacing: 12) {
-                // Revenus
-                HStack(spacing: 6) {
-                    Image(systemName: "arrow.down.left.circle.fill")
-                        .foregroundColor(.appGreen)
-                        .font(.system(size: 20))
-                    VStack(alignment: .leading, spacing: 1) {
-                        Text("Revenus")
-                            .font(.caption2)
-                            .foregroundColor(.secondary)
-                        Text(viewModel.formatAmount(viewModel.totalIncome))
-                            .font(.caption)
-                            .fontWeight(.bold)
-                            .fontDesign(.rounded)
-                            .foregroundColor(.primary)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.5)
-                    }
-                }
-                .frame(maxWidth: .infinity)
-                
-                Divider()
-                    .frame(height: 30)
-                
-                // Dépenses
-                HStack(spacing: 6) {
-                    Image(systemName: "arrow.up.right.circle.fill")
-                        .foregroundColor(.appRed)
-                        .font(.system(size: 20))
-                    VStack(alignment: .leading, spacing: 1) {
-                        Text("Dépenses")
-                            .font(.caption2)
-                            .foregroundColor(.secondary)
-                        Text(viewModel.formatAmount(viewModel.totalExpenses))
-                            .font(.caption)
-                            .fontWeight(.bold)
-                            .fontDesign(.rounded)
-                            .foregroundColor(.primary)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.5)
-                    }
-                }
-                .frame(maxWidth: .infinity)
-                
-                Divider()
-                    .frame(height: 30)
-                
-                // Épargne
-                HStack(spacing: 6) {
-                    Image(systemName: viewModel.savingsRate >= 0 ? "arrow.up.right.circle.fill" : "arrow.down.right.circle.fill")
-                        .foregroundColor(viewModel.savingsRate >= 0 ? .appGreen : .appRed)
-                        .font(.system(size: 20))
-                    VStack(alignment: .leading, spacing: 1) {
-                        Text("Épargne")
-                            .font(.caption2)
-                            .foregroundColor(.secondary)
-                        Text(viewModel.formatPercentage(abs(viewModel.savingsRate)))
-                            .font(.caption)
-                            .fontWeight(.bold)
-                            .fontDesign(.rounded)
-                            .foregroundColor(.primary)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.5)
-                    }
-                }
-                .frame(maxWidth: .infinity)
+            // Taux d'épargne pill
+            HStack(spacing: 5) {
+                Image(systemName: viewModel.savingsRate >= 0 ? "arrow.up.right" : "arrow.down.right")
+                    .font(.system(size: 11, weight: .bold))
+                Text("\(viewModel.formatPercentage(abs(viewModel.savingsRate))) d'épargne")
+                    .font(.system(size: 12, weight: .semibold))
             }
+            .foregroundColor(viewModel.savingsRate >= 0 ? Color(hex: "34C759") : Color(hex: "FF3B30"))
+            .padding(.horizontal, 12)
+            .padding(.vertical, 5)
+            .background((viewModel.savingsRate >= 0 ? Color(hex: "34C759") : Color(hex: "FF3B30")).opacity(0.1))
+            .clipShape(Capsule())
         }
-        .padding(20)
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 24)
         .background(Color(UIColor.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
-        .shadow(color: Color.black.opacity(0.1), radius: 16, x: 0, y: 8)
-        .scaleEffect(animateIn ? 1 : 0.92)
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .scaleEffect(animateIn ? 1 : 0.95)
         .opacity(animateIn ? 1 : 0)
     }
     
-    // MARK: - Stats rapides
+    // MARK: - Revenus / Dépenses Cards
     
-    private var quickStatsRow: some View {
+    private var flowCardsRow: some View {
         HStack(spacing: 12) {
-            statCard(
+            flowCard(
                 title: "Revenus",
                 amount: viewModel.formatAmount(viewModel.totalIncome),
                 icon: "arrow.down.left",
-                color: .appGreen
+                color: Color(hex: "34C759")
             )
-            statCard(
+            flowCard(
                 title: "Dépenses",
                 amount: viewModel.formatAmount(viewModel.totalExpenses),
                 icon: "arrow.up.right",
-                color: .appRed
+                color: Color(hex: "FF3B30")
             )
         }
         .opacity(animateIn ? 1 : 0)
-        .offset(y: animateIn ? 0 : 20)
+        .offset(y: animateIn ? 0 : 15)
     }
     
-    private func statCard(title: String, amount: String, icon: String, color: Color) -> some View {
+    private func flowCard(title: String, amount: String, icon: String, color: Color) -> some View {
         HStack(spacing: 12) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(color.opacity(0.12))
-                    .frame(width: 36, height: 36)
-                Image(systemName: icon)
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundColor(color)
-            }
+            Image(systemName: icon)
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundColor(color)
+                .frame(width: 36, height: 36)
+                .background(color.opacity(0.1))
+                .clipShape(Circle())
             
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
-                    .font(.subheadline)
+                    .font(.caption)
                     .foregroundColor(.secondary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.6)
                 Text(amount)
                     .font(.headline)
-                    .fontWeight(.bold)
+                    .fontWeight(.semibold)
                     .fontDesign(.rounded)
                     .foregroundColor(.primary)
                     .lineLimit(1)
@@ -283,12 +166,13 @@ struct DashboardView: View {
             }
             Spacer()
         }
-        .padding(16)
+        .padding(14)
         .background(Color(UIColor.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 18))
-        .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.2 : 0.03), radius: 6, x: 0, y: 2)
+        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
         .frame(maxWidth: .infinity)
     }
+    
+
     
     // MARK: - Graphique hebdomadaire
     
