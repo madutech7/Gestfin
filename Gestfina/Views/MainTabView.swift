@@ -18,6 +18,7 @@ struct MainTabView: View {
     enum AppTab: String, CaseIterable {
         case dashboard    = "Accueil"
         case transactions = "Transactions"
+        case add          = "Ajouter"
         case budget       = "Budget"
     }
 
@@ -25,11 +26,8 @@ struct MainTabView: View {
         self.authManager  = authManager
         self.notifManager = notifManager
 
-        // Premium tab bar appearance
-        let appearance = UITabBarAppearance()
-        appearance.configureWithDefaultBackground()
-        UITabBar.appearance().standardAppearance   = appearance
-        UITabBar.appearance().scrollEdgeAppearance = appearance
+        // Hide default tab bar to use a custom floating one
+        UITabBar.appearance().isHidden = true
     }
 
     var body: some View {
@@ -39,54 +37,32 @@ struct MainTabView: View {
                 set: { newTab in
                     if newTab != selectedTab {
                         UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                        selectedTab = newTab
                     }
-                    selectedTab = newTab
                 }
             )) {
                 DashboardView(authManager: authManager, notifManager: notifManager)
-                    .tabItem {
-                        Label("Accueil", systemImage: selectedTab == .dashboard ? "house.fill" : "house")
-                    }
                     .tag(AppTab.dashboard)
+                    .toolbar(.hidden, for: .tabBar)
 
                 TransactionsView()
-                    .tabItem {
-                        Label("Transactions", systemImage: "arrow.left.arrow.right")
-                    }
                     .tag(AppTab.transactions)
+                    .toolbar(.hidden, for: .tabBar)
 
                 BudgetView()
-                    .tabItem {
-                        Label("Budget", systemImage: selectedTab == .budget ? "chart.pie.fill" : "chart.pie")
-                    }
                     .tag(AppTab.budget)
+                    .toolbar(.hidden, for: .tabBar)
             }
-            .tint(.appBlue)
-            
-            // Apple-native separated floating pill button (iOS 16+ Home Screen Search style)
-            Button(action: {
+
+            // Custom Floating Tab Bar
+            CustomFloatingTabBar(selectedTab: $selectedTab) {
                 UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                 showAddTransaction = true
-            }) {
-                HStack(spacing: 6) {
-                    Image(systemName: "plus")
-                        .font(.system(size: 14, weight: .bold))
-                    Text("Ajouter")
-                        .font(.system(size: 15, weight: .semibold, design: .rounded))
-                }
-                .foregroundStyle(.primary)
-                .padding(.horizontal, 20)
-                .padding(.vertical, 10)
-                .background(.ultraThinMaterial)
-                .clipShape(Capsule())
-                .shadow(color: Color.black.opacity(0.1), radius: 8, x: 0, y: 4)
-                .overlay(
-                    Capsule()
-                        .strokeBorder(Color.primary.opacity(0.05), lineWidth: 0.5)
-                )
             }
-            .padding(.bottom, 60) // Positioned just above the TabBar
+            .padding(.horizontal, 16)
+            .padding(.bottom, 8)
         }
+        .tint(.appBlue)
         .sheet(isPresented: $showAddTransaction) {
             AddTransactionView()
                 .environmentObject(viewModel)
@@ -94,6 +70,80 @@ struct MainTabView: View {
                 .presentationDragIndicator(.visible)
                 .presentationCornerRadius(32)
         }
+    }
+}
+
+// MARK: - Custom Floating Tab Bar
+
+struct CustomFloatingTabBar: View {
+    @Binding var selectedTab: MainTabView.AppTab
+    var onAddTap: () -> Void
+    
+    var body: some View {
+        HStack(spacing: 12) {
+            // Main Navigation Pill
+            HStack(spacing: 0) {
+                TabBarButton(
+                    icon: selectedTab == .dashboard ? "house.fill" : "house",
+                    title: "Accueil",
+                    isSelected: selectedTab == .dashboard
+                ) { selectedTab = .dashboard }
+                
+                TabBarButton(
+                    icon: "arrow.left.arrow.right",
+                    title: "Transactions",
+                    isSelected: selectedTab == .transactions
+                ) { selectedTab = .transactions }
+                
+                TabBarButton(
+                    icon: selectedTab == .budget ? "chart.pie.fill" : "chart.pie",
+                    title: "Budget",
+                    isSelected: selectedTab == .budget
+                ) { selectedTab = .budget }
+            }
+            .padding(.horizontal, 8)
+            .padding(.vertical, 8)
+            .background(.ultraThinMaterial)
+            .clipShape(Capsule())
+            .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 5)
+            
+            // Separated Add Button
+            Button(action: onAddTap) {
+                ZStack {
+                    Circle()
+                        .fill(Color.appBlue)
+                        .frame(width: 56, height: 56)
+                        .shadow(color: Color.appBlue.opacity(0.3), radius: 8, x: 0, y: 4)
+                    
+                    Image(systemName: "plus")
+                        .font(.system(size: 22, weight: .semibold))
+                        .foregroundColor(.white)
+                }
+            }
+            .buttonStyle(.plain)
+        }
+    }
+}
+
+struct TabBarButton: View {
+    let icon: String
+    let title: String
+    let isSelected: Bool
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            VStack(spacing: 4) {
+                Image(systemName: icon)
+                    .font(.system(size: 20, weight: isSelected ? .semibold : .regular))
+                Text(title)
+                    .font(.system(size: 10, weight: isSelected ? .semibold : .medium))
+            }
+            .foregroundColor(isSelected ? .appBlue : .secondary)
+            .frame(maxWidth: .infinity)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
     }
 }
 
