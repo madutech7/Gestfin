@@ -357,7 +357,7 @@ class NotificationManager: ObservableObject {
 //  LockScreenView.swift
 //  Gestfina
 //
-//  Écran de verrouillage — Face ID / Touch ID / Code
+//  Écran de verrouillage premium — Face ID / Touch ID / Code
 //
 
 import SwiftUI
@@ -365,58 +365,105 @@ import SwiftUI
 struct LockScreenView: View {
     @ObservedObject var authManager: AuthenticationManager
     @State private var shakeOffset: CGFloat = 0
-    @State private var logoScale: CGFloat = 0.8
+    @State private var logoScale: CGFloat = 0.6
     @State private var logoOpacity: Double = 0
+    @State private var pulseScale: CGFloat = 1
     @Environment(\.colorScheme) var colorScheme
-    
+
     var body: some View {
         ZStack {
-            // Effet de flou matériel (comme iOS natif)
+            // Premium background
             if colorScheme == .dark {
                 Color.black.ignoresSafeArea()
+                // Subtle radial accent
+                RadialGradient(
+                    colors: [Color.appBlue.opacity(0.08), Color.clear],
+                    center: .center,
+                    startRadius: 50,
+                    endRadius: 300
+                )
+                .ignoresSafeArea()
             } else {
                 Color(UIColor.systemGroupedBackground).ignoresSafeArea()
             }
-            
-            VStack(spacing: 24) {
-                Image(systemName: "lock.fill")
-                    .font(.system(size: 60, weight: .regular))
-                    .foregroundColor(colorScheme == .dark ? .white : .black)
-                    .scaleEffect(logoScale)
-                    .opacity(logoOpacity)
-                
-                Text("SamaXaalis est verrouillé")
-                    .font(.system(size: 20, weight: .semibold))
-                    .foregroundColor(.primary)
-                    .opacity(logoOpacity)
-                
+
+            VStack(spacing: 28) {
+                Spacer()
+
+                // Lock icon with pulse ring
+                ZStack {
+                    Circle()
+                        .stroke(Color.appBlue.opacity(0.15), lineWidth: 2)
+                        .frame(width: 100, height: 100)
+                        .scaleEffect(pulseScale)
+                        .opacity(Double(2 - pulseScale))
+
+                    Circle()
+                        .fill(Color.appBlue.opacity(0.08))
+                        .frame(width: 90, height: 90)
+
+                    Image(systemName: "lock.fill")
+                        .font(.system(size: 38, weight: .light))
+                        .foregroundStyle(.primary)
+                }
+                .scaleEffect(logoScale)
+                .opacity(logoOpacity)
+
+                VStack(spacing: 8) {
+                    Text("SamaXaalis")
+                        .font(.system(size: 24, weight: .bold, design: .rounded))
+                        .foregroundStyle(.primary)
+
+                    Text("est verrouillé")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundStyle(.secondary)
+                }
+                .opacity(logoOpacity)
+
                 if let error = authManager.authError {
                     Text(error)
-                        .font(.system(size: 14))
-                        .foregroundColor(.appRed)
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundStyle(.appRed)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 32)
                         .offset(x: shakeOffset)
+                        .transition(.opacity.combined(with: .scale(scale: 0.95)))
                 }
-                
+
+                Spacer()
+
+                // Biometric button
                 Button {
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                     authManager.authenticate()
                 } label: {
-                    Text("Utiliser \(authManager.biometricName)")
-                        .font(.system(size: 16, weight: .medium))
-                        .foregroundColor(.appBlue)
-                        .padding(.top, 16)
+                    HStack(spacing: 10) {
+                        Image(systemName: authManager.biometricIcon)
+                            .font(.system(size: 20))
+                        Text("Utiliser \(authManager.biometricName)")
+                            .font(.system(size: 16, weight: .semibold))
+                    }
+                    .foregroundStyle(.appBlue)
+                    .padding(.horizontal, 28)
+                    .padding(.vertical, 14)
+                    .background(.ultraThinMaterial)
+                    .clipShape(Capsule())
                 }
-                .opacity(authManager.authError != nil ? 1 : 0)
+                .opacity(logoOpacity)
+                .padding(.bottom, 60)
             }
         }
         .onAppear {
-            withAnimation(.easeOut(duration: 0.3)) {
+            withAnimation(.spring(response: 0.6, dampingFraction: 0.75)) {
                 logoScale = 1
                 logoOpacity = 1
             }
-            // Déclenchement automatique de Face ID à l'ouverture
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            // Pulse animation
+            withAnimation(.easeInOut(duration: 2).repeatForever(autoreverses: true).delay(0.5)) {
+                pulseScale = 1.3
+            }
+            // Auto-trigger biometric
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
                 authManager.authenticate()
             }
         }

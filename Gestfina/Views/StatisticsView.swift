@@ -2,7 +2,7 @@
 //  StatisticsView.swift
 //  Gestfina
 //
-//  Statistiques — Style iOS natif professionnel, adaptive Light/Dark
+//  Statistiques — Design premium Apple Health × Stocks
 //
 
 import SwiftUI
@@ -12,25 +12,25 @@ struct StatisticsView: View {
     @EnvironmentObject var viewModel: FinanceViewModel
     @State private var selectedChart: ChartType = .expenses
     @Environment(\.colorScheme) var colorScheme
-    
+
     enum ChartType: String, CaseIterable {
         case expenses = "Dépenses"
         case income = "Revenus"
         case trend = "Tendance"
     }
-    
+
     var body: some View {
         NavigationView {
             List {
-                // Grille métriques
+                // Metrics grid
                 Section {
                     metricsGrid
                 }
                 .listRowInsets(EdgeInsets())
                 .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)
-                
-                // Sélecteur de graphique
+
+                // Chart selector
                 Section {
                     Picker("Vue", selection: $selectedChart) {
                         ForEach(ChartType.allCases, id: \.self) { type in
@@ -40,19 +40,26 @@ struct StatisticsView: View {
                     .pickerStyle(.segmented)
                     .padding(.vertical, 4)
                 }
-                
-                // Graphique
+
+                // Chart
                 Section {
                     chartView
                         .padding(.vertical, 8)
                 }
-                
-                // Top dépenses
+
+                // Top expenses
                 if !viewModel.expensesByCategory.isEmpty {
                     Section(header:
-                    Label("Top dépenses", systemImage: "trophy.fill")
-                        .foregroundColor(.primary)
-                ) {
+                        HStack(spacing: 6) {
+                            Image(systemName: "trophy.fill")
+                                .foregroundColor(.appOrange)
+                                .font(.system(size: 13))
+                            Text("Top dépenses")
+                                .font(.system(size: 14, weight: .bold))
+                                .foregroundColor(.primary)
+                        }
+                        .textCase(nil)
+                    ) {
                         ForEach(Array(viewModel.expensesByCategory.prefix(5).enumerated()), id: \.element.category) { index, item in
                             topCategoryRow(index: index, item: item)
                         }
@@ -68,71 +75,52 @@ struct StatisticsView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Menu {
                         ForEach(FinanceViewModel.TimePeriod.allCases, id: \.self) { period in
-                            Button(period.rawValue) {
-                                withAnimation { viewModel.selectedPeriod = period }
+                            Button {
+                                withAnimation(.spring(response: 0.35)) {
+                                    viewModel.selectedPeriod = period
+                                }
+                            } label: {
+                                HStack {
+                                    Text(period.rawValue)
+                                    if viewModel.selectedPeriod == period {
+                                        Image(systemName: "checkmark")
+                                    }
+                                }
                             }
                         }
                     } label: {
                         HStack(spacing: 4) {
                             Text(viewModel.selectedPeriod.rawValue)
-                                .font(.system(size: 14, weight: .medium))
+                                .font(.system(size: 14, weight: .semibold))
                             Image(systemName: "chevron.down")
-                                .font(.system(size: 11))
+                                .font(.system(size: 10, weight: .bold))
                         }
-                        .foregroundColor(.appBlue)
+                        .foregroundStyle(.appBlue)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(Color.appBlue.opacity(0.1))
+                        .clipShape(Capsule())
                     }
                 }
             }
         }
     }
-    
+
     // MARK: - Metrics Grid
-    
+
     private var metricsGrid: some View {
-        LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
-            metricCard(title: "Revenus", value: viewModel.formatAmount(viewModel.totalIncome), icon: "arrow.down.left", color: .appGreen)
-            metricCard(title: "Dépenses", value: viewModel.formatAmount(viewModel.totalExpenses), icon: "arrow.up.right", color: .appRed)
-            metricCard(title: "Épargne", value: viewModel.formatPercentage(viewModel.savingsRate), icon: "leaf.fill", color: .appCyan)
-            metricCard(title: "Opérations", value: "\(viewModel.filteredTransactions.count)", icon: "rectangle.stack.fill", color: .appBlue)
+        LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 10) {
+            StatMetricCard(title: "Revenus", value: viewModel.formatAmount(viewModel.totalIncome), icon: "arrow.down.left.circle.fill", color: .appGreen)
+            StatMetricCard(title: "Dépenses", value: viewModel.formatAmount(viewModel.totalExpenses), icon: "arrow.up.right.circle.fill", color: .appRed)
+            StatMetricCard(title: "Épargne", value: viewModel.formatPercentage(viewModel.savingsRate), icon: "leaf.circle.fill", color: .appCyan)
+            StatMetricCard(title: "Opérations", value: "\(viewModel.filteredTransactions.count)", icon: "number.circle.fill", color: .appBlue)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 8)
     }
-    
-    private func metricCard(title: String, value: String, icon: String, color: Color) -> some View {
-        HStack(spacing: 10) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(color.opacity(0.12))
-                    .frame(width: 36, height: 36)
-                Image(systemName: icon)
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundColor(color)
-            }
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.6)
-                Text(value)
-                    .font(.headline)
-                    .fontWeight(.bold)
-                    .fontDesign(.rounded)
-                    .foregroundColor(.primary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.4)
-            }
-            Spacer()
-        }
-        .padding(14)
-        .background(Color(UIColor.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.2 : 0.03), radius: 4, x: 0, y: 2)
-    }
-    
+
     // MARK: - Chart View
-    
+
     @ViewBuilder
     private var chartView: some View {
         if selectedChart == .trend {
@@ -141,30 +129,30 @@ struct StatisticsView: View {
             breakdownChart
         }
     }
-    
+
     private var trendChart: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Tendance mensuelle — Dépenses")
-                .font(.system(size: 15, weight: .semibold))
-                .foregroundColor(.primary)
-            
+            Text("Tendance mensuelle")
+                .font(.system(size: 15, weight: .bold))
+                .foregroundStyle(.primary)
+
             if #available(iOS 16.0, *) {
                 Chart {
                     ForEach(viewModel.monthlyExpenses.indices, id: \.self) { i in
                         let item = viewModel.monthlyExpenses[i]
                         let maxVal = viewModel.monthlyExpenses.map(\.amount).max() ?? 1
                         let isMax = item.amount == maxVal && maxVal > 0
-                        
+
                         BarMark(
                             x: .value("Mois", item.month),
                             y: .value("Montant", item.amount)
                         )
                         .foregroundStyle(
-                            isMax 
+                            isMax
                             ? AnyShapeStyle(LinearGradient(colors: [.appBlue, .appCyan], startPoint: .bottom, endPoint: .top))
-                            : AnyShapeStyle(Color.secondary.opacity(0.15))
+                            : AnyShapeStyle(Color.secondary.opacity(0.12))
                         )
-                        .cornerRadius(6)
+                        .cornerRadius(8)
                     }
                 }
                 .frame(height: 170)
@@ -181,20 +169,19 @@ struct StatisticsView: View {
                         let item = viewModel.monthlyExpenses[i]
                         let maxVal = viewModel.monthlyExpenses.map(\.amount).max() ?? 1
                         let isMax = item.amount == maxVal && maxVal > 0
-                        
+
                         VStack(spacing: 6) {
                             RoundedRectangle(cornerRadius: 8)
                                 .fill(
                                     isMax
                                     ? AnyShapeStyle(LinearGradient(colors: [.appBlue, .appCyan], startPoint: .bottom, endPoint: .top))
-                                    : AnyShapeStyle(Color.secondary.opacity(0.15))
+                                    : AnyShapeStyle(Color.secondary.opacity(0.12))
                                 )
                                 .frame(height: maxVal > 0 ? max(CGFloat(item.amount / maxVal) * 120, 6) : 6)
-                                .shadow(color: isMax ? Color.appBlue.opacity(0.3) : .clear, radius: 6, y: 3)
-                            
+
                             Text(item.month)
                                 .font(.system(size: 10, weight: isMax ? .bold : .medium))
-                                .foregroundColor(isMax ? .appBlue : .secondary)
+                                .foregroundStyle(isMax ? .appBlue : .secondary)
                         }
                         .frame(maxWidth: .infinity)
                     }
@@ -203,25 +190,25 @@ struct StatisticsView: View {
             }
         }
     }
-    
+
     private var breakdownChart: some View {
         let data = selectedChart == .expenses ? viewModel.expensesByCategory : viewModel.incomeByCategory
-        
+
         return VStack(alignment: .leading, spacing: 14) {
             Text("Répartition \(selectedChart.rawValue.lowercased())")
-                .font(.system(size: 15, weight: .semibold))
-                .foregroundColor(.primary)
-            
+                .font(.system(size: 15, weight: .bold))
+                .foregroundStyle(.primary)
+
             if data.isEmpty {
                 HStack {
                     Spacer()
-                    VStack(spacing: 8) {
+                    VStack(spacing: 10) {
                         Image(systemName: "chart.pie")
-                            .font(.system(size: 36))
-                            .foregroundColor(.secondary)
+                            .font(.system(size: 36, weight: .light))
+                            .foregroundStyle(.tertiary)
                         Text("Aucune donnée")
-                            .font(.system(size: 14))
-                            .foregroundColor(.secondary)
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundStyle(.secondary)
                     }
                     Spacer()
                 }
@@ -234,24 +221,28 @@ struct StatisticsView: View {
                                 .fill(item.category.color)
                                 .frame(width: 8, height: 8)
                             Text(item.category.rawValue)
-                                .font(.system(size: 14, weight: .medium))
-                                .foregroundColor(.primary)
+                                .font(.system(size: 14, weight: .semibold))
                             Spacer()
                             Text(viewModel.formatAmount(item.amount))
                                 .font(.system(size: 14, weight: .bold, design: .rounded))
-                                .foregroundColor(.primary)
                             Text(viewModel.formatPercentage(item.percentage))
-                                .font(.system(size: 11))
-                                .foregroundColor(.secondary)
+                                .font(.system(size: 11, weight: .medium))
+                                .foregroundStyle(.secondary)
                                 .frame(width: 42, alignment: .trailing)
                         }
                         GeometryReader { geo in
                             ZStack(alignment: .leading) {
                                 RoundedRectangle(cornerRadius: 3)
-                                    .fill(Color.secondary.opacity(0.12))
+                                    .fill(Color.secondary.opacity(0.1))
                                     .frame(height: 4)
                                 RoundedRectangle(cornerRadius: 3)
-                                    .fill(LinearGradient(colors: [item.category.color, item.category.color.opacity(0.6)], startPoint: .leading, endPoint: .trailing))
+                                    .fill(
+                                        LinearGradient(
+                                            colors: [item.category.color, item.category.color.opacity(0.5)],
+                                            startPoint: .leading,
+                                            endPoint: .trailing
+                                        )
+                                    )
                                     .frame(width: geo.size.width * CGFloat(item.percentage / 100), height: 4)
                             }
                         }
@@ -261,40 +252,78 @@ struct StatisticsView: View {
             }
         }
     }
-    
+
     // MARK: - Top Category Row
-    
+
     private func topCategoryRow(index: Int, item: (category: TransactionCategory, amount: Double, percentage: Double)) -> some View {
         HStack(spacing: 14) {
-            Text("\(index + 1)")
-                .font(.system(size: 15, weight: .bold, design: .rounded))
-                .foregroundColor(index == 0 ? .appOrange : .secondary)
-                .frame(width: 22)
-            
+            // Rank badge
             ZStack {
                 Circle()
-                    .fill(item.category.color.opacity(0.12))
-                    .frame(width: 44, height: 44)
-                Image(systemName: item.category.icon)
-                    .font(.system(size: 18, weight: .medium))
-                    .foregroundColor(item.category.color)
+                    .fill(index == 0 ? Color.appOrange.opacity(0.15) : Color.secondary.opacity(0.08))
+                    .frame(width: 28, height: 28)
+                Text("\(index + 1)")
+                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .foregroundStyle(index == 0 ? .appOrange : .secondary)
             }
-            
+
+            ZStack {
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .fill(item.category.color.opacity(0.12))
+                    .frame(width: 40, height: 40)
+                Image(systemName: item.category.icon)
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundStyle(item.category.color)
+            }
+
             VStack(alignment: .leading, spacing: 2) {
                 Text(item.category.rawValue)
                     .font(.system(size: 15, weight: .semibold))
-                    .foregroundColor(.primary)
                 Text("\(Int(item.percentage))% du total")
-                    .font(.system(size: 12))
-                    .foregroundColor(.secondary)
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundStyle(.secondary)
             }
-            
+
             Spacer()
-            
+
             Text(viewModel.formatAmount(item.amount))
                 .font(.system(size: 16, weight: .bold, design: .rounded))
-                .foregroundColor(.primary)
         }
+    }
+}
+
+// MARK: - Stat Metric Card
+
+struct StatMetricCard: View {
+    let title: String
+    let value: String
+    let icon: String
+    let color: Color
+    @Environment(\.colorScheme) var colorScheme
+
+    var body: some View {
+        HStack(spacing: 10) {
+            Image(systemName: icon)
+                .font(.system(size: 22))
+                .foregroundStyle(color)
+                .frame(width: 32)
+
+            VStack(alignment: .leading, spacing: 3) {
+                Text(title)
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                Text(value)
+                    .font(.system(size: 16, weight: .bold, design: .rounded))
+                    .foregroundStyle(.primary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.5)
+            }
+            Spacer()
+        }
+        .padding(14)
+        .background(Color(UIColor.secondarySystemGroupedBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
     }
 }
 

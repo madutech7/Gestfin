@@ -2,7 +2,7 @@
 //  DashboardView.swift
 //  SamaXaalis
 //
-//  Design inspiré des applications Apple natives (Wallet, Santé, Réglages)
+//  Design ultra-premium inspiré Apple Wallet × Stocks × Health
 //
 
 import SwiftUI
@@ -12,70 +12,141 @@ struct DashboardView: View {
     @EnvironmentObject var viewModel: FinanceViewModel
     @State private var showSettings   = false
     @State private var balanceVisible = true
+    @State private var greetingScale: CGFloat = 0.95
+    @State private var greetingOpacity: Double = 0
+    @State private var cardAppeared = false
     @Environment(\.colorScheme) var colorScheme
 
     let authManager:  AuthenticationManager
     let notifManager: NotificationManager
 
+    private var greeting: String {
+        let hour = Calendar.current.component(.hour, from: Date())
+        switch hour {
+        case 5..<12:  return "Bonjour"
+        case 12..<18: return "Bon après-midi"
+        default:      return "Bonsoir"
+        }
+    }
+
     var body: some View {
         NavigationView {
             ScrollView(.vertical, showsIndicators: false) {
-                VStack(spacing: 24) {
-                    // ── 1. CARTE STYLE APPLE WALLET ──
-                    WalletCardHeader(viewModel: viewModel, balanceVisible: $balanceVisible)
+                VStack(spacing: 28) {
+
+                    // ── GREETING ──
+                    HStack {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(greeting + ",")
+                                .font(.system(size: 16, weight: .medium))
+                                .foregroundStyle(.secondary)
+                            Text(viewModel.userName)
+                                .font(.system(size: 28, weight: .bold, design: .rounded))
+                                .foregroundStyle(.primary)
+                        }
+                        Spacer()
+                        Button {
+                            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                            showSettings = true
+                        } label: {
+                            ZStack {
+                                Circle()
+                                    .fill(.ultraThinMaterial)
+                                    .frame(width: 42, height: 42)
+                                Image(systemName: "gearshape.fill")
+                                    .font(.system(size: 17, weight: .medium))
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.top, 8)
+                    .scaleEffect(greetingScale)
+                    .opacity(greetingOpacity)
+
+                    // ── 1. BALANCE CARD — APPLE WALLET PREMIUM ──
+                    BalanceCardView(viewModel: viewModel, balanceVisible: $balanceVisible)
                         .padding(.horizontal, 20)
-                        .padding(.top, 10)
-                    
-                    // ── 2. ACTIONS RAPIDES ──
-                    QuickActionsRow(viewModel: viewModel)
+                        .opacity(cardAppeared ? 1 : 0)
+                        .offset(y: cardAppeared ? 0 : 20)
+
+                    // ── 2. QUICK METRICS ──
+                    QuickMetricsRow(viewModel: viewModel)
                         .padding(.horizontal, 20)
 
-                    // ── 3. ACTIVITÉ (STYLE APPLE STOCKS) ──
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("Activité")
-                            .font(.title3.weight(.bold))
-                            .padding(.horizontal, 24)
-                        
-                        ActivityChartCard(viewModel: viewModel)
+                    // ── 3. SPARKLINE ACTIVITY ──
+                    VStack(alignment: .leading, spacing: 14) {
+                        HStack {
+                            Label("Activité", systemImage: "chart.xyaxis.line")
+                                .font(.system(size: 18, weight: .bold))
+                                .foregroundStyle(.primary)
+                            Spacer()
+                            Text("7 jours")
+                                .font(.system(size: 13, weight: .medium))
+                                .foregroundStyle(.secondary)
+                        }
+                        .padding(.horizontal, 24)
+
+                        SparklineChartCard(viewModel: viewModel)
                             .padding(.horizontal, 20)
                     }
 
-                    // ── 4. CATÉGORIES (STYLE SANTÉ/RÉGLAGES) ──
+                    // ── 4. CATEGORIES — APPLE HEALTH STYLE ──
                     if !viewModel.expensesByCategory.isEmpty {
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("Dépenses")
-                                .font(.title3.weight(.bold))
-                                .padding(.horizontal, 24)
-                            
+                        VStack(alignment: .leading, spacing: 14) {
+                            HStack {
+                                Label("Dépenses", systemImage: "chart.pie.fill")
+                                    .font(.system(size: 18, weight: .bold))
+                                    .foregroundStyle(.primary)
+                                Spacer()
+                                Text("\(viewModel.expensesByCategory.count) catégories")
+                                    .font(.system(size: 13, weight: .medium))
+                                    .foregroundStyle(.secondary)
+                            }
+                            .padding(.horizontal, 24)
+
                             VStack(spacing: 0) {
                                 ForEach(Array(viewModel.expensesByCategory.prefix(5).enumerated()), id: \.element.category) { index, item in
-                                    CategoryAppleRow(item: item, viewModel: viewModel)
+                                    PremiumCategoryRow(item: item, viewModel: viewModel)
                                     if index < min(viewModel.expensesByCategory.count, 5) - 1 {
-                                        Divider().padding(.leading, 64)
+                                        Divider()
+                                            .padding(.leading, 68)
                                     }
                                 }
                             }
-                            .padding(.vertical, 8)
+                            .padding(.vertical, 6)
                             .background(Color(UIColor.secondarySystemGroupedBackground))
-                            .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+                            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                             .padding(.horizontal, 20)
                         }
                     }
 
-                    // ── 5. TRANSACTIONS RÉCENTES ──
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("Récentes")
-                            .font(.title3.weight(.bold))
-                            .padding(.horizontal, 24)
-                        
+                    // ── 5. RECENT TRANSACTIONS ──
+                    VStack(alignment: .leading, spacing: 14) {
+                        HStack {
+                            Label("Récentes", systemImage: "clock.arrow.circlepath")
+                                .font(.system(size: 18, weight: .bold))
+                                .foregroundStyle(.primary)
+                            Spacer()
+                            if !viewModel.recentTransactions.isEmpty {
+                                Text("\(viewModel.recentTransactions.count)")
+                                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                                    .foregroundStyle(.white)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 3)
+                                    .background(Color.appBlue)
+                                    .clipShape(Capsule())
+                            }
+                        }
+                        .padding(.horizontal, 24)
+
                         if viewModel.recentTransactions.isEmpty {
-                            Text("Aucune transaction")
-                                .foregroundStyle(.secondary)
-                                .frame(maxWidth: .infinity, alignment: .center)
-                                .padding()
-                                .background(Color(UIColor.secondarySystemGroupedBackground))
-                                .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
-                                .padding(.horizontal, 20)
+                            EmptyStateCard(
+                                icon: "tray",
+                                title: "Aucune transaction",
+                                subtitle: "Ajoutez votre première opération"
+                            )
+                            .padding(.horizontal, 20)
                         } else {
                             VStack(spacing: 0) {
                                 ForEach(Array(viewModel.recentTransactions.enumerated()), id: \.element.id) { index, t in
@@ -84,19 +155,21 @@ struct DashboardView: View {
                                         .padding(.vertical, 12)
                                         .contextMenu {
                                             Button(role: .destructive) {
-                                                withAnimation { viewModel.deleteTransaction(t) }
+                                                withAnimation(.spring(response: 0.35)) {
+                                                    viewModel.deleteTransaction(t)
+                                                }
                                             } label: {
                                                 Label("Supprimer", systemImage: "trash")
                                             }
                                         }
-                                    
+
                                     if index < viewModel.recentTransactions.count - 1 {
-                                        Divider().padding(.leading, 64)
+                                        Divider().padding(.leading, 68)
                                     }
                                 }
                             }
                             .background(Color(UIColor.secondarySystemGroupedBackground))
-                            .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+                            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                             .padding(.horizontal, 20)
                         }
                     }
@@ -104,185 +177,230 @@ struct DashboardView: View {
                 }
             }
             .background(Color(UIColor.systemGroupedBackground).ignoresSafeArea())
-            .navigationTitle("SamaXaalis")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                        showSettings = true
-                    } label: {
-                        Image(systemName: "gearshape.circle.fill")
-                            .font(.system(size: 24))
-                            .foregroundStyle(Color.secondary, Color(UIColor.secondarySystemFill))
-                    }
-                }
-            }
+            .navigationBarHidden(true)
             .sheet(isPresented: $showSettings) {
                 NavigationView {
                     SettingsView(authManager: authManager, notifManager: notifManager)
                         .environmentObject(viewModel)
                 }
             }
+            .onAppear {
+                withAnimation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.1)) {
+                    greetingScale = 1
+                    greetingOpacity = 1
+                }
+                withAnimation(.spring(response: 0.7, dampingFraction: 0.78).delay(0.2)) {
+                    cardAppeared = true
+                }
+            }
         }
     }
 }
 
 // ──────────────────────────────────────────────────────────────────
-// MARK: – Composants
+// MARK: – Balance Card (Apple Wallet × Apple Card Premium)
 // ──────────────────────────────────────────────────────────────────
 
-struct WalletCardHeader: View {
+struct BalanceCardView: View {
     @ObservedObject var viewModel: FinanceViewModel
     @Binding var balanceVisible: Bool
     @Environment(\.colorScheme) var colorScheme
-    
+    @State private var gradientPhase: CGFloat = 0
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
+        VStack(alignment: .leading, spacing: 0) {
+            // Top section
             HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("Solde total")
-                        .font(.subheadline.weight(.medium))
-                        .foregroundStyle(Color.white.opacity(0.8))
-                    
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "creditcard.fill")
+                            .font(.system(size: 13, weight: .semibold))
+                        Text("Solde total")
+                            .font(.system(size: 14, weight: .semibold))
+                    }
+                    .foregroundStyle(Color.white.opacity(0.7))
+
                     Text(balanceVisible
                          ? viewModel.formatAmount(viewModel.totalBalance)
-                         : "••••••••")
-                        .font(.system(size: 42, weight: .bold, design: .rounded))
+                         : "••••••")
+                        .font(.system(size: 38, weight: .bold, design: .rounded))
                         .foregroundStyle(.white)
                         .contentTransition(.numericText())
-                        .minimumScaleFactor(0.4)
+                        .minimumScaleFactor(0.5)
                         .lineLimit(1)
                 }
-                
+
                 Spacer()
-                
+
                 Button {
                     UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                    withAnimation(.spring(response: 0.3)) { balanceVisible.toggle() }
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                        balanceVisible.toggle()
+                    }
                 } label: {
-                    Image(systemName: balanceVisible ? "eye" : "eye.slash")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(.white)
+                    Image(systemName: balanceVisible ? "eye.fill" : "eye.slash.fill")
+                        .font(.system(size: 15, weight: .medium))
+                        .foregroundStyle(.white.opacity(0.9))
                         .padding(10)
-                        .background(.ultraThinMaterial)
-                        .environment(\.colorScheme, .dark) // Force dark material
+                        .background(.white.opacity(0.15))
                         .clipShape(Circle())
                 }
             }
-            
-            Spacer(minLength: 20)
-            
+
+            Spacer(minLength: 24)
+
+            // Bottom metrics
             let rate = viewModel.savingsRate
             let positive = rate >= 0
             HStack(alignment: .bottom) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Variation")
-                        .font(.caption2.weight(.medium))
-                        .foregroundStyle(Color.white.opacity(0.7))
-                        .textCase(.uppercase)
-                    
-                    HStack(spacing: 4) {
-                        Image(systemName: positive ? "arrow.up.right.circle.fill" : "arrow.down.right.circle.fill")
-                        Text("\(positive ? "+" : "")\(viewModel.formatPercentage(rate))")
-                    }
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.white)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(Color.white.opacity(0.2))
-                    .clipShape(Capsule())
+                HStack(spacing: 6) {
+                    Image(systemName: positive ? "arrow.up.right" : "arrow.down.right")
+                        .font(.system(size: 11, weight: .bold))
+                    Text("\(positive ? "+" : "")\(viewModel.formatPercentage(rate))")
+                        .font(.system(size: 13, weight: .bold, design: .rounded))
                 }
-                
+                .foregroundStyle(.white)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 6)
+                .background(
+                    Capsule()
+                        .fill(positive ? Color.white.opacity(0.2) : Color.red.opacity(0.3))
+                )
+
                 Spacer()
-                
-                HStack(spacing: 4) {
+
+                HStack(spacing: 5) {
                     Image(systemName: "applelogo")
+                        .font(.system(size: 12))
                     Text("SamaXaalis")
+                        .font(.system(size: 13, weight: .semibold))
                 }
-                .font(.footnote.weight(.semibold))
-                .foregroundStyle(Color.white.opacity(0.6))
+                .foregroundStyle(Color.white.opacity(0.5))
             }
         }
         .padding(24)
-        .frame(height: 210)
+        .frame(height: 200)
         .background(
-            LinearGradient(
-                colors: colorScheme == .dark
-                    ? [Color(red: 40/255, green: 40/255, blue: 45/255), Color(red: 20/255, green: 20/255, blue: 25/255)] // Dark Titanium
-                    : [Color.black, Color(red: 40/255, green: 40/255, blue: 40/255)], // Sleek Black
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
+            ZStack {
+                // Base gradient
+                LinearGradient(
+                    colors: [
+                        Color(red: 0.08, green: 0.08, blue: 0.12),
+                        Color(red: 0.15, green: 0.12, blue: 0.22),
+                        Color(red: 0.08, green: 0.10, blue: 0.18)
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+
+                // Subtle animated accent
+                EllipticalGradient(
+                    colors: [
+                        Color.purple.opacity(0.25),
+                        Color.blue.opacity(0.15),
+                        Color.clear
+                    ],
+                    center: UnitPoint(x: 0.8 + sin(gradientPhase) * 0.15,
+                                     y: 0.2 + cos(gradientPhase) * 0.15)
+                )
+
+                // Top-left light reflection
+                RadialGradient(
+                    colors: [Color.white.opacity(0.08), Color.clear],
+                    center: .topLeading,
+                    startRadius: 0,
+                    endRadius: 200
+                )
+            }
         )
-        // Effet de brillance subtil
-        .overlay(
-            LinearGradient(
-                colors: [Color.white.opacity(0.2), Color.clear],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
-        )
-        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
-        .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.4 : 0.15), radius: 20, x: 0, y: 10)
+        .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .shadow(color: Color.purple.opacity(colorScheme == .dark ? 0.2 : 0.08), radius: 30, x: 0, y: 15)
+        .shadow(color: Color.black.opacity(0.15), radius: 10, x: 0, y: 5)
+        .onAppear {
+            withAnimation(.easeInOut(duration: 6).repeatForever(autoreverses: true)) {
+                gradientPhase = .pi * 2
+            }
+        }
     }
 }
 
-struct QuickActionsRow: View {
+// ──────────────────────────────────────────────────────────────────
+// MARK: – Quick Metrics (Revenue / Expense pills)
+// ──────────────────────────────────────────────────────────────────
+
+struct QuickMetricsRow: View {
     @ObservedObject var viewModel: FinanceViewModel
-    
+
     var body: some View {
-        HStack(spacing: 16) {
-            actionCard(
+        HStack(spacing: 12) {
+            MetricPill(
                 title: "Revenus",
                 amount: viewModel.formatAmount(viewModel.totalIncome),
                 icon: "arrow.down.left",
-                color: .green
+                color: .appGreen
             )
-            actionCard(
+            MetricPill(
                 title: "Dépenses",
                 amount: viewModel.formatAmount(viewModel.totalExpenses),
                 icon: "arrow.up.right",
-                color: .red
+                color: .appRed
             )
         }
     }
-    
-    private func actionCard(title: String, amount: String, icon: String, color: Color) -> some View {
-        HStack(spacing: 12) {
+}
+
+struct MetricPill: View {
+    let title: String
+    let amount: String
+    let icon: String
+    let color: Color
+
+    var body: some View {
+        HStack(spacing: 10) {
             ZStack {
                 Circle()
-                    .fill(color.opacity(0.15))
-                    .frame(width: 44, height: 44)
+                    .fill(color.opacity(0.12))
+                    .frame(width: 40, height: 40)
                 Image(systemName: icon)
-                    .font(.system(size: 16, weight: .bold))
+                    .font(.system(size: 14, weight: .bold))
                     .foregroundStyle(color)
             }
-            
+
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
-                    .font(.caption.weight(.medium))
+                    .font(.system(size: 12, weight: .medium))
                     .foregroundStyle(.secondary)
                 Text(amount)
-                    .font(.subheadline.weight(.semibold))
-                    .fontDesign(.rounded)
+                    .font(.system(size: 15, weight: .bold, design: .rounded))
                     .foregroundStyle(.primary)
                     .lineLimit(1)
-                    .minimumScaleFactor(0.8)
+                    .minimumScaleFactor(0.6)
             }
             Spacer()
         }
         .padding(14)
         .background(Color(UIColor.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
     }
 }
 
-struct ActivityChartCard: View {
+// ──────────────────────────────────────────────────────────────────
+// MARK: – Sparkline Chart (Apple Stocks style)
+// ──────────────────────────────────────────────────────────────────
+
+struct SparklineChartCard: View {
     @ObservedObject var viewModel: FinanceViewModel
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
+            // Total for period
+            let total = viewModel.dailyExpenses.reduce(0) { $0 + $1.amount }
+            if total > 0 {
+                Text(viewModel.formatAmount(total))
+                    .font(.system(size: 24, weight: .bold, design: .rounded))
+                    .foregroundStyle(.primary)
+            }
+
             Chart(viewModel.dailyExpenses, id: \.day) { item in
                 AreaMark(
                     x: .value("Jour", item.day),
@@ -290,77 +408,130 @@ struct ActivityChartCard: View {
                 )
                 .foregroundStyle(
                     LinearGradient(
-                        colors: [Color.blue.opacity(0.25), Color.clear],
+                        colors: [Color.appBlue.opacity(0.2), Color.appBlue.opacity(0.02)],
                         startPoint: .top,
                         endPoint: .bottom
                     )
                 )
+                .interpolationMethod(.catmullRom)
+
                 LineMark(
                     x: .value("Jour", item.day),
                     y: .value("Montant", item.amount)
                 )
-                .foregroundStyle(Color.blue)
-                .lineStyle(StrokeStyle(lineWidth: 3, lineCap: .round, lineJoin: .round))
+                .foregroundStyle(
+                    LinearGradient(
+                        colors: [.appBlue, .appCyan],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+                .lineStyle(StrokeStyle(lineWidth: 2.5, lineCap: .round, lineJoin: .round))
                 .interpolationMethod(.catmullRom)
             }
             .chartXAxis {
                 AxisMarks {
-                    AxisValueLabel().font(.caption2.weight(.medium)).foregroundStyle(.secondary)
+                    AxisValueLabel()
+                        .font(.system(size: 10, weight: .medium))
+                        .foregroundStyle(.secondary)
                 }
             }
             .chartYAxis(.hidden)
-            .frame(height: 150)
+            .frame(height: 140)
         }
         .padding(20)
         .background(Color(UIColor.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
 }
 
-struct CategoryAppleRow: View {
+// ──────────────────────────────────────────────────────────────────
+// MARK: – Category Row (Apple Health style)
+// ──────────────────────────────────────────────────────────────────
+
+struct PremiumCategoryRow: View {
     let item: (category: TransactionCategory, amount: Double, percentage: Double)
     @ObservedObject var viewModel: FinanceViewModel
-    
+
     var body: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: 14) {
             ZStack {
-                RoundedRectangle(cornerRadius: 8, style: .continuous)
-                    .fill(item.category.color)
-                    .frame(width: 32, height: 32)
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .fill(item.category.color.opacity(0.15))
+                    .frame(width: 38, height: 38)
                 Image(systemName: item.category.icon)
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(.white)
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundStyle(item.category.color)
             }
-            
-            VStack(alignment: .leading, spacing: 6) {
+
+            VStack(alignment: .leading, spacing: 7) {
                 HStack {
                     Text(item.category.rawValue)
-                        .font(.body)
+                        .font(.system(size: 15, weight: .medium))
                     Spacer()
                     Text(viewModel.formatAmount(item.amount))
-                        .font(.body.weight(.medium))
-                        .fontDesign(.rounded)
+                        .font(.system(size: 15, weight: .bold, design: .rounded))
                 }
-                
+
                 GeometryReader { geo in
                     ZStack(alignment: .leading) {
                         Capsule()
-                            .fill(Color(UIColor.tertiarySystemGroupedBackground))
+                            .fill(Color(UIColor.tertiarySystemFill))
                         Capsule()
-                            .fill(item.category.color)
+                            .fill(
+                                LinearGradient(
+                                    colors: [item.category.color, item.category.color.opacity(0.6)],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                            )
                             .frame(width: geo.size.width * CGFloat(min(item.percentage / 100, 1)))
                     }
                 }
-                .frame(height: 4)
+                .frame(height: 5)
+                .clipShape(Capsule())
             }
+
+            Text("\(Int(item.percentage))%")
+                .font(.system(size: 13, weight: .semibold, design: .rounded))
+                .foregroundStyle(.secondary)
+                .frame(width: 36, alignment: .trailing)
         }
         .padding(.vertical, 12)
         .padding(.horizontal, 16)
     }
 }
 
+// ──────────────────────────────────────────────────────────────────
+// MARK: – Empty State Card
+// ──────────────────────────────────────────────────────────────────
+
+struct EmptyStateCard: View {
+    let icon: String
+    let title: String
+    let subtitle: String
+
+    var body: some View {
+        VStack(spacing: 12) {
+            Image(systemName: icon)
+                .font(.system(size: 32, weight: .light))
+                .foregroundStyle(.tertiary)
+            Text(title)
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundStyle(.secondary)
+            Text(subtitle)
+                .font(.system(size: 13))
+                .foregroundStyle(.tertiary)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 32)
+        .background(Color(UIColor.secondarySystemGroupedBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+    }
+}
+
 // ─────────────────────────────────────────────────────────────────────
-// MARK: – Anciens composants conservés pour StatisticsView / BudgetView
+// MARK: – Legacy components kept for StatisticsView / BudgetView
 // ─────────────────────────────────────────────────────────────────────
 
 struct GlassBarChart: View {

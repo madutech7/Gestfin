@@ -2,7 +2,7 @@
 //  MainTabView.swift
 //  Gestfina
 //
-//  Navigation native avec Tab Bar — 5 onglets + Réglages
+//  Navigation premium avec Tab Bar natif — Design Apple-tier
 //
 
 import SwiftUI
@@ -11,37 +11,39 @@ struct MainTabView: View {
     @State private var selectedTab: AppTab = .dashboard
     @State private var showAddTransaction = false
     @EnvironmentObject var viewModel: FinanceViewModel
-    
+
     let authManager: AuthenticationManager
     let notifManager: NotificationManager
-    
+
     enum AppTab: String, CaseIterable {
         case dashboard    = "Accueil"
         case transactions = "Transactions"
         case add          = "Ajouter"
         case budget       = "Budget"
     }
-    
+
     init(authManager: AuthenticationManager, notifManager: NotificationManager) {
         self.authManager  = authManager
         self.notifManager = notifManager
-        
-        // Tab Bar apparence native (translucide avec flou iOS)
+
+        // Premium tab bar appearance
         let appearance = UITabBarAppearance()
         appearance.configureWithDefaultBackground()
         UITabBar.appearance().standardAppearance   = appearance
         UITabBar.appearance().scrollEdgeAppearance = appearance
     }
-    
+
     var body: some View {
         TabView(selection: Binding(
             get: { selectedTab },
             set: { newTab in
                 if newTab == .add {
-                    let impact = UIImpactFeedbackGenerator(style: .medium)
-                    impact.impactOccurred()
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                     showAddTransaction = true
                 } else {
+                    if newTab != selectedTab {
+                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                    }
                     selectedTab = newTab
                 }
             }
@@ -51,20 +53,20 @@ struct MainTabView: View {
                     Label("Accueil", systemImage: selectedTab == .dashboard ? "house.fill" : "house")
                 }
                 .tag(AppTab.dashboard)
-            
+
             TransactionsView()
                 .tabItem {
                     Label("Transactions", systemImage: "arrow.left.arrow.right")
                 }
                 .tag(AppTab.transactions)
-            
-            // Onglet central "+" déclencheur
+
+            // Central "+" trigger tab
             Color.clear
                 .tabItem {
                     Label("Ajouter", systemImage: "plus.circle.fill")
                 }
                 .tag(AppTab.add)
-            
+
             BudgetView()
                 .tabItem {
                     Label("Budget", systemImage: selectedTab == .budget ? "chart.pie.fill" : "chart.pie")
@@ -92,7 +94,7 @@ struct MainTabView: View {
 //  SettingsView.swift
 //  Gestfina
 //
-//  Paramètres complets — Profil, Devise, Sécurité, Notifications, Données
+//  Paramètres — Design premium Apple Settings native
 //
 
 import SwiftUI
@@ -102,23 +104,23 @@ struct SettingsView: View {
     @ObservedObject var authManager: AuthenticationManager
     @ObservedObject var notifManager: NotificationManager
     @Environment(\.colorScheme) var colorScheme
-    
+
     @State private var showResetAlert    = false
     @State private var showNameEditor    = false
     @State private var showCurrencyPicker = false
     @State private var tempName          = ""
-    
+
     var body: some View {
         NavigationView {
             List {
-                
+
                 // MARK: - Profil
                 Section {
                     profileRow
                 } header: {
                     Text("Profil")
                 }
-                
+
                 // MARK: - Devise
                 Section {
                     currencyRow
@@ -127,7 +129,7 @@ struct SettingsView: View {
                 } footer: {
                     Text("La devise sélectionnée sera utilisée pour toutes les transactions et les budgets.")
                 }
-                
+
                 // MARK: - Sécurité
                 Section {
                     securitySection
@@ -138,7 +140,7 @@ struct SettingsView: View {
                          ? "L'application se verrouille automatiquement en arrière-plan."
                          : "Activez \(authManager.biometricName) pour protéger vos données financières.")
                 }
-                
+
                 // MARK: - Notifications
                 Section {
                     notificationsSection
@@ -149,7 +151,7 @@ struct SettingsView: View {
                         Text("Notifications désactivées. Activez-les dans Réglages > SamaXaalis.")
                     }
                 }
-                
+
                 // MARK: - Données
                 Section {
                     dataSection
@@ -158,7 +160,7 @@ struct SettingsView: View {
                 } footer: {
                     Text("Toutes vos données sont stockées uniquement sur votre appareil.")
                 }
-                
+
                 // MARK: - À propos
                 Section {
                     aboutSection
@@ -173,8 +175,7 @@ struct SettingsView: View {
                 Button("Annuler", role: .cancel) { }
                 Button("Réinitialiser", role: .destructive) {
                     viewModel.resetAllData()
-                    let feedback = UINotificationFeedbackGenerator()
-                    feedback.notificationOccurred(.warning)
+                    UINotificationFeedbackGenerator().notificationOccurred(.warning)
                 }
             } message: {
                 Text("Toutes vos transactions et budgets seront supprimés définitivement. Cette action est irréversible.")
@@ -190,9 +191,9 @@ struct SettingsView: View {
             }
         }
     }
-    
+
     // MARK: - Profil Row
-    
+
     private var profileRow: some View {
         Button {
             tempName = viewModel.userName
@@ -213,7 +214,7 @@ struct SettingsView: View {
                         .font(.system(size: 22, weight: .bold, design: .rounded))
                         .foregroundColor(.white)
                 }
-                
+
                 VStack(alignment: .leading, spacing: 3) {
                     Text(viewModel.userName)
                         .font(.system(size: 17, weight: .semibold))
@@ -222,7 +223,7 @@ struct SettingsView: View {
                         .font(.system(size: 13))
                         .foregroundColor(.secondary)
                 }
-                
+
                 Spacer()
                 Image(systemName: "chevron.right")
                     .font(.system(size: 13, weight: .semibold))
@@ -232,9 +233,9 @@ struct SettingsView: View {
         }
         .buttonStyle(.plain)
     }
-    
+
     // MARK: - Devise Row
-    
+
     private var currencyRow: some View {
         Button {
             showCurrencyPicker = true
@@ -251,19 +252,21 @@ struct SettingsView: View {
                         }
                     }
                 } icon: {
-                    Image(systemName: "dollarsign.circle")
-                        .foregroundColor(.appBlue)
+                    Image(systemName: "dollarsign.circle.fill")
+                        .foregroundStyle(.appBlue)
+                        .symbolRenderingMode(.hierarchical)
+                        .font(.system(size: 22))
                 }
-                
+
                 Spacer()
-                
+
                 HStack(spacing: 6) {
                     Text(viewModel.currencySymbol)
-                        .font(.system(size: 15, weight: .semibold, design: .rounded))
-                        .foregroundColor(.appBlue)
+                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .foregroundStyle(.appBlue)
                     Text(viewModel.currency)
                         .font(.system(size: 14))
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                     Image(systemName: "chevron.right")
                         .font(.system(size: 12, weight: .semibold))
                         .foregroundColor(Color(UIColor.tertiaryLabel))
@@ -273,9 +276,9 @@ struct SettingsView: View {
         }
         .buttonStyle(.plain)
     }
-    
+
     // MARK: - Sécurité
-    
+
     @ViewBuilder
     private var securitySection: some View {
         if authManager.isBiometricAvailable {
@@ -284,11 +287,11 @@ struct SettingsView: View {
                     Text(authManager.biometricName)
                 } icon: {
                     Image(systemName: authManager.biometricIcon)
-                        .foregroundColor(.appBlue)
+                        .foregroundStyle(.appBlue)
                 }
-                
+
                 Spacer()
-                
+
                 Toggle("", isOn: Binding(
                     get: { authManager.isAuthEnabled },
                     set: { newValue in
@@ -296,8 +299,7 @@ struct SettingsView: View {
                             authManager.isAuthEnabled = newValue
                             if !newValue { authManager.isUnlocked = true }
                         }
-                        let feedback = UIImpactFeedbackGenerator(style: .light)
-                        feedback.impactOccurred()
+                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
                     }
                 ))
                 .tint(.appBlue)
@@ -306,26 +308,26 @@ struct SettingsView: View {
             Label("Biométrie non disponible", systemImage: "exclamationmark.shield")
                 .foregroundColor(.secondary)
         }
-        
+
         HStack {
             Label("Stockage chiffré local", systemImage: "lock.shield.fill")
                 .foregroundColor(.primary)
             Spacer()
             Label("Actif", systemImage: "checkmark.circle.fill")
-                .font(.system(size: 13))
+                .font(.system(size: 13, weight: .semibold))
                 .foregroundColor(.appGreen)
         }
     }
-    
+
     // MARK: - Notifications
-    
+
     @ViewBuilder
     private var notificationsSection: some View {
         if notifManager.authorizationStatus == .notDetermined {
             Button {
                 notifManager.requestAuthorization()
             } label: {
-                Label("Activer les notifications", systemImage: "bell.badge")
+                Label("Activer les notifications", systemImage: "bell.badge.fill")
                     .foregroundColor(.appBlue)
             }
         } else if notifManager.authorizationStatus == .denied {
@@ -350,7 +352,7 @@ struct SettingsView: View {
                 }
             }
             .tint(.appBlue)
-            
+
             Toggle(isOn: $notifManager.dailyReminderEnabled) {
                 Label {
                     VStack(alignment: .leading, spacing: 2) {
@@ -365,7 +367,7 @@ struct SettingsView: View {
                 }
             }
             .tint(.appBlue)
-            
+
             if notifManager.dailyReminderEnabled {
                 HStack {
                     Label("Heure du rappel", systemImage: "clock")
@@ -380,27 +382,27 @@ struct SettingsView: View {
             }
         }
     }
-    
+
     // MARK: - Données
-    
+
     @ViewBuilder
     private var dataSection: some View {
         HStack {
             Label("Transactions enregistrées", systemImage: "arrow.left.arrow.right")
             Spacer()
             Text("\(viewModel.transactions.count)")
-                .font(.system(size: 15, weight: .semibold, design: .rounded))
-                .foregroundColor(.secondary)
+                .font(.system(size: 15, weight: .bold, design: .rounded))
+                .foregroundStyle(.appBlue)
         }
-        
+
         HStack {
             Label("Budgets actifs", systemImage: "chart.pie")
             Spacer()
             Text("\(viewModel.budgets.count)")
-                .font(.system(size: 15, weight: .semibold, design: .rounded))
-                .foregroundColor(.secondary)
+                .font(.system(size: 15, weight: .bold, design: .rounded))
+                .foregroundStyle(.appBlue)
         }
-        
+
         Button {
             showResetAlert = true
         } label: {
@@ -408,9 +410,9 @@ struct SettingsView: View {
                 .foregroundColor(.appRed)
         }
     }
-    
+
     // MARK: - À propos
-    
+
     @ViewBuilder
     private var aboutSection: some View {
         HStack {
@@ -420,9 +422,10 @@ struct SettingsView: View {
                 .foregroundColor(.secondary)
         }
         HStack {
-            Label("Développeur", systemImage: "hammer")
+            Label("Développeur", systemImage: "hammer.fill")
             Spacer()
             Text("Madu")
+                .font(.system(size: 15, weight: .semibold))
                 .foregroundColor(.secondary)
         }
         HStack {
@@ -432,16 +435,22 @@ struct SettingsView: View {
                 .foregroundColor(.appGreen)
         }
     }
-    
+
     // MARK: - Éditeur de nom
-    
+
     private var nameEditorSheet: some View {
         NavigationView {
             Form {
                 Section(header: Text("Votre prénom")) {
-                    HStack {
-                        Image(systemName: "person.circle")
-                            .foregroundColor(.appBlue)
+                    HStack(spacing: 12) {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                .fill(Color.appBlue.opacity(0.12))
+                                .frame(width: 30, height: 30)
+                            Image(systemName: "person.fill")
+                                .font(.system(size: 13, weight: .semibold))
+                                .foregroundStyle(.appBlue)
+                        }
                         TextField("Prénom", text: $tempName)
                     }
                 }
@@ -458,10 +467,9 @@ struct SettingsView: View {
                         viewModel.userName = tempName.isEmpty ? "Madu" : tempName
                         viewModel.saveUserName()
                         showNameEditor = false
-                        let feedback = UIImpactFeedbackGenerator(style: .medium)
-                        feedback.impactOccurred()
+                        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                     }
-                    .fontWeight(.semibold)
+                    .font(.system(size: 16, weight: .bold))
                 }
             }
         }
@@ -470,13 +478,13 @@ struct SettingsView: View {
     }
 }
 
-// MARK: - Sélecteur de devise
+// MARK: - Currency Picker
 
 struct CurrencyPickerSheet: View {
     @Binding var selectedCode: String
     @Environment(\.dismiss) var dismiss
     @State private var searchText = ""
-    
+
     private var filteredGroups: [(region: String, currencies: [AppCurrency])] {
         if searchText.isEmpty { return AppCurrency.grouped }
         let q = searchText.lowercased()
@@ -489,7 +497,7 @@ struct CurrencyPickerSheet: View {
             return filtered.isEmpty ? nil : (group.region, filtered)
         }
     }
-    
+
     var body: some View {
         NavigationView {
             List {
@@ -498,12 +506,10 @@ struct CurrencyPickerSheet: View {
                         ForEach(group.currencies) { currency in
                             Button {
                                 selectedCode = currency.code
-                                let feedback = UIImpactFeedbackGenerator(style: .light)
-                                feedback.impactOccurred()
+                                UIImpactFeedbackGenerator(style: .light).impactOccurred()
                                 dismiss()
                             } label: {
                                 HStack(spacing: 14) {
-                                    // Symbole de devise dans un cercle
                                     ZStack {
                                         Circle()
                                             .fill(Color.appBlue.opacity(0.1))
@@ -514,7 +520,7 @@ struct CurrencyPickerSheet: View {
                                             .minimumScaleFactor(0.5)
                                             .lineLimit(1)
                                     }
-                                    
+
                                     VStack(alignment: .leading, spacing: 2) {
                                         Text(currency.name)
                                             .font(.system(size: 15, weight: .medium))
@@ -523,9 +529,9 @@ struct CurrencyPickerSheet: View {
                                             .font(.system(size: 12))
                                             .foregroundColor(.secondary)
                                     }
-                                    
+
                                     Spacer()
-                                    
+
                                     if selectedCode == currency.code {
                                         Image(systemName: "checkmark.circle.fill")
                                             .foregroundColor(.appBlue)
@@ -559,4 +565,3 @@ struct CurrencyPickerSheet: View {
     )
     .environmentObject(FinanceViewModel())
 }
-

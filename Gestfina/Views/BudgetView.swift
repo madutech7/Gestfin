@@ -2,7 +2,7 @@
 //  BudgetView.swift
 //  Gestfina
 //
-//  Gestion des budgets — avec édition et suppression
+//  Gestion des budgets — Design premium Apple Activity Rings
 //
 
 import SwiftUI
@@ -12,54 +12,65 @@ struct BudgetView: View {
     @State private var showAddBudget = false
     @State private var budgetToEdit: Budget? = nil
     @Environment(\.colorScheme) var colorScheme
-    
+
     var body: some View {
         NavigationView {
             List {
-                // Carte de synthèse globale
+                // Overview ring card
                 Section {
                     overviewCard
                 }
                 .listRowInsets(EdgeInsets())
                 .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)
-                
-                // Liste des budgets
+
+                // Budget list
                 if viewModel.budgets.isEmpty {
                     Section {
-                        VStack(spacing: 16) {
+                        VStack(spacing: 20) {
                             ZStack {
                                 Circle()
-                                    .fill(Color.appBlue.opacity(0.1))
+                                    .fill(
+                                        LinearGradient(
+                                            colors: [Color.appBlue.opacity(0.12), Color.appCyan.opacity(0.08)],
+                                            startPoint: .topLeading,
+                                            endPoint: .bottomTrailing
+                                        )
+                                    )
                                     .frame(width: 80, height: 80)
-                                Image(systemName: "chart.pie.fill")
-                                    .font(.system(size: 36))
-                                    .foregroundColor(.appBlue)
-                                    .shadow(color: Color.appBlue.opacity(0.5), radius: 10, x: 0, y: 5)
+                                Image(systemName: "chart.pie")
+                                    .font(.system(size: 32, weight: .light))
+                                    .foregroundStyle(.appBlue)
                             }
-                            
-                            Text("Aucun budget défini")
-                                .font(.system(size: 20, weight: .bold, design: .rounded))
-                                .foregroundColor(.primary)
-                            
-                            Text("Créez votre premier budget pour commencer à suivre vos dépenses intelligemment.")
-                                .font(.system(size: 15))
-                                .foregroundColor(.secondary)
-                                .multilineTextAlignment(.center)
-                                .padding(.horizontal, 20)
+
+                            VStack(spacing: 6) {
+                                Text("Aucun budget défini")
+                                    .font(.system(size: 20, weight: .bold, design: .rounded))
+                                Text("Créez votre premier budget pour\nsuivre vos dépenses intelligemment.")
+                                    .font(.system(size: 14))
+                                    .foregroundStyle(.secondary)
+                                    .multilineTextAlignment(.center)
+                            }
                         }
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 60)
-                        .background(Color(UIColor.secondarySystemGroupedBackground))
-                        .clipShape(RoundedRectangle(cornerRadius: 24))
-                        .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.2 : 0.03), radius: 10, x: 0, y: 4)
+                        .padding(.vertical, 50)
                     }
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
                 } else {
-                    Section(header: Text("Mes budgets")) {
+                    Section(header:
+                        HStack(spacing: 6) {
+                            Image(systemName: "list.bullet.circle.fill")
+                                .foregroundColor(.appBlue)
+                                .font(.system(size: 13))
+                            Text("Mes budgets")
+                                .font(.system(size: 14, weight: .bold))
+                                .foregroundColor(.primary)
+                        }
+                        .textCase(nil)
+                    ) {
                         ForEach(viewModel.budgets) { budget in
-                            BudgetCard(
+                            PremiumBudgetCard(
                                 budget: budget,
                                 progress: viewModel.budgetProgress(for: budget),
                                 viewModel: viewModel
@@ -77,7 +88,9 @@ struct BudgetView: View {
                             }
                             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                                 Button(role: .destructive) {
-                                    viewModel.deleteBudget(budget)
+                                    withAnimation(.spring(response: 0.35)) {
+                                        viewModel.deleteBudget(budget)
+                                    }
                                 } label: {
                                     Label("Supprimer", systemImage: "trash")
                                 }
@@ -94,21 +107,22 @@ struct BudgetView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
+                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
                         showAddBudget = true
                     } label: {
-                        Image(systemName: "plus")
-                            .fontWeight(.semibold)
+                        Image(systemName: "plus.circle.fill")
+                            .font(.system(size: 22))
+                            .symbolRenderingMode(.hierarchical)
+                            .foregroundStyle(.appBlue)
                     }
                 }
             }
-            // Ajout d'un budget
             .sheet(isPresented: $showAddBudget) {
                 BudgetFormSheet(viewModel: viewModel, budgetToEdit: nil)
                     .presentationDetents([.medium])
                     .presentationDragIndicator(.visible)
                     .presentationCornerRadius(32)
             }
-            // Édition d'un budget
             .sheet(item: $budgetToEdit) { budget in
                 BudgetFormSheet(viewModel: viewModel, budgetToEdit: budget)
                     .presentationDetents([.medium])
@@ -117,69 +131,89 @@ struct BudgetView: View {
             }
         }
     }
-    
+
+    // MARK: - Overview Card with Activity Ring
+
     private var overviewCard: some View {
         let totalBudget = viewModel.budgets.filter(\.isActive).reduce(0) { $0 + $1.limit }
         let totalSpent  = viewModel.budgets.filter(\.isActive).reduce(0) { $0 + viewModel.budgetProgress(for: $1).spent }
         let pct         = totalBudget > 0 ? (totalSpent / totalBudget) * 100 : 0
         let remaining   = max(totalBudget - totalSpent, 0)
-        
+        let ringColor: [Color] = pct > 90 ? [.appRed, .appOrange] : pct > 60 ? [.appOrange, .appYellow] : [.appGreen, .appCyan]
+
         return VStack(spacing: 20) {
-            HStack(spacing: 24) {
-                // Anneau de progression
+            HStack(spacing: 28) {
+                // Activity Ring
                 ZStack {
+                    // Background ring
                     Circle()
-                        .stroke(Color.secondary.opacity(0.15), lineWidth: 10)
-                        .frame(width: 90, height: 90)
+                        .stroke(Color.secondary.opacity(0.1), lineWidth: 12)
+                        .frame(width: 100, height: 100)
+
+                    // Progress ring
                     Circle()
                         .trim(from: 0, to: CGFloat(min(pct, 100)) / 100)
                         .stroke(
-                            LinearGradient(
-                                colors: pct > 90 ? [.appRed, .appOrange] : [.appGreen, .appCyan],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
+                            AngularGradient(
+                                colors: ringColor + [ringColor.first!],
+                                center: .center,
+                                startAngle: .degrees(0),
+                                endAngle: .degrees(360)
                             ),
-                            style: StrokeStyle(lineWidth: 10, lineCap: .round)
+                            style: StrokeStyle(lineWidth: 12, lineCap: .round)
                         )
-                        .frame(width: 90, height: 90)
+                        .frame(width: 100, height: 100)
                         .rotationEffect(.degrees(-90))
-                        .animation(.spring(response: 0.8), value: pct)
-                    
+                        .animation(.spring(response: 1.0, dampingFraction: 0.7), value: pct)
+
+                    // Center label
                     VStack(spacing: 1) {
                         Text("\(Int(pct))%")
-                            .font(.system(size: 19, weight: .bold, design: .rounded))
-                            .foregroundColor(.primary)
+                            .font(.system(size: 22, weight: .bold, design: .rounded))
+                            .foregroundStyle(.primary)
                         Text("utilisé")
-                            .font(.system(size: 9, weight: .medium))
-                            .foregroundColor(.secondary)
+                            .font(.system(size: 10, weight: .medium))
+                            .foregroundStyle(.secondary)
                     }
                 }
-                
-                VStack(alignment: .leading, spacing: 12) {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Budget total").font(.system(size: 12)).foregroundColor(.secondary)
+
+                // Stats
+                VStack(alignment: .leading, spacing: 14) {
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text("Budget total")
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundStyle(.secondary)
                         Text(viewModel.formatAmount(totalBudget))
                             .font(.system(size: 22, weight: .bold, design: .rounded))
-                            .foregroundColor(.primary)
                             .lineLimit(1)
-                            .minimumScaleFactor(0.4)
+                            .minimumScaleFactor(0.5)
                     }
                     HStack(spacing: 20) {
-                        VStack(alignment: .leading, spacing: 1) {
-                            Text("Dépensé").font(.system(size: 11)).foregroundColor(.secondary)
+                        VStack(alignment: .leading, spacing: 2) {
+                            HStack(spacing: 4) {
+                                Circle().fill(Color.appRed).frame(width: 6, height: 6)
+                                Text("Dépensé")
+                                    .font(.system(size: 11, weight: .medium))
+                                    .foregroundStyle(.secondary)
+                            }
                             Text(viewModel.formatAmount(totalSpent))
-                                .font(.system(size: 14, weight: .semibold, design: .rounded))
-                                .foregroundColor(.appRed)
+                                .font(.system(size: 14, weight: .bold, design: .rounded))
+                                .foregroundStyle(.appRed)
                                 .lineLimit(1)
-                                .minimumScaleFactor(0.4)
+                                .minimumScaleFactor(0.5)
                         }
-                        VStack(alignment: .leading, spacing: 1) {
-                            Text("Restant").font(.system(size: 11)).foregroundColor(.secondary)
+                        VStack(alignment: .leading, spacing: 2) {
+                            HStack(spacing: 4) {
+                                Circle().fill(Color.appGreen).frame(width: 6, height: 6)
+                                Text("Restant")
+                                    .font(.system(size: 11, weight: .medium))
+                                    .foregroundStyle(.secondary)
+                            }
                             Text(viewModel.formatAmount(remaining))
-                                .font(.system(size: 14, weight: .semibold, design: .rounded))
-                                .foregroundColor(.appGreen)
+                                .font(.system(size: 14, weight: .bold, design: .rounded))
+                                .foregroundStyle(.appGreen)
                                 .lineLimit(1)
-                                .minimumScaleFactor(0.4)
+                                .minimumScaleFactor(0.5)
                         }
                     }
                 }
@@ -188,134 +222,130 @@ struct BudgetView: View {
         }
         .padding(20)
         .background(Color(UIColor.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
         .padding(.horizontal, 16)
         .padding(.vertical, 8)
     }
 }
 
-// MARK: - Budget Card
+// MARK: - Premium Budget Card
 
-struct BudgetCard: View {
+struct PremiumBudgetCard: View {
     let budget: Budget
     let progress: (spent: Double, percentage: Double)
     let viewModel: FinanceViewModel
-    @State private var appeared = false
     @Environment(\.colorScheme) var colorScheme
-    
+
     private var progressColor: Color {
         progress.percentage > 90 ? .appRed : progress.percentage > 70 ? .appOrange : budget.category.color
     }
-    
+
     var body: some View {
         VStack(spacing: 14) {
             HStack(spacing: 12) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .fill(budget.category.color.opacity(0.12))
-                        .frame(width: 42, height: 42)
+                        .fill(
+                            LinearGradient(
+                                colors: [budget.category.color.opacity(0.18), budget.category.color.opacity(0.08)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(width: 44, height: 44)
                     Image(systemName: budget.category.icon)
                         .font(.system(size: 20, weight: .semibold))
-                        .foregroundColor(budget.category.color)
+                        .foregroundStyle(budget.category.color)
                 }
-                
-                VStack(alignment: .leading, spacing: 2) {
+
+                VStack(alignment: .leading, spacing: 3) {
                     Text(budget.category.rawValue)
-                        .font(.headline)
-                        .foregroundColor(.primary)
+                        .font(.system(size: 16, weight: .bold))
                         .lineLimit(1)
-                        .minimumScaleFactor(0.7)
                     Text(budget.period.rawValue)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.7)
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundStyle(.secondary)
                 }
-                
+
                 Spacer()
-                
-                VStack(alignment: .trailing, spacing: 2) {
+
+                VStack(alignment: .trailing, spacing: 3) {
                     Text(viewModel.formatAmount(progress.spent))
-                        .font(.headline)
-                        .fontWeight(.bold)
-                        .fontDesign(.rounded)
-                        .foregroundColor(.primary)
+                        .font(.system(size: 16, weight: .bold, design: .rounded))
                         .lineLimit(1)
-                        .minimumScaleFactor(0.5)
+                        .minimumScaleFactor(0.6)
                     Text("/ \(budget.formattedLimit)")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundStyle(.secondary)
                         .lineLimit(1)
-                        .minimumScaleFactor(0.5)
+                        .minimumScaleFactor(0.6)
                 }
             }
-            
-            // Barre de progression
+
+            // Progress bar
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: 4)
-                        .fill(Color.secondary.opacity(0.12))
-                        .frame(height: 7)
+                        .fill(Color.secondary.opacity(0.1))
+                        .frame(height: 6)
                     RoundedRectangle(cornerRadius: 4)
-                        .fill(LinearGradient(
-                            colors: [progressColor, progressColor.opacity(0.7)],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        ))
-                        .frame(width: geo.size.width * CGFloat(min(progress.percentage, 100) / 100), height: 7)
+                        .fill(
+                            LinearGradient(
+                                colors: [progressColor, progressColor.opacity(0.6)],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
+                        .frame(width: geo.size.width * CGFloat(min(progress.percentage, 100) / 100), height: 6)
                         .animation(.spring(response: 0.6), value: progress.percentage)
                 }
             }
-            .frame(height: 7)
-            
+            .frame(height: 6)
+
             HStack {
                 if progress.percentage > 90 {
-                    Label {
+                    HStack(spacing: 4) {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .font(.system(size: 11))
+                            .foregroundStyle(.appRed)
                         Text("\(Int(progress.percentage))% utilisé")
-                            .font(.caption)
-                            .fontWeight(.medium)
-                            .foregroundColor(.appRed)
-                    } icon: {
-                        Image(systemName: "exclamationmark.circle.fill")
-                            .foregroundColor(.appRed)
-                            .font(.caption)
+                            .font(.system(size: 12, weight: .bold))
+                            .foregroundStyle(.appRed)
                     }
                 } else {
                     Text("\(Int(progress.percentage))% utilisé")
-                        .font(.caption)
-                        .fontWeight(.medium)
-                        .foregroundColor(.secondary)
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(.secondary)
                 }
                 Spacer()
-                Text("Il reste \(viewModel.formatAmount(max(budget.limit - progress.spent, 0)))")
-                    .font(.caption)
-                    .fontWeight(.medium)
-                    .foregroundColor(.appGreen)
+                Text("Reste \(viewModel.formatAmount(max(budget.limit - progress.spent, 0)))")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(.appGreen)
             }
         }
         .padding(.vertical, 4)
     }
 }
 
-// MARK: - Budget Form Sheet (Ajout ET Édition)
+// MARK: - Budget Form Sheet (Add & Edit)
 
 struct BudgetFormSheet: View {
     @ObservedObject var viewModel: FinanceViewModel
     @Environment(\.dismiss) var dismiss
-    
-    let budgetToEdit: Budget?   // nil = nouveau budget
-    
+
+    let budgetToEdit: Budget?
+
     @State private var category: TransactionCategory = .food
     @State private var limitText: String = ""
     @State private var period: BudgetPeriod = .monthly
     @FocusState private var limitFocused: Bool
-    
+
     private var isEditing: Bool { budgetToEdit != nil }
-    
+
     private var canSave: Bool {
         (Double(limitText.replacingOccurrences(of: ",", with: ".")) ?? 0) > 0
     }
-    
+
     var body: some View {
         NavigationView {
             Form {
@@ -328,12 +358,12 @@ struct BudgetFormSheet: View {
                     .pickerStyle(.wheel)
                     .frame(height: 130)
                 }
-                
+
                 Section(header: Text("Limite")) {
                     HStack {
                         Text(viewModel.currencySymbol)
                             .font(.system(size: 20, weight: .semibold, design: .rounded))
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
                         TextField("0,00", text: $limitText)
                             .font(.system(size: 28, weight: .bold, design: .rounded))
                             .keyboardType(.decimalPad)
@@ -341,7 +371,7 @@ struct BudgetFormSheet: View {
                     }
                     .padding(.vertical, 4)
                 }
-                
+
                 Section(header: Text("Fréquence")) {
                     Picker("Période", selection: $period) {
                         ForEach(BudgetPeriod.allCases, id: \.self) { p in
@@ -356,7 +386,7 @@ struct BudgetFormSheet: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Annuler") { dismiss() }
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
@@ -369,12 +399,11 @@ struct BudgetFormSheet: View {
                         } else {
                             viewModel.addBudget(Budget(category: category, limit: limit, period: period))
                         }
-                        let impact = UIImpactFeedbackGenerator(style: .medium)
-                        impact.impactOccurred()
+                        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                         dismiss()
                     } label: {
                         Text(isEditing ? "Enregistrer" : "Ajouter")
-                            .fontWeight(.semibold)
+                            .fontWeight(.bold)
                     }
                     .disabled(!canSave)
                 }
@@ -391,6 +420,17 @@ struct BudgetFormSheet: View {
                 }
             }
         }
+    }
+}
+
+// Keep BudgetCard for backward compat
+struct BudgetCard: View {
+    let budget: Budget
+    let progress: (spent: Double, percentage: Double)
+    let viewModel: FinanceViewModel
+
+    var body: some View {
+        PremiumBudgetCard(budget: budget, progress: progress, viewModel: viewModel)
     }
 }
 

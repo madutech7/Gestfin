@@ -2,52 +2,69 @@
 //  TransactionRow.swift
 //  Gestfina
 //
-//  Ligne de transaction — Adaptive Light/Dark
+//  Ligne de transaction — Design premium Apple-native
 //
 
 import SwiftUI
 
 struct TransactionRow: View {
     let transaction: Transaction
+    @State private var appeared = false
+
     var body: some View {
-        HStack(spacing: 16) {
-            // Icône catégorie
+        HStack(spacing: 14) {
+            // Category icon with subtle gradient background
             ZStack {
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(transaction.category.color.opacity(0.15))
-                    .frame(width: 42, height: 42)
-                
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                transaction.category.color.opacity(0.18),
+                                transaction.category.color.opacity(0.08)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: 44, height: 44)
+
                 Image(systemName: transaction.category.icon)
-                    .font(.system(size: 20, weight: .semibold))
-                    .foregroundColor(transaction.category.color)
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundStyle(transaction.category.color)
             }
-            
-            VStack(alignment: .leading, spacing: 2) {
+
+            VStack(alignment: .leading, spacing: 3) {
                 Text(transaction.title)
-                    .font(.headline)
-                    .foregroundColor(.primary)
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundStyle(.primary)
                     .lineLimit(1)
-                
-                HStack(spacing: 4) {
+
+                HStack(spacing: 5) {
                     Text(transaction.category.rawValue)
+                        .font(.system(size: 13, weight: .medium))
                     Text("·")
+                        .font(.system(size: 13, weight: .bold))
                     Text(transaction.date.relativeFormatted)
+                        .font(.system(size: 13))
                 }
-                .font(.subheadline)
-                .foregroundColor(.secondary)
+                .foregroundStyle(.secondary)
                 .lineLimit(1)
-                .minimumScaleFactor(0.7)
             }
-            
+
             Spacer()
-            
-            Text(transaction.formattedAmount)
-                .font(.headline)
-                .fontWeight(.bold)
-                .fontDesign(.rounded)
-                .foregroundColor(transaction.type == .income ? .appGreen : .primary)
-                .lineLimit(1)
-                .minimumScaleFactor(0.4)
+
+            VStack(alignment: .trailing, spacing: 2) {
+                Text(transaction.formattedAmount)
+                    .font(.system(size: 16, weight: .bold, design: .rounded))
+                    .foregroundStyle(transaction.type == .income ? .appGreen : .primary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.5)
+
+                // Subtle type indicator
+                Text(transaction.type == .income ? "Revenu" : "Dépense")
+                    .font(.system(size: 10, weight: .medium))
+                    .foregroundStyle(transaction.type == .income ? Color.appGreen.opacity(0.7) : Color.secondary.opacity(0.6))
+            }
         }
         .padding(.vertical, 4)
         .contextMenu {

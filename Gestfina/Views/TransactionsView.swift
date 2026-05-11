@@ -2,7 +2,7 @@
 //  TransactionsView.swift
 //  Gestfina
 //
-//  Liste des transactions — Style iOS natif professionnel
+//  Liste des transactions — Design premium Apple-native
 //
 
 import SwiftUI
@@ -12,7 +12,7 @@ struct TransactionsView: View {
     @State private var showDeleteAlert = false
     @State private var transactionToDelete: Transaction?
     @Environment(\.colorScheme) var colorScheme
-    
+
     var body: some View {
         NavigationView {
             List {
@@ -20,20 +20,23 @@ struct TransactionsView: View {
                 Section {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 8) {
-                            FilterChip(title: "Tout", isSelected: viewModel.selectedFilter == nil, color: .appBlue) {
+                            PremiumFilterChip(title: "Tout", isSelected: viewModel.selectedFilter == nil, color: .appBlue) {
                                 viewModel.selectedFilter = nil
                             }
-                            FilterChip(title: "Revenus", isSelected: viewModel.selectedFilter == .income, color: .appGreen) {
+                            PremiumFilterChip(title: "Revenus", isSelected: viewModel.selectedFilter == .income, color: .appGreen) {
                                 viewModel.selectedFilter = .income
                             }
-                            FilterChip(title: "Dépenses", isSelected: viewModel.selectedFilter == .expense, color: .appRed) {
+                            PremiumFilterChip(title: "Dépenses", isSelected: viewModel.selectedFilter == .expense, color: .appRed) {
                                 viewModel.selectedFilter = .expense
                             }
-                            
-                            Divider().frame(height: 20)
-                            
+
+                            Rectangle()
+                                .fill(Color.secondary.opacity(0.2))
+                                .frame(width: 1, height: 20)
+                                .padding(.horizontal, 4)
+
                             ForEach(FinanceViewModel.TimePeriod.allCases, id: \.self) { period in
-                                FilterChip(title: period.rawValue, isSelected: viewModel.selectedPeriod == period, color: .appBlue) {
+                                PremiumFilterChip(title: period.rawValue, isSelected: viewModel.selectedPeriod == period, color: .appBlue) {
                                     viewModel.selectedPeriod = period
                                 }
                             }
@@ -42,68 +45,87 @@ struct TransactionsView: View {
                     }
                 }
                 .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
-                
-                // Résumé rapide
+
+                // Summary bar
                 if !viewModel.filteredTransactions.isEmpty {
                     Section {
-                        HStack {
-                            Label {
+                        HStack(spacing: 16) {
+                            HStack(spacing: 6) {
+                                Image(systemName: "number")
+                                    .font(.system(size: 13, weight: .bold))
+                                    .foregroundStyle(.appBlue)
                                 Text("\(viewModel.filteredTransactions.count) opérations")
-                                    .font(.system(size: 14, weight: .medium))
-                                    .foregroundColor(.secondary)
-                            } icon: {
-                                Image(systemName: "list.bullet")
-                                    .foregroundColor(.appBlue)
+                                    .font(.system(size: 14, weight: .semibold))
+                                    .foregroundStyle(.secondary)
                             }
+
                             Spacer()
-                            Text("Solde : \(viewModel.formatAmount(viewModel.filteredTransactions.reduce(0) { $0 + $1.signedAmount }))")
-                                .font(.system(size: 14, weight: .semibold, design: .rounded))
-                                .foregroundColor(.primary)
+
+                            let netBalance = viewModel.filteredTransactions.reduce(0) { $0 + $1.signedAmount }
+                            HStack(spacing: 4) {
+                                Image(systemName: netBalance >= 0 ? "arrow.up.right" : "arrow.down.right")
+                                    .font(.system(size: 10, weight: .bold))
+                                Text(viewModel.formatAmount(netBalance))
+                                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                            }
+                            .foregroundStyle(netBalance >= 0 ? .appGreen : .appRed)
                         }
                     }
                 }
-                
-                // Transactions
+
+                // Transactions list
                 if viewModel.filteredTransactions.isEmpty {
                     Section {
-                        VStack(spacing: 16) {
+                        VStack(spacing: 20) {
                             ZStack {
                                 Circle()
-                                    .fill(Color.appBlue.opacity(0.1))
+                                    .fill(
+                                        LinearGradient(
+                                            colors: [Color.appBlue.opacity(0.12), Color.appCyan.opacity(0.08)],
+                                            startPoint: .topLeading,
+                                            endPoint: .bottomTrailing
+                                        )
+                                    )
                                     .frame(width: 80, height: 80)
-                                Image(systemName: "tray.fill")
-                                    .font(.system(size: 36))
-                                    .foregroundColor(.appBlue)
-                                    .shadow(color: Color.appBlue.opacity(0.5), radius: 10, x: 0, y: 5)
+                                Image(systemName: "tray")
+                                    .font(.system(size: 32, weight: .light))
+                                    .foregroundStyle(.appBlue)
                             }
-                            Text("Aucune transaction")
-                                .font(.system(size: 20, weight: .bold, design: .rounded))
-                                .foregroundColor(.primary)
-                            Text("Ajoutez votre première transaction via le bouton + pour l'afficher ici.")
-                                .font(.system(size: 15))
-                                .foregroundColor(.secondary)
-                                .multilineTextAlignment(.center)
-                                .padding(.horizontal, 20)
+                            VStack(spacing: 6) {
+                                Text("Aucune transaction")
+                                    .font(.system(size: 20, weight: .bold, design: .rounded))
+                                    .foregroundStyle(.primary)
+                                Text("Ajoutez votre première opération\nvia le bouton +")
+                                    .font(.system(size: 14))
+                                    .foregroundStyle(.secondary)
+                                    .multilineTextAlignment(.center)
+                            }
                         }
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 60)
-                        .background(Color(UIColor.secondarySystemGroupedBackground))
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .padding(.vertical, 50)
                     }
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
                 } else {
-                    Section {
-                        ForEach(viewModel.filteredTransactions) { transaction in
-                            TransactionRow(transaction: transaction)
-                                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                    Button(role: .destructive) {
-                                        transactionToDelete = transaction
-                                        showDeleteAlert = true
-                                    } label: {
-                                        Label("Supprimer", systemImage: "trash")
+                    // Group by date
+                    let grouped = Dictionary(grouping: viewModel.filteredTransactions) { transaction in
+                        Calendar.current.startOfDay(for: transaction.date)
+                    }
+                    let sortedKeys = grouped.keys.sorted(by: >)
+
+                    ForEach(sortedKeys, id: \.self) { date in
+                        Section(header: Text(date.relativeFormatted).textCase(nil)) {
+                            ForEach(grouped[date]!) { transaction in
+                                TransactionRow(transaction: transaction)
+                                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                        Button(role: .destructive) {
+                                            transactionToDelete = transaction
+                                            showDeleteAlert = true
+                                        } label: {
+                                            Label("Supprimer", systemImage: "trash")
+                                        }
                                     }
-                                }
+                            }
                         }
                     }
                 }
@@ -118,7 +140,11 @@ struct TransactionsView: View {
         .alert("Supprimer cette transaction ?", isPresented: $showDeleteAlert) {
             Button("Annuler", role: .cancel) { }
             Button("Supprimer", role: .destructive) {
-                if let t = transactionToDelete { viewModel.deleteTransaction(t) }
+                if let t = transactionToDelete {
+                    withAnimation(.spring(response: 0.35)) {
+                        viewModel.deleteTransaction(t)
+                    }
+                }
             }
         } message: {
             if let t = transactionToDelete {
@@ -128,28 +154,42 @@ struct TransactionsView: View {
     }
 }
 
-// MARK: - Filter Chip
+// MARK: - Premium Filter Chip
 
+struct PremiumFilterChip: View {
+    let title: String
+    let isSelected: Bool
+    var color: Color = .appBlue
+    let action: () -> Void
+
+    var body: some View {
+        Button {
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) { action() }
+        } label: {
+            Text(title)
+                .font(.system(size: 13, weight: isSelected ? .bold : .medium))
+                .foregroundStyle(isSelected ? .white : .primary)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 8)
+                .background(
+                    Capsule()
+                        .fill(isSelected ? color : Color(UIColor.tertiarySystemGroupedBackground))
+                )
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+// Keep FilterChip as alias for backward compat
 struct FilterChip: View {
     let title: String
     let isSelected: Bool
     var color: Color = .appBlue
     let action: () -> Void
-    
+
     var body: some View {
-        Button {
-            withAnimation(.spring(response: 0.25, dampingFraction: 0.7)) { action() }
-        } label: {
-            Text(title)
-                .font(.system(size: 13, weight: isSelected ? .semibold : .medium))
-                .foregroundColor(isSelected ? .white : .secondary)
-                .padding(.horizontal, 14)
-                .padding(.vertical, 7)
-                .background(
-                    Capsule().fill(isSelected ? color : Color(UIColor.tertiarySystemGroupedBackground))
-                )
-        }
-        .buttonStyle(.plain)
+        PremiumFilterChip(title: title, isSelected: isSelected, color: color, action: action)
     }
 }
 
