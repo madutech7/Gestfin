@@ -1,55 +1,189 @@
 //
 //  DashboardView.swift
-//  SamaXaalis — Design Apple Wallet / Health
+//  SamaXaalis
+//
+//  Architecture identique aux apps Apple (Stocks, Santé, Wallet)
+//  — Grande typo, fond système, composants natifs, Swift Charts
 //
 
 import SwiftUI
+import Charts
 
 struct DashboardView: View {
     @EnvironmentObject var viewModel: FinanceViewModel
-    @State private var showSettings = false
-    @State private var balanceVisible = true
-    @State private var animateIn = false
+    @State private var showSettings    = false
+    @State private var balanceVisible  = true
+    @State private var animateIn       = false
     @Environment(\.colorScheme) var colorScheme
 
-    let authManager: AuthenticationManager
+    let authManager:  AuthenticationManager
     let notifManager: NotificationManager
 
     // ─────────────────────────────────────────────────────────────────
     var body: some View {
         NavigationView {
-            ScrollView(showsIndicators: false) {
-                VStack(spacing: 0) {
+            List {
 
-                    // 1 ▸ Carte Solde (Wallet-style)
-                    balanceCard
-                        .padding(.horizontal, 16)
-                        .padding(.top, 8)
+                // ─── Bloc Solde (flottant, pas de carte) ─────────────
+                Section {
+                    VStack(spacing: 6) {
+                        Text("Solde disponible")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
 
-                    // 2 ▸ Tuiles Revenus / Dépenses (Health-style)
-                    statTiles
-                        .padding(.horizontal, 16)
-                        .padding(.top, 12)
+                        // Solde géant — style Apple Stocks
+                        Text(balanceVisible
+                             ? viewModel.formatAmount(viewModel.totalBalance)
+                             : "••••••")
+                            .font(.system(size: 52, weight: .bold, design: .rounded))
+                            .foregroundStyle(.primary)
+                            .contentTransition(.numericText())
+                            .animation(.spring(response: 0.4), value: viewModel.totalBalance)
+                            .minimumScaleFactor(0.45)
+                            .lineLimit(1)
 
-                    // 3 ▸ Graphique Semaine
-                    chartSection
-                        .padding(.horizontal, 16)
-                        .padding(.top, 12)
+                        // Indicateur épargne — style Stocks (+/-)
+                        let rate = viewModel.savingsRate
+                        let positive = rate >= 0
+                        Label(
+                            "\(positive ? "+" : "")\(viewModel.formatPercentage(rate)) ce mois",
+                            systemImage: positive ? "arrow.up.right" : "arrow.down.right"
+                        )
+                        .font(.footnote.weight(.semibold))
+                        .foregroundStyle(positive ? Color(UIColor.systemGreen) : Color(UIColor.systemRed))
+                        .padding(.top, 2)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.vertical, 16)
+                }
+                .listRowBackground(Color.clear)
+                .listRowInsets(EdgeInsets())
 
-                    // 4 ▸ Transactions Récentes
-                    recentSection
-                        .padding(.top, 12)
+                // ─── Revenus / Dépenses ──────────────────────────────
+                Section {
+                    HStack(spacing: 0) {
+                        cashFlowCell(
+                            icon:  "arrow.down.left.circle.fill",
+                            label: "Revenus",
+                            value: viewModel.formatAmount(viewModel.totalIncome),
+                            color: Color(UIColor.systemGreen)
+                        )
+                        Rectangle()
+                            .fill(Color(UIColor.separator))
+                            .frame(width: 0.5, height: 52)
+                        cashFlowCell(
+                            icon:  "arrow.up.right.circle.fill",
+                            label: "Dépenses",
+                            value: viewModel.formatAmount(viewModel.totalExpenses),
+                            color: Color(UIColor.systemRed)
+                        )
+                    }
+                    .padding(.vertical, 4)
+                }
 
-                    Spacer(minLength: 32)
+                // ─── Graphique (Swift Charts — niveau Apple) ─────────
+                Section {
+                    VStack(alignment: .leading, spacing: 14) {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Dépenses")
+                                    .font(.footnote)
+                                    .foregroundStyle(.secondary)
+                                Text(viewModel.formatAmount(viewModel.totalExpenses))
+                                    .font(.title3.weight(.semibold))
+                                    .fontDesign(.rounded)
+                            }
+                            Spacer()
+                            Menu {
+                                ForEach(FinanceViewModel.TimePeriod.allCases, id: \.self) { p in
+                                    Button(p.rawValue) {
+                                        withAnimation { viewModel.selectedPeriod = p }
+                                    }
+                                }
+                            } label: {
+                                HStack(spacing: 3) {
+                                    Text(viewModel.selectedPeriod.rawValue)
+                                    Image(systemName: "chevron.down")
+                                        .imageScale(.small)
+                                }
+                                .font(.subheadline.weight(.medium))
+                                .foregroundStyle(Color(UIColor.systemBlue))
+                            }
+                        }
+
+                        // Swift Charts bar chart
+                        Chart(viewModel.dailyExpenses, id: \.day) { item in
+                            BarMark(
+                                x: .value("Jour", item.day),
+                                y: .value("Montant", item.amount)
+                            )
+                            .foregroundStyle(Color(UIColor.systemBlue).gradient)
+                            .cornerRadius(5)
+                        }
+                        .frame(height: 120)
+                        .chartXAxis {
+                            AxisMarks { _ in
+                                AxisValueLabel()
+                                    .font(.system(size: 10, weight: .medium))
+                                    .foregroundStyle(Color.secondary)
+                            }
+                        }
+                        .chartYAxis(.hidden)
+                    }
+                    .padding(.vertical, 6)
+                }
+
+                // ─── Catégories ──────────────────────────────────────
+                Section(header: Text("Par catégorie")) {
+                    if viewModel.expensesByCategory.isEmpty {
+                        Label("Aucune dépense", systemImage: "chart.pie")
+                            .foregroundStyle(.secondary)
+                            .font(.subheadline)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .padding(.vertical, 8)
+                    } else {
+                        ForEach(viewModel.expensesByCategory.prefix(5), id: \.category) { item in
+                            categoryRow(item: item)
+                        }
+                    }
+                }
+
+                // ─── Transactions récentes ───────────────────────────
+                Section(header: Text("Récentes")) {
+                    if viewModel.recentTransactions.isEmpty {
+                        Label("Appuyez sur + pour commencer", systemImage: "plus.circle")
+                            .foregroundStyle(.secondary)
+                            .font(.subheadline)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .padding(.vertical, 8)
+                    } else {
+                        ForEach(viewModel.recentTransactions) { t in
+                            TransactionRow(transaction: t)
+                        }
+                    }
                 }
             }
-            .background(Color(UIColor.systemGroupedBackground).ignoresSafeArea())
+            .listStyle(.insetGrouped)
             .navigationTitle("Bonjour, \(viewModel.userName)")
             .navigationBarTitleDisplayMode(.large)
-            .toolbar { toolbarContent }
-            .onAppear {
-                withAnimation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.1)) {
-                    animateIn = true
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    HStack(spacing: 16) {
+                        Button {
+                            Haptics.play(.light)
+                            withAnimation(.spring(response: 0.3)) { balanceVisible.toggle() }
+                        } label: {
+                            Image(systemName: balanceVisible ? "eye" : "eye.slash")
+                                .foregroundStyle(.secondary)
+                        }
+                        Button {
+                            Haptics.play(.light)
+                            showSettings = true
+                        } label: {
+                            Image(systemName: "gearshape")
+                                .foregroundStyle(.secondary)
+                        }
+                    }
                 }
             }
         }
@@ -62,296 +196,80 @@ struct DashboardView: View {
     }
 
     // ─────────────────────────────────────────────────────────────────
-    // MARK: – Toolbar
+    // MARK: – Cash Flow Cell
     // ─────────────────────────────────────────────────────────────────
-    @ToolbarContentBuilder
-    private var toolbarContent: some ToolbarContent {
-        ToolbarItem(placement: .navigationBarTrailing) {
-            HStack(spacing: 12) {
-                Button {
-                    Haptics.play(.light)
-                    withAnimation(.spring(response: 0.3)) { balanceVisible.toggle() }
-                } label: {
-                    Image(systemName: balanceVisible ? "eye" : "eye.slash")
-                        .foregroundStyle(.secondary)
-                }
-                Button {
-                    Haptics.play(.light)
-                    showSettings = true
-                } label: {
-                    Image(systemName: "gearshape")
-                        .foregroundStyle(.secondary)
-                }
-            }
-        }
-    }
-
-    // ─────────────────────────────────────────────────────────────────
-    // MARK: – 1. Carte Solde (style Apple Wallet)
-    // ─────────────────────────────────────────────────────────────────
-    private var balanceCard: some View {
-        ZStack(alignment: .bottomLeading) {
-            // Fond sombre (Wallet-inspired dark card)
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .fill(colorScheme == .dark
-                      ? Color(UIColor.secondarySystemBackground)
-                      : Color(hex: "1C1C1E"))
-
-            // Contenu
-            VStack(alignment: .leading, spacing: 0) {
-                // Ligne supérieure : label + chip épargne
-                HStack(alignment: .firstTextBaseline) {
-                    Text("Solde disponible")
-                        .font(.footnote)
-                        .fontWeight(.medium)
-                        .foregroundStyle(.white.opacity(0.55))
-                    Spacer()
-                    // Capsule épargne
-                    let rate = viewModel.savingsRate
-                    HStack(spacing: 3) {
-                        Image(systemName: rate >= 0 ? "arrow.up.right" : "arrow.down.right")
-                            .font(.system(size: 9, weight: .bold))
-                        Text("\(viewModel.formatPercentage(abs(rate)))")
-                            .font(.system(size: 11, weight: .semibold))
-                    }
-                    .foregroundStyle(rate >= 0 ? Color(UIColor.systemGreen) : Color(UIColor.systemRed))
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 3)
-                    .background(
-                        (rate >= 0 ? Color(UIColor.systemGreen) : Color(UIColor.systemRed)).opacity(0.2)
-                    )
-                    .clipShape(Capsule())
-                }
-                .padding(.top, 22)
-
-                // Montant principal
-                Text(balanceVisible
-                     ? viewModel.formatAmount(viewModel.totalBalance)
-                     : "••••••")
-                    .font(.system(size: 42, weight: .bold, design: .rounded))
-                    .foregroundStyle(.white)
-                    .contentTransition(.numericText())
-                    .animation(.spring(response: 0.4), value: viewModel.totalBalance)
-                    .minimumScaleFactor(0.5)
-                    .lineLimit(1)
-                    .padding(.top, 6)
-
-                Spacer(minLength: 20)
-
-                // Séparateur
-                Divider()
-                    .overlay(Color.white.opacity(0.12))
-
-                // Revenus / Dépenses inline
-                HStack(spacing: 0) {
-                    inlineStatView(
-                        label: "Revenus",
-                        value: viewModel.formatAmount(viewModel.totalIncome),
-                        color: Color(UIColor.systemGreen)
-                    )
-                    Rectangle()
-                        .fill(Color.white.opacity(0.12))
-                        .frame(width: 1, height: 36)
-                    inlineStatView(
-                        label: "Dépenses",
-                        value: viewModel.formatAmount(viewModel.totalExpenses),
-                        color: Color(UIColor.systemRed)
-                    )
-                }
-                .padding(.bottom, 18)
-                .padding(.top, 12)
-            }
-            .padding(.horizontal, 20)
-        }
-        .frame(height: 210)
-        .shadow(color: Color.black.opacity(0.22), radius: 20, x: 0, y: 8)
-        .scaleEffect(animateIn ? 1 : 0.96)
-        .opacity(animateIn ? 1 : 0)
-    }
-
-    private func inlineStatView(label: String, value: String, color: Color) -> some View {
-        VStack(alignment: .center, spacing: 3) {
-            HStack(spacing: 4) {
-                Circle()
-                    .fill(color)
-                    .frame(width: 7, height: 7)
-                Text(label)
-                    .font(.caption2)
-                    .fontWeight(.medium)
-                    .foregroundStyle(.white.opacity(0.5))
-            }
-            Text(value)
-                .font(.system(.callout, design: .rounded).weight(.semibold))
-                .foregroundStyle(.white)
-                .lineLimit(1)
-                .minimumScaleFactor(0.5)
-        }
-        .frame(maxWidth: .infinity)
-    }
-
-    // ─────────────────────────────────────────────────────────────────
-    // MARK: – 2. Tuiles statistiques (style Apple Health)
-    // ─────────────────────────────────────────────────────────────────
-    private var statTiles: some View {
-        let expenses = viewModel.expensesByCategory.prefix(4)
-        return VStack(alignment: .leading, spacing: 10) {
-            Text("Répartition")
-                .font(.title3.weight(.semibold))
-                .foregroundStyle(.primary)
-                .padding(.horizontal, 4)
-
-            if expenses.isEmpty {
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(Color(UIColor.secondarySystemGroupedBackground))
-                    .frame(height: 80)
-                    .overlay(
-                        Label("Aucune dépense", systemImage: "chart.pie")
-                            .foregroundStyle(.secondary)
-                            .font(.subheadline)
-                    )
-            } else {
-                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
-                    ForEach(Array(expenses.enumerated()), id: \.element.category) { _, item in
-                        categoryTile(item: item)
-                    }
-                }
-            }
-        }
-        .opacity(animateIn ? 1 : 0)
-        .offset(y: animateIn ? 0 : 12)
-    }
-
-    private func categoryTile(item: (category: TransactionCategory, amount: Double, percentage: Double)) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 10, style: .continuous)
-                        .fill(item.category.color.opacity(0.15))
-                        .frame(width: 36, height: 36)
-                    Image(systemName: item.category.icon)
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(item.category.color)
-                }
-                Spacer()
-                Text("\(Int(item.percentage))%")
-                    .font(.caption.weight(.bold))
-                    .foregroundStyle(item.category.color)
-            }
-
+    private func cashFlowCell(icon: String, label: String, value: String, color: Color) -> some View {
+        HStack(spacing: 10) {
+            Image(systemName: icon)
+                .font(.system(size: 26))
+                .foregroundStyle(color)
             VStack(alignment: .leading, spacing: 2) {
-                Text(item.category.rawValue)
-                    .font(.caption.weight(.medium))
+                Text(label)
+                    .font(.caption)
                     .foregroundStyle(.secondary)
-                    .lineLimit(1)
-                Text(viewModel.formatAmount(item.amount))
-                    .font(.system(.subheadline, design: .rounded).weight(.bold))
+                Text(value)
+                    .font(.system(.callout, design: .rounded).weight(.semibold))
                     .foregroundStyle(.primary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
             }
-
-            // Mini barre de progression
-            GeometryReader { geo in
-                ZStack(alignment: .leading) {
-                    Capsule().fill(Color.secondary.opacity(0.1)).frame(height: 4)
-                    Capsule()
-                        .fill(item.category.color)
-                        .frame(width: geo.size.width * CGFloat(min(item.percentage / 100, 1)), height: 4)
-                }
-            }
-            .frame(height: 4)
         }
-        .padding(14)
-        .background(Color(UIColor.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 4)
+        .padding(.vertical, 8)
     }
 
     // ─────────────────────────────────────────────────────────────────
-    // MARK: – 3. Graphique semaine
+    // MARK: – Category Row
     // ─────────────────────────────────────────────────────────────────
-    private var chartSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text("Cette semaine")
-                    .font(.title3.weight(.semibold))
-                    .foregroundStyle(.primary)
-                Spacer()
-                Menu {
-                    ForEach(FinanceViewModel.TimePeriod.allCases, id: \.self) { period in
-                        Button(period.rawValue) {
-                            withAnimation { viewModel.selectedPeriod = period }
-                        }
-                    }
-                } label: {
-                    HStack(spacing: 3) {
-                        Text(viewModel.selectedPeriod.rawValue)
-                            .font(.subheadline.weight(.medium))
-                        Image(systemName: "chevron.down")
-                            .font(.system(size: 10, weight: .semibold))
-                    }
-                    .foregroundStyle(Color(UIColor.systemBlue))
+    private func categoryRow(item: (category: TransactionCategory, amount: Double, percentage: Double)) -> some View {
+        HStack(spacing: 14) {
+            // Icône dans carré arrondi (style Apple Raccourcis)
+            ZStack {
+                RoundedRectangle(cornerRadius: 9, style: .continuous)
+                    .fill(item.category.color)
+                    .frame(width: 34, height: 34)
+                Image(systemName: item.category.icon)
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(.white)
+            }
+
+            // Texte + barre
+            VStack(alignment: .leading, spacing: 5) {
+                HStack(alignment: .firstTextBaseline) {
+                    Text(item.category.rawValue)
+                        .font(.subheadline.weight(.medium))
+                        .foregroundStyle(.primary)
+                        .lineLimit(1)
+                    Spacer()
+                    Text(viewModel.formatAmount(item.amount))
+                        .font(.subheadline.weight(.semibold))
+                        .fontDesign(.rounded)
+                        .foregroundStyle(.primary)
                 }
-            }
-            .padding(.horizontal, 4)
-
-            GlassBarChart(data: viewModel.dailyExpenses)
-                .frame(height: 110)
-                .padding(.horizontal, 4)
-                .padding(.vertical, 12)
-                .background(Color(UIColor.secondarySystemGroupedBackground))
-                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-        }
-        .opacity(animateIn ? 1 : 0)
-        .offset(y: animateIn ? 0 : 12)
-    }
-
-    // ─────────────────────────────────────────────────────────────────
-    // MARK: – 4. Transactions Récentes (native List row)
-    // ─────────────────────────────────────────────────────────────────
-    private var recentSection: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            HStack {
-                Text("Récentes")
-                    .font(.title3.weight(.semibold))
-                    .foregroundStyle(.primary)
-                Spacer()
-                Button("Voir tout") {}
-                    .font(.subheadline.weight(.medium))
-                    .foregroundStyle(Color(UIColor.systemBlue))
-            }
-            .padding(.horizontal, 20)
-            .padding(.bottom, 10)
-
-            if viewModel.recentTransactions.isEmpty {
-                Label("Appuyez sur + pour commencer", systemImage: "plus.circle")
-                    .foregroundStyle(.secondary)
-                    .font(.subheadline)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding(.vertical, 28)
-            } else {
-                VStack(spacing: 0) {
-                    ForEach(Array(viewModel.recentTransactions.enumerated()), id: \.element.id) { index, transaction in
-                        TransactionRow(transaction: transaction)
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 2)
-                        if index < viewModel.recentTransactions.count - 1 {
-                            Divider()
-                                .padding(.leading, 70)
-                        }
+                GeometryReader { geo in
+                    ZStack(alignment: .leading) {
+                        Capsule()
+                            .fill(Color(UIColor.systemFill))
+                            .frame(height: 4)
+                        Capsule()
+                            .fill(item.category.color)
+                            .frame(
+                                width: geo.size.width * CGFloat(min(item.percentage / 100, 1)),
+                                height: 4
+                            )
+                            .animation(.spring(response: 0.6, dampingFraction: 0.8), value: item.percentage)
                     }
                 }
-                .background(Color(UIColor.secondarySystemGroupedBackground))
-                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                .padding(.horizontal, 16)
+                .frame(height: 4)
             }
         }
-        .opacity(animateIn ? 1 : 0)
-        .offset(y: animateIn ? 0 : 12)
+        .padding(.vertical, 4)
     }
 }
 
 // ─────────────────────────────────────────────────────────────────────
-// MARK: – GlassBarChart (épuré, pas de fond custom)
+// MARK: – GlassBarChart  (still used by StatisticsView)
 // ─────────────────────────────────────────────────────────────────────
 
 struct GlassBarChart: View {
@@ -362,8 +280,8 @@ struct GlassBarChart: View {
     var body: some View {
         HStack(alignment: .bottom, spacing: 6) {
             ForEach(Array(data.enumerated()), id: \.offset) { index, item in
-                let isLast = index == data.count - 1
-                let ratio = maxAmount > 0 ? CGFloat(item.amount / maxAmount) : 0
+                let isLast  = index == data.count - 1
+                let ratio   = maxAmount > 0 ? CGFloat(item.amount / maxAmount) : 0.05
 
                 VStack(spacing: 5) {
                     GeometryReader { geo in
@@ -378,7 +296,7 @@ struct GlassBarChart: View {
                     }
                     Text(item.day)
                         .font(.system(size: 10, weight: isLast ? .bold : .regular))
-                        .foregroundStyle(isLast ? Color(UIColor.systemBlue) : .secondary)
+                        .foregroundStyle(isLast ? Color(UIColor.systemBlue) : Color.secondary)
                 }
                 .frame(maxWidth: .infinity)
             }
@@ -387,23 +305,23 @@ struct GlassBarChart: View {
 }
 
 // ─────────────────────────────────────────────────────────────────────
-// MARK: – GlassCategoryRow (utilisé dans BudgetView)
+// MARK: – GlassCategoryRow  (utilisé par BudgetView / StatisticsView)
 // ─────────────────────────────────────────────────────────────────────
 
 struct GlassCategoryRow: View {
-    let category: TransactionCategory
-    let amount: String
+    let category:   TransactionCategory
+    let amount:     String
     let percentage: Double
 
     var body: some View {
         HStack(spacing: 14) {
             ZStack {
-                RoundedRectangle(cornerRadius: 10, style: .continuous)
-                    .fill(category.color.opacity(0.14))
-                    .frame(width: 36, height: 36)
+                RoundedRectangle(cornerRadius: 9, style: .continuous)
+                    .fill(category.color)
+                    .frame(width: 34, height: 34)
                 Image(systemName: category.icon)
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(category.color)
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(.white)
             }
             VStack(alignment: .leading, spacing: 4) {
                 HStack {
@@ -413,10 +331,15 @@ struct GlassCategoryRow: View {
                 }
                 GeometryReader { geo in
                     ZStack(alignment: .leading) {
-                        Capsule().fill(Color.secondary.opacity(0.1)).frame(height: 4)
+                        Capsule()
+                            .fill(Color(UIColor.systemFill))
+                            .frame(height: 4)
                         Capsule()
                             .fill(category.color)
-                            .frame(width: geo.size.width * CGFloat(min(percentage / 100, 1)), height: 4)
+                            .frame(
+                                width: geo.size.width * CGFloat(min(percentage / 100, 1)),
+                                height: 4
+                            )
                     }
                 }
                 .frame(height: 4)
@@ -428,7 +351,7 @@ struct GlassCategoryRow: View {
 
 #Preview {
     DashboardView(
-        authManager: AuthenticationManager(),
+        authManager:  AuthenticationManager(),
         notifManager: NotificationManager()
     )
     .environmentObject(FinanceViewModel())
