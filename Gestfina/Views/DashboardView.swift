@@ -218,7 +218,7 @@ struct DashboardView: View {
                 Spacer()
                 // Period pills
                 HStack(spacing: 6) {
-                    ForEach(Array(FinanceViewModel.TimePeriod.allCases), id: \.self) { p in
+                    ForEach(FinanceViewModel.TimePeriod.allCases as [FinanceViewModel.TimePeriod], id: \.self) { p in
                         let sel = viewModel.selectedPeriod == p
                         Button {
                             Haptics.play(.selection)
