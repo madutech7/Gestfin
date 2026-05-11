@@ -137,8 +137,7 @@ struct TabBarButton: View {
         }
         .buttonStyle(.plain)
     }
-
-
+}
 
 #Preview {
     MainTabView(authManager: AuthenticationManager(), notifManager: NotificationManager())
