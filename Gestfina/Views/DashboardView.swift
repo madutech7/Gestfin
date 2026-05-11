@@ -1,102 +1,55 @@
 //
 //  DashboardView.swift
-//  SamaXaalis
-//
-//  Design Apple HIG — Wallet / Santé style
+//  SamaXaalis — Design Apple Wallet / Health
 //
 
 import SwiftUI
 
 struct DashboardView: View {
     @EnvironmentObject var viewModel: FinanceViewModel
-    @State private var animateIn = false
-    @State private var balanceVisible = true
     @State private var showSettings = false
+    @State private var balanceVisible = true
+    @State private var animateIn = false
     @Environment(\.colorScheme) var colorScheme
 
     let authManager: AuthenticationManager
     let notifManager: NotificationManager
 
+    // ─────────────────────────────────────────────────────────────────
     var body: some View {
         NavigationView {
-            List {
-                // ── SECTION 1 : Solde ──────────────────────────────────
-                Section {
-                    balanceCell
-                }
-                .listRowBackground(Color.clear)
-                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 0) {
 
-                // ── SECTION 2 : Flux ───────────────────────────────────
-                Section {
-                    HStack(spacing: 0) {
-                        flowCell(
-                            title: "Revenus",
-                            value: viewModel.formatAmount(viewModel.totalIncome),
-                            icon: "arrow.down.left",
-                            color: .appGreen
-                        )
-                        Divider().frame(height: 44)
-                        flowCell(
-                            title: "Dépenses",
-                            value: viewModel.formatAmount(viewModel.totalExpenses),
-                            icon: "arrow.up.right",
-                            color: .appRed
-                        )
-                    }
-                }
-                .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+                    // 1 ▸ Carte Solde (Wallet-style)
+                    balanceCard
+                        .padding(.horizontal, 16)
+                        .padding(.top, 8)
 
-                // ── SECTION 3 : Graphique ──────────────────────────────
-                Section(header: sectionHeader("Cette semaine", trailingMenu: periodMenu)) {
-                    GlassBarChart(data: viewModel.dailyExpenses)
-                        .frame(height: 130)
-                        .padding(.vertical, 8)
-                }
+                    // 2 ▸ Tuiles Revenus / Dépenses (Health-style)
+                    statTiles
+                        .padding(.horizontal, 16)
+                        .padding(.top, 12)
 
-                // ── SECTION 4 : Catégories ─────────────────────────────
-                Section(header: sectionHeader("Par catégorie", trailingMenu: nil)) {
-                    if viewModel.expensesByCategory.isEmpty {
-                        emptyCategoryCell
-                    } else {
-                        ForEach(viewModel.expensesByCategory.prefix(5), id: \.category) { item in
-                            categoryCell(item: item)
-                        }
-                    }
-                }
+                    // 3 ▸ Graphique Semaine
+                    chartSection
+                        .padding(.horizontal, 16)
+                        .padding(.top, 12)
 
-                // ── SECTION 5 : Transactions récentes ─────────────────
-                Section(header: sectionHeader("Récentes", trailingMenu: nil)) {
-                    if viewModel.recentTransactions.isEmpty {
-                        emptyTransactionCell
-                    } else {
-                        ForEach(viewModel.recentTransactions) { transaction in
-                            TransactionRow(transaction: transaction)
-                        }
-                    }
+                    // 4 ▸ Transactions Récentes
+                    recentSection
+                        .padding(.top, 12)
+
+                    Spacer(minLength: 32)
                 }
             }
-            .listStyle(.insetGrouped)
+            .background(Color(UIColor.systemGroupedBackground).ignoresSafeArea())
             .navigationTitle("Bonjour, \(viewModel.userName)")
             .navigationBarTitleDisplayMode(.large)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    HStack(spacing: 14) {
-                        Button {
-                            Haptics.play(.light)
-                            withAnimation(.spring(response: 0.3)) { balanceVisible.toggle() }
-                        } label: {
-                            Image(systemName: balanceVisible ? "eye" : "eye.slash")
-                                .foregroundStyle(Color.secondary)
-                        }
-                        Button {
-                            Haptics.play(.light)
-                            showSettings = true
-                        } label: {
-                            Image(systemName: "gearshape")
-                                .foregroundStyle(Color.secondary)
-                        }
-                    }
+            .toolbar { toolbarContent }
+            .onAppear {
+                withAnimation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.1)) {
+                    animateIn = true
                 }
             }
         }
@@ -108,159 +61,301 @@ struct DashboardView: View {
         }
     }
 
-    // ── MARK: Solde Cell ─────────────────────────────────────────────
-
-    private var balanceCell: some View {
-        VStack(spacing: 4) {
-            Text("Solde total")
-                .font(.subheadline)
-                .foregroundStyle(Color.secondary)
-                .frame(maxWidth: .infinity, alignment: .center)
-
-            Text(balanceVisible
-                 ? viewModel.formatAmount(viewModel.totalBalance)
-                 : "••••••")
-                .font(.system(size: 46, weight: .bold, design: .rounded))
-                .foregroundStyle(Color.primary)
-                .contentTransition(.numericText())
-                .animation(.spring(response: 0.4), value: viewModel.totalBalance)
-                .minimumScaleFactor(0.5)
-                .lineLimit(1)
-                .frame(maxWidth: .infinity, alignment: .center)
-
-            // Indicateur épargne
-            let saving = viewModel.savingsRate
-            HStack(spacing: 4) {
-                Image(systemName: saving >= 0 ? "arrow.up.right" : "arrow.down.right")
-                    .font(.system(size: 11, weight: .semibold))
-                Text("\(viewModel.formatPercentage(abs(saving))) d'épargne")
-                    .font(.footnote.weight(.medium))
+    // ─────────────────────────────────────────────────────────────────
+    // MARK: – Toolbar
+    // ─────────────────────────────────────────────────────────────────
+    @ToolbarContentBuilder
+    private var toolbarContent: some ToolbarContent {
+        ToolbarItem(placement: .navigationBarTrailing) {
+            HStack(spacing: 12) {
+                Button {
+                    Haptics.play(.light)
+                    withAnimation(.spring(response: 0.3)) { balanceVisible.toggle() }
+                } label: {
+                    Image(systemName: balanceVisible ? "eye" : "eye.slash")
+                        .foregroundStyle(.secondary)
+                }
+                Button {
+                    Haptics.play(.light)
+                    showSettings = true
+                } label: {
+                    Image(systemName: "gearshape")
+                        .foregroundStyle(.secondary)
+                }
             }
-            .foregroundStyle(saving >= 0 ? Color.appGreen : Color.appRed)
-            .padding(.horizontal, 10)
-            .padding(.vertical, 4)
-            .background((saving >= 0 ? Color.appGreen : Color.appRed).opacity(0.1))
-            .clipShape(Capsule())
-            .padding(.top, 2)
         }
-        .padding(.vertical, 20)
     }
 
-    // ── MARK: Flow Cells ─────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────
+    // MARK: – 1. Carte Solde (style Apple Wallet)
+    // ─────────────────────────────────────────────────────────────────
+    private var balanceCard: some View {
+        ZStack(alignment: .bottomLeading) {
+            // Fond sombre (Wallet-inspired dark card)
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .fill(colorScheme == .dark
+                      ? Color(UIColor.secondarySystemBackground)
+                      : Color(hex: "1C1C1E"))
 
-    private func flowCell(title: String, value: String, icon: String, color: Color) -> some View {
-        VStack(alignment: .center, spacing: 6) {
-            HStack(spacing: 5) {
-                Image(systemName: icon)
-                    .font(.system(size: 12, weight: .bold))
-                    .foregroundStyle(color)
-                Text(title)
-                    .font(.footnote)
-                    .foregroundStyle(Color.secondary)
+            // Contenu
+            VStack(alignment: .leading, spacing: 0) {
+                // Ligne supérieure : label + chip épargne
+                HStack(alignment: .firstTextBaseline) {
+                    Text("Solde disponible")
+                        .font(.footnote)
+                        .fontWeight(.medium)
+                        .foregroundStyle(.white.opacity(0.55))
+                    Spacer()
+                    // Capsule épargne
+                    let rate = viewModel.savingsRate
+                    HStack(spacing: 3) {
+                        Image(systemName: rate >= 0 ? "arrow.up.right" : "arrow.down.right")
+                            .font(.system(size: 9, weight: .bold))
+                        Text("\(viewModel.formatPercentage(abs(rate)))")
+                            .font(.system(size: 11, weight: .semibold))
+                    }
+                    .foregroundStyle(rate >= 0 ? Color(UIColor.systemGreen) : Color(UIColor.systemRed))
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 3)
+                    .background(
+                        (rate >= 0 ? Color(UIColor.systemGreen) : Color(UIColor.systemRed)).opacity(0.2)
+                    )
+                    .clipShape(Capsule())
+                }
+                .padding(.top, 22)
+
+                // Montant principal
+                Text(balanceVisible
+                     ? viewModel.formatAmount(viewModel.totalBalance)
+                     : "••••••")
+                    .font(.system(size: 42, weight: .bold, design: .rounded))
+                    .foregroundStyle(.white)
+                    .contentTransition(.numericText())
+                    .animation(.spring(response: 0.4), value: viewModel.totalBalance)
+                    .minimumScaleFactor(0.5)
+                    .lineLimit(1)
+                    .padding(.top, 6)
+
+                Spacer(minLength: 20)
+
+                // Séparateur
+                Divider()
+                    .overlay(Color.white.opacity(0.12))
+
+                // Revenus / Dépenses inline
+                HStack(spacing: 0) {
+                    inlineStatView(
+                        label: "Revenus",
+                        value: viewModel.formatAmount(viewModel.totalIncome),
+                        color: Color(UIColor.systemGreen)
+                    )
+                    Rectangle()
+                        .fill(Color.white.opacity(0.12))
+                        .frame(width: 1, height: 36)
+                    inlineStatView(
+                        label: "Dépenses",
+                        value: viewModel.formatAmount(viewModel.totalExpenses),
+                        color: Color(UIColor.systemRed)
+                    )
+                }
+                .padding(.bottom, 18)
+                .padding(.top, 12)
+            }
+            .padding(.horizontal, 20)
+        }
+        .frame(height: 210)
+        .shadow(color: Color.black.opacity(0.22), radius: 20, x: 0, y: 8)
+        .scaleEffect(animateIn ? 1 : 0.96)
+        .opacity(animateIn ? 1 : 0)
+    }
+
+    private func inlineStatView(label: String, value: String, color: Color) -> some View {
+        VStack(alignment: .center, spacing: 3) {
+            HStack(spacing: 4) {
+                Circle()
+                    .fill(color)
+                    .frame(width: 7, height: 7)
+                Text(label)
+                    .font(.caption2)
+                    .fontWeight(.medium)
+                    .foregroundStyle(.white.opacity(0.5))
             }
             Text(value)
                 .font(.system(.callout, design: .rounded).weight(.semibold))
-                .foregroundStyle(Color.primary)
+                .foregroundStyle(.white)
                 .lineLimit(1)
                 .minimumScaleFactor(0.5)
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, 12)
     }
 
-    // ── MARK: Section Header ─────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────
+    // MARK: – 2. Tuiles statistiques (style Apple Health)
+    // ─────────────────────────────────────────────────────────────────
+    private var statTiles: some View {
+        let expenses = viewModel.expensesByCategory.prefix(4)
+        return VStack(alignment: .leading, spacing: 10) {
+            Text("Répartition")
+                .font(.title3.weight(.semibold))
+                .foregroundStyle(.primary)
+                .padding(.horizontal, 4)
 
-    private func sectionHeader(_ title: String, trailingMenu: AnyView?) -> some View {
-        HStack {
-            Text(title)
-            Spacer()
-            trailingMenu
-        }
-    }
-
-    private var periodMenu: AnyView {
-        AnyView(
-            Menu {
-                ForEach(FinanceViewModel.TimePeriod.allCases, id: \.self) { period in
-                    Button(period.rawValue) {
-                        withAnimation { viewModel.selectedPeriod = period }
+            if expenses.isEmpty {
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(Color(UIColor.secondarySystemGroupedBackground))
+                    .frame(height: 80)
+                    .overlay(
+                        Label("Aucune dépense", systemImage: "chart.pie")
+                            .foregroundStyle(.secondary)
+                            .font(.subheadline)
+                    )
+            } else {
+                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
+                    ForEach(Array(expenses.enumerated()), id: \.element.category) { _, item in
+                        categoryTile(item: item)
                     }
                 }
-            } label: {
-                Text(viewModel.selectedPeriod.rawValue)
-                    .font(.footnote.weight(.medium))
-                    .foregroundStyle(Color.appBlue)
             }
-        )
+        }
+        .opacity(animateIn ? 1 : 0)
+        .offset(y: animateIn ? 0 : 12)
     }
 
-    // ── MARK: Category Cell ──────────────────────────────────────────
-
-    private func categoryCell(item: (category: TransactionCategory, amount: Double, percentage: Double)) -> some View {
-        HStack(spacing: 14) {
-            // Icône
-            ZStack {
-                RoundedRectangle(cornerRadius: 10, style: .continuous)
-                    .fill(item.category.color.opacity(0.14))
-                    .frame(width: 38, height: 38)
-                Image(systemName: item.category.icon)
-                    .font(.system(size: 17, weight: .semibold))
+    private func categoryTile(item: (category: TransactionCategory, amount: Double, percentage: Double)) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .fill(item.category.color.opacity(0.15))
+                        .frame(width: 36, height: 36)
+                    Image(systemName: item.category.icon)
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(item.category.color)
+                }
+                Spacer()
+                Text("\(Int(item.percentage))%")
+                    .font(.caption.weight(.bold))
                     .foregroundStyle(item.category.color)
             }
 
-            // Nom + barre
-            VStack(alignment: .leading, spacing: 5) {
-                HStack {
-                    Text(item.category.rawValue)
-                        .font(.subheadline.weight(.medium))
-                        .foregroundStyle(Color.primary)
-                    Spacer()
-                    Text(viewModel.formatAmount(item.amount))
-                        .font(.subheadline.weight(.semibold))
-                        .fontDesign(.rounded)
-                        .foregroundStyle(Color.primary)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(item.category.rawValue)
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                Text(viewModel.formatAmount(item.amount))
+                    .font(.system(.subheadline, design: .rounded).weight(.bold))
+                    .foregroundStyle(.primary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.5)
+            }
+
+            // Mini barre de progression
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    Capsule().fill(Color.secondary.opacity(0.1)).frame(height: 4)
+                    Capsule()
+                        .fill(item.category.color)
+                        .frame(width: geo.size.width * CGFloat(min(item.percentage / 100, 1)), height: 4)
                 }
-                GeometryReader { geo in
-                    ZStack(alignment: .leading) {
-                        Capsule()
-                            .fill(Color.secondary.opacity(0.1))
-                            .frame(height: 5)
-                        Capsule()
-                            .fill(item.category.color)
-                            .frame(width: geo.size.width * CGFloat(min(item.percentage, 100) / 100), height: 5)
-                            .animation(.spring(response: 0.6), value: item.percentage)
+            }
+            .frame(height: 4)
+        }
+        .padding(14)
+        .background(Color(UIColor.secondarySystemGroupedBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // MARK: – 3. Graphique semaine
+    // ─────────────────────────────────────────────────────────────────
+    private var chartSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Cette semaine")
+                    .font(.title3.weight(.semibold))
+                    .foregroundStyle(.primary)
+                Spacer()
+                Menu {
+                    ForEach(FinanceViewModel.TimePeriod.allCases, id: \.self) { period in
+                        Button(period.rawValue) {
+                            withAnimation { viewModel.selectedPeriod = period }
+                        }
+                    }
+                } label: {
+                    HStack(spacing: 3) {
+                        Text(viewModel.selectedPeriod.rawValue)
+                            .font(.subheadline.weight(.medium))
+                        Image(systemName: "chevron.down")
+                            .font(.system(size: 10, weight: .semibold))
+                    }
+                    .foregroundStyle(Color(UIColor.systemBlue))
+                }
+            }
+            .padding(.horizontal, 4)
+
+            GlassBarChart(data: viewModel.dailyExpenses)
+                .frame(height: 110)
+                .padding(.horizontal, 4)
+                .padding(.vertical, 12)
+                .background(Color(UIColor.secondarySystemGroupedBackground))
+                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        }
+        .opacity(animateIn ? 1 : 0)
+        .offset(y: animateIn ? 0 : 12)
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // MARK: – 4. Transactions Récentes (native List row)
+    // ─────────────────────────────────────────────────────────────────
+    private var recentSection: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack {
+                Text("Récentes")
+                    .font(.title3.weight(.semibold))
+                    .foregroundStyle(.primary)
+                Spacer()
+                Button("Voir tout") {}
+                    .font(.subheadline.weight(.medium))
+                    .foregroundStyle(Color(UIColor.systemBlue))
+            }
+            .padding(.horizontal, 20)
+            .padding(.bottom, 10)
+
+            if viewModel.recentTransactions.isEmpty {
+                Label("Appuyez sur + pour commencer", systemImage: "plus.circle")
+                    .foregroundStyle(.secondary)
+                    .font(.subheadline)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.vertical, 28)
+            } else {
+                VStack(spacing: 0) {
+                    ForEach(Array(viewModel.recentTransactions.enumerated()), id: \.element.id) { index, transaction in
+                        TransactionRow(transaction: transaction)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 2)
+                        if index < viewModel.recentTransactions.count - 1 {
+                            Divider()
+                                .padding(.leading, 70)
+                        }
                     }
                 }
-                .frame(height: 5)
+                .background(Color(UIColor.secondarySystemGroupedBackground))
+                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                .padding(.horizontal, 16)
             }
         }
-        .padding(.vertical, 4)
-    }
-
-    // ── MARK: Empty States ───────────────────────────────────────────
-
-    private var emptyCategoryCell: some View {
-        Label("Aucune dépense enregistrée", systemImage: "chart.pie")
-            .foregroundStyle(Color.secondary)
-            .font(.subheadline)
-            .frame(maxWidth: .infinity, alignment: .center)
-            .padding(.vertical, 12)
-    }
-
-    private var emptyTransactionCell: some View {
-        Label("Appuyez sur + pour commencer", systemImage: "plus.circle")
-            .foregroundStyle(Color.secondary)
-            .font(.subheadline)
-            .frame(maxWidth: .infinity, alignment: .center)
-            .padding(.vertical, 12)
+        .opacity(animateIn ? 1 : 0)
+        .offset(y: animateIn ? 0 : 12)
     }
 }
 
-// ── MARK: GlassBarChart ──────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────
+// MARK: – GlassBarChart (épuré, pas de fond custom)
+// ─────────────────────────────────────────────────────────────────────
 
 struct GlassBarChart: View {
     let data: [(day: String, amount: Double)]
-    @Environment(\.colorScheme) var colorScheme
 
     private var maxAmount: Double { data.map(\.amount).max() ?? 1 }
 
@@ -268,26 +363,32 @@ struct GlassBarChart: View {
         HStack(alignment: .bottom, spacing: 6) {
             ForEach(Array(data.enumerated()), id: \.offset) { index, item in
                 let isLast = index == data.count - 1
-                let height = maxAmount > 0 ? max(CGFloat(item.amount / maxAmount) * 100, 6) : 6
+                let ratio = maxAmount > 0 ? CGFloat(item.amount / maxAmount) : 0
 
-                VStack(spacing: 6) {
-                    RoundedRectangle(cornerRadius: 6, style: .continuous)
-                        .fill(isLast ? Color.appBlue : Color.secondary.opacity(0.15))
-                        .frame(height: height)
-                        .animation(.spring(response: 0.5), value: item.amount)
-
+                VStack(spacing: 5) {
+                    GeometryReader { geo in
+                        VStack {
+                            Spacer()
+                            RoundedRectangle(cornerRadius: 5, style: .continuous)
+                                .fill(isLast
+                                      ? Color(UIColor.systemBlue)
+                                      : Color(UIColor.systemBlue).opacity(0.18))
+                                .frame(height: max(geo.size.height * ratio, 5))
+                        }
+                    }
                     Text(item.day)
                         .font(.system(size: 10, weight: isLast ? .bold : .regular))
-                        .foregroundStyle(isLast ? Color.appBlue : Color.secondary)
+                        .foregroundStyle(isLast ? Color(UIColor.systemBlue) : .secondary)
                 }
                 .frame(maxWidth: .infinity)
             }
         }
-        .frame(maxWidth: .infinity)
     }
 }
 
-// ── MARK: GlassCategoryRow (Dashboard compact) ───────────────────────
+// ─────────────────────────────────────────────────────────────────────
+// MARK: – GlassCategoryRow (utilisé dans BudgetView)
+// ─────────────────────────────────────────────────────────────────────
 
 struct GlassCategoryRow: View {
     let category: TransactionCategory
@@ -299,29 +400,26 @@ struct GlassCategoryRow: View {
             ZStack {
                 RoundedRectangle(cornerRadius: 10, style: .continuous)
                     .fill(category.color.opacity(0.14))
-                    .frame(width: 38, height: 38)
+                    .frame(width: 36, height: 36)
                 Image(systemName: category.icon)
-                    .font(.system(size: 17, weight: .semibold))
+                    .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(category.color)
             }
             VStack(alignment: .leading, spacing: 4) {
                 HStack {
-                    Text(category.rawValue)
-                        .font(.subheadline.weight(.medium))
+                    Text(category.rawValue).font(.subheadline.weight(.medium))
                     Spacer()
-                    Text(amount)
-                        .font(.subheadline.weight(.semibold))
-                        .fontDesign(.rounded)
+                    Text(amount).font(.subheadline.weight(.semibold)).fontDesign(.rounded)
                 }
                 GeometryReader { geo in
                     ZStack(alignment: .leading) {
-                        Capsule().fill(Color.secondary.opacity(0.1)).frame(height: 5)
+                        Capsule().fill(Color.secondary.opacity(0.1)).frame(height: 4)
                         Capsule()
                             .fill(category.color)
-                            .frame(width: geo.size.width * CGFloat(min(percentage, 100) / 100), height: 5)
+                            .frame(width: geo.size.width * CGFloat(min(percentage / 100, 1)), height: 4)
                     }
                 }
-                .frame(height: 5)
+                .frame(height: 4)
             }
         }
         .padding(.vertical, 3)
@@ -329,6 +427,9 @@ struct GlassCategoryRow: View {
 }
 
 #Preview {
-    DashboardView(authManager: AuthenticationManager(), notifManager: NotificationManager())
-        .environmentObject(FinanceViewModel())
+    DashboardView(
+        authManager: AuthenticationManager(),
+        notifManager: NotificationManager()
+    )
+    .environmentObject(FinanceViewModel())
 }
