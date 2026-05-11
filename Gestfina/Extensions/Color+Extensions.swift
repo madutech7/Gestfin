@@ -9,16 +9,15 @@ import SwiftUI
 
 extension Color {
     
-    // MARK: - Couleurs principales
-    
-    static let appGreen = Color(hex: "34D399")
-    static let appRed = Color(hex: "FB7185")
-    static let appBlue = Color(hex: "60A5FA")
-    static let appPurple = Color(hex: "A78BFA")
-    static let appOrange = Color(hex: "FBBF24")
-    static let appYellow = Color(hex: "FDE68A")
-    static let appCyan = Color(hex: "22D3EE")
-    static let appPink = Color(hex: "F472B6")
+    // MARK: - Couleurs système Apple exactes
+    static let appGreen  = Color(UIColor.systemGreen)   // #34C759
+    static let appRed    = Color(UIColor.systemRed)     // #FF3B30
+    static let appBlue   = Color(UIColor.systemBlue)    // #007AFF
+    static let appPurple = Color(UIColor.systemPurple)  // #AF52DE
+    static let appOrange = Color(UIColor.systemOrange)  // #FF9500
+    static let appYellow = Color(UIColor.systemYellow)  // #FFCC00
+    static let appCyan   = Color(UIColor.systemCyan)    // #32ADE6
+    static let appPink   = Color(UIColor.systemPink)    // #FF2D55
     
     // MARK: - Fond clair / Blanc
     
