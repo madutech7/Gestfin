@@ -22,47 +22,65 @@ struct MainTabView: View {
         case budget       = "Budget"
     }
 
+    @Namespace private var animation
+
     init(authManager: AuthenticationManager, notifManager: NotificationManager) {
         self.authManager  = authManager
         self.notifManager = notifManager
-
-        // Hide default tab bar to use a custom floating one
-        UITabBar.appearance().isHidden = true
     }
 
     var body: some View {
         ZStack(alignment: .bottom) {
-            TabView(selection: Binding(
-                get: { selectedTab },
-                set: { newTab in
-                    if newTab != selectedTab {
-                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                        selectedTab = newTab
-                    }
+            // Main content
+            Group {
+                switch selectedTab {
+                case .dashboard:
+                    DashboardView(authManager: authManager, notifManager: notifManager)
+                case .transactions:
+                    TransactionsView()
+                case .add:
+                    EmptyView() // Ignored
+                case .budget:
+                    BudgetView()
                 }
-            )) {
-                DashboardView(authManager: authManager, notifManager: notifManager)
-                    .tag(AppTab.dashboard)
-                    .toolbar(.hidden, for: .tabBar)
-
-                TransactionsView()
-                    .tag(AppTab.transactions)
-                    .toolbar(.hidden, for: .tabBar)
-
-                BudgetView()
-                    .tag(AppTab.budget)
-                    .toolbar(.hidden, for: .tabBar)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
 
-            // Custom Floating Tab Bar
-            CustomFloatingTabBar(selectedTab: $selectedTab) {
-                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                showAddTransaction = true
+            // Detached Floating Tab Bar
+            HStack(spacing: 12) {
+                // Main Navigation Pill
+                HStack(spacing: 8) {
+                    TabBarButton(tab: .dashboard, selectedTab: $selectedTab, icon: "house", selectedIcon: "house.fill", title: "Accueil", animation: animation)
+                    TabBarButton(tab: .transactions, selectedTab: $selectedTab, icon: "arrow.left.arrow.right", selectedIcon: "arrow.left.arrow.right", title: "Transactions", animation: animation)
+                    TabBarButton(tab: .budget, selectedTab: $selectedTab, icon: "chart.pie", selectedIcon: "chart.pie.fill", title: "Budget", animation: animation)
+                }
+                .padding(.horizontal, 8)
+                .padding(.vertical, 8)
+                .background(
+                    Capsule()
+                        .fill(.ultraThinMaterial)
+                        .shadow(color: Color.black.opacity(0.1), radius: 12, y: 6)
+                )
+
+                // Detached Add Action Button
+                Button {
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                    showAddTransaction = true
+                } label: {
+                    Image(systemName: "plus")
+                        .font(.system(size: 20, weight: .bold))
+                        .foregroundColor(.white)
+                        .frame(width: 50, height: 50)
+                        .background(Color.appBlue)
+                        .clipShape(Circle())
+                        .shadow(color: Color.appBlue.opacity(0.3), radius: 8, y: 4)
+                }
+                .buttonStyle(.plain)
             }
-            .padding(.horizontal, 16)
-            .padding(.bottom, 8)
+            .padding(.horizontal, 20)
+            .padding(.bottom, 24)
         }
-        .tint(.appBlue)
+        .ignoresSafeArea(.keyboard, edges: .bottom)
         .sheet(isPresented: $showAddTransaction) {
             AddTransactionView()
                 .environmentObject(viewModel)
@@ -73,79 +91,54 @@ struct MainTabView: View {
     }
 }
 
-// MARK: - Custom Floating Tab Bar
-
-struct CustomFloatingTabBar: View {
+// MARK: - TabBarButton Component
+struct TabBarButton: View {
+    let tab: MainTabView.AppTab
     @Binding var selectedTab: MainTabView.AppTab
-    var onAddTap: () -> Void
+    let icon: String
+    let selectedIcon: String
+    let title: String
+    let animation: Namespace.ID
+    
+    var isSelected: Bool {
+        selectedTab == tab
+    }
     
     var body: some View {
-        HStack(spacing: 12) {
-            // Main Navigation Pill
-            HStack(spacing: 0) {
-                TabBarButton(
-                    icon: selectedTab == .dashboard ? "house.fill" : "house",
-                    title: "Accueil",
-                    isSelected: selectedTab == .dashboard
-                ) { selectedTab = .dashboard }
-                
-                TabBarButton(
-                    icon: "arrow.left.arrow.right",
-                    title: "Transactions",
-                    isSelected: selectedTab == .transactions
-                ) { selectedTab = .transactions }
-                
-                TabBarButton(
-                    icon: selectedTab == .budget ? "chart.pie.fill" : "chart.pie",
-                    title: "Budget",
-                    isSelected: selectedTab == .budget
-                ) { selectedTab = .budget }
-            }
-            .padding(.horizontal, 8)
-            .padding(.vertical, 8)
-            .background(.ultraThinMaterial)
-            .clipShape(Capsule())
-            .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 5)
-            
-            // Separated Add Button
-            Button(action: onAddTap) {
-                ZStack {
-                    Circle()
-                        .fill(Color.appBlue)
-                        .frame(width: 56, height: 56)
-                        .shadow(color: Color.appBlue.opacity(0.3), radius: 8, x: 0, y: 4)
-                    
-                    Image(systemName: "plus")
-                        .font(.system(size: 22, weight: .semibold))
-                        .foregroundColor(.white)
+        Button {
+            if !isSelected {
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                    selectedTab = tab
                 }
             }
-            .buttonStyle(.plain)
-        }
-    }
-}
-
-struct TabBarButton: View {
-    let icon: String
-    let title: String
-    let isSelected: Bool
-    let action: () -> Void
-    
-    var body: some View {
-        Button(action: action) {
-            VStack(spacing: 4) {
-                Image(systemName: icon)
-                    .font(.system(size: 20, weight: isSelected ? .semibold : .regular))
-                Text(title)
-                    .font(.system(size: 10, weight: isSelected ? .semibold : .medium))
+        } label: {
+            HStack(spacing: 4) {
+                Image(systemName: isSelected ? selectedIcon : icon)
+                    .font(.system(size: 20, weight: isSelected ? .bold : .semibold))
+                
+                if isSelected {
+                    Text(title)
+                        .font(.system(size: 13, weight: .bold))
+                }
             }
-            .foregroundColor(isSelected ? .appBlue : .secondary)
-            .frame(maxWidth: .infinity)
-            .contentShape(Rectangle())
+            .foregroundColor(isSelected ? .white : .secondary)
+            .padding(.horizontal, isSelected ? 14 : 10)
+            .padding(.vertical, 10)
+            .background(
+                ZStack {
+                    if isSelected {
+                        Capsule()
+                            .fill(Color.appBlue)
+                            .matchedGeometryEffect(id: "TAB_BACKGROUND", in: animation)
+                    }
+                }
+            )
         }
         .buttonStyle(.plain)
     }
-}
+
+
 
 #Preview {
     MainTabView(authManager: AuthenticationManager(), notifManager: NotificationManager())
