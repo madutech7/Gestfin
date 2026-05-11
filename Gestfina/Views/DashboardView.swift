@@ -395,12 +395,19 @@ struct GlassCategoryRow: View {
             VStack(alignment: .leading, spacing: 6) {
                 HStack {
                     Text(category.rawValue)
-                        .font(.system(size: 14, weight: .medium))
+                        .font(.subheadline)
+                        .fontWeight(.medium)
                         .foregroundColor(.primary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
                     Spacer()
                     Text(amount)
-                        .font(.system(size: 14, weight: .semibold, design: .rounded))
+                        .font(.subheadline)
+                        .fontWeight(.bold)
+                        .fontDesign(.rounded)
                         .foregroundColor(.primary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.5)
                 }
                 
                 GeometryReader { geo in

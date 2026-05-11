@@ -35,6 +35,8 @@ struct TransactionRow: View {
                 }
                 .font(.subheadline)
                 .foregroundColor(.secondary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
             }
             
             Spacer()

@@ -223,9 +223,13 @@ struct BudgetCard: View {
                     Text(budget.category.rawValue)
                         .font(.headline)
                         .foregroundColor(.primary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
                     Text(budget.period.rawValue)
                         .font(.subheadline)
                         .foregroundColor(.secondary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
                 }
                 
                 Spacer()
