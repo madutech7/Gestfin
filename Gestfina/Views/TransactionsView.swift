@@ -20,18 +20,16 @@ struct TransactionsView: View {
                 Section {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 8) {
-                            let isAllSelected = viewModel.selectedFilter == nil
-                            let isIncomeSelected = viewModel.selectedFilter == .income
-                            let isExpenseSelected = viewModel.selectedFilter == .expense
-
-                            PremiumFilterChip(title: "Tout", isSelected: isAllSelected, color: Color.appBlue) {
-                                viewModel.selectedFilter = nil
-                            }
-                            PremiumFilterChip(title: "Revenus", isSelected: isIncomeSelected, color: Color.appGreen) {
-                                viewModel.selectedFilter = .income
-                            }
-                            PremiumFilterChip(title: "Dépenses", isSelected: isExpenseSelected, color: Color.appRed) {
-                                viewModel.selectedFilter = .expense
+                            Group {
+                                PremiumFilterChip(title: "Tout", isSelected: viewModel.selectedFilter == nil, color: Color.appBlue) {
+                                    viewModel.selectedFilter = nil
+                                }
+                                PremiumFilterChip(title: "Revenus", isSelected: viewModel.selectedFilter == .income, color: Color.appGreen) {
+                                    viewModel.selectedFilter = .income
+                                }
+                                PremiumFilterChip(title: "Dépenses", isSelected: viewModel.selectedFilter == .expense, color: Color.appRed) {
+                                    viewModel.selectedFilter = .expense
+                                }
                             }
 
                             Rectangle()
@@ -40,8 +38,7 @@ struct TransactionsView: View {
                                 .padding(.horizontal, 4)
 
                             ForEach(FinanceViewModel.TimePeriod.allCases, id: \.self) { period in
-                                let isPeriodSelected = viewModel.selectedPeriod == period
-                                PremiumFilterChip(title: period.rawValue, isSelected: isPeriodSelected, color: Color.appBlue) {
+                                PremiumFilterChip(title: period.rawValue, isSelected: viewModel.selectedPeriod == period, color: Color.appBlue) {
                                     viewModel.selectedPeriod = period
                                 }
                             }

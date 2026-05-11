@@ -60,7 +60,7 @@ struct AddTransactionView: View {
                             Text(selectedType.rawValue)
                                 .font(.system(size: 12, weight: .semibold))
                         }
-                        .foregroundStyle(selectedType == .income ? .appGreen : .appRed)
+                        .foregroundStyle(selectedType == .income ? Color.appGreen : Color.appRed)
                         .padding(.horizontal, 12)
                         .padding(.vertical, 5)
                         .background(
