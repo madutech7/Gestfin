@@ -9,52 +9,41 @@ import SwiftUI
 
 struct TransactionRow: View {
     let transaction: Transaction
-    @State private var appeared = false
-    
     var body: some View {
-        HStack(spacing: 14) {
+        HStack(spacing: 16) {
             // Icône catégorie
             ZStack {
-                RoundedRectangle(cornerRadius: 14)
-                    .fill(transaction.category.color.opacity(0.12))
-                    .frame(width: 46, height: 46)
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(transaction.category.color.opacity(0.15))
+                    .frame(width: 42, height: 42)
                 
                 Image(systemName: transaction.category.icon)
-                    .font(.system(size: 18, weight: .medium))
+                    .font(.system(size: 20, weight: .semibold))
                     .foregroundColor(transaction.category.color)
             }
             
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 2) {
                 Text(transaction.title)
-                    .font(.system(size: 15, weight: .semibold))
+                    .font(.headline)
                     .foregroundColor(.primary)
                     .lineLimit(1)
                 
-                HStack(spacing: 6) {
+                HStack(spacing: 4) {
                     Text(transaction.category.rawValue)
-                        .font(.system(size: 10, weight: .semibold))
-                        .foregroundColor(transaction.category.color)
-                        .padding(.horizontal, 7)
-                        .padding(.vertical, 2)
-                        .background(
-                            Capsule()
-                                .fill(transaction.category.color.opacity(0.10))
-                        )
-                    
                     Text("·")
-                        .foregroundColor(.secondary)
-                    
                     Text(transaction.date.relativeFormatted)
-                        .font(.system(size: 11))
-                        .foregroundColor(.secondary)
                 }
+                .font(.subheadline)
+                .foregroundColor(.secondary)
             }
             
             Spacer()
             
             Text(transaction.formattedAmount)
-                .font(.system(size: 15, weight: .bold, design: .rounded))
-                .foregroundColor(transaction.type == .income ? .appGreen : .appRed)
+                .font(.headline)
+                .fontWeight(.bold)
+                .fontDesign(.rounded)
+                .foregroundColor(transaction.type == .income ? .appGreen : .primary)
                 .lineLimit(1)
                 .minimumScaleFactor(0.4)
         }
@@ -71,13 +60,6 @@ struct TransactionRow: View {
                 UIPasteboard.general.string = transaction.title
             }) {
                 Label("Copier le titre", systemImage: "text.cursor")
-            }
-        }
-        .opacity(appeared ? 1 : 0)
-        .offset(x: appeared ? 0 : 20)
-        .onAppear {
-            withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
-                appeared = true
             }
         }
     }

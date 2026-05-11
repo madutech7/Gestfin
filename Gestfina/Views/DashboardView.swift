@@ -186,12 +186,14 @@ struct DashboardView: View {
             
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
-                    .font(.system(size: 12))
+                    .font(.subheadline)
                     .foregroundColor(.secondary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
                 Text(amount)
-                    .font(.system(size: 16, weight: .bold, design: .rounded))
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .fontDesign(.rounded)
                     .foregroundColor(.primary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.4)
@@ -211,7 +213,8 @@ struct DashboardView: View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
                 Text("Cette semaine")
-                    .font(.system(size: 17, weight: .semibold))
+                    .font(.title3)
+                    .fontWeight(.semibold)
                     .foregroundColor(.primary)
                 
                 Spacer()
@@ -245,8 +248,9 @@ struct DashboardView: View {
     
     private var categoryBreakdown: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Par catégorie")
-                .font(.system(size: 17, weight: .semibold))
+            Text("Dépenses par catégorie")
+                .font(.title3)
+                .fontWeight(.semibold)
                 .foregroundColor(.primary)
             
             if viewModel.expensesByCategory.isEmpty {
@@ -285,11 +289,13 @@ struct DashboardView: View {
         VStack(alignment: .leading, spacing: 14) {
             HStack {
                 Text("Récentes")
-                    .font(.system(size: 17, weight: .semibold))
+                    .font(.title3)
+                    .fontWeight(.semibold)
                     .foregroundColor(.primary)
                 Spacer()
                 Text("Voir tout")
-                    .font(.system(size: 14, weight: .medium))
+                    .font(.subheadline)
+                    .fontWeight(.medium)
                     .foregroundColor(.appBlue)
             }
             

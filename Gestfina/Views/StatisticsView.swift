@@ -111,12 +111,14 @@ struct StatisticsView: View {
             }
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
-                    .font(.system(size: 11))
+                    .font(.caption)
                     .foregroundColor(.secondary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
                 Text(value)
-                    .font(.system(size: 16, weight: .bold, design: .rounded))
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .fontDesign(.rounded)
                     .foregroundColor(.primary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.4)

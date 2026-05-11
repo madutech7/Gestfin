@@ -211,20 +211,20 @@ struct BudgetCard: View {
         VStack(spacing: 14) {
             HStack(spacing: 12) {
                 ZStack {
-                    RoundedRectangle(cornerRadius: 12)
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
                         .fill(budget.category.color.opacity(0.12))
-                        .frame(width: 44, height: 44)
+                        .frame(width: 42, height: 42)
                     Image(systemName: budget.category.icon)
-                        .font(.system(size: 17, weight: .medium))
+                        .font(.system(size: 20, weight: .semibold))
                         .foregroundColor(budget.category.color)
                 }
                 
-                VStack(alignment: .leading, spacing: 3) {
+                VStack(alignment: .leading, spacing: 2) {
                     Text(budget.category.rawValue)
-                        .font(.system(size: 16, weight: .semibold))
+                        .font(.headline)
                         .foregroundColor(.primary)
                     Text(budget.period.rawValue)
-                        .font(.system(size: 12))
+                        .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
                 
@@ -232,12 +232,14 @@ struct BudgetCard: View {
                 
                 VStack(alignment: .trailing, spacing: 2) {
                     Text(viewModel.formatAmount(progress.spent))
-                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .font(.headline)
+                        .fontWeight(.bold)
+                        .fontDesign(.rounded)
                         .foregroundColor(.primary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.5)
                     Text("/ \(budget.formattedLimit)")
-                        .font(.system(size: 11))
+                        .font(.caption)
                         .foregroundColor(.secondary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.5)
@@ -266,33 +268,28 @@ struct BudgetCard: View {
                 if progress.percentage > 90 {
                     Label {
                         Text("\(Int(progress.percentage))% utilisé")
-                            .font(.system(size: 12, weight: .medium))
+                            .font(.caption)
+                            .fontWeight(.medium)
                             .foregroundColor(.appRed)
                     } icon: {
                         Image(systemName: "exclamationmark.circle.fill")
                             .foregroundColor(.appRed)
-                            .font(.system(size: 12))
+                            .font(.caption)
                     }
                 } else {
                     Text("\(Int(progress.percentage))% utilisé")
-                        .font(.system(size: 12, weight: .medium))
+                        .font(.caption)
+                        .fontWeight(.medium)
                         .foregroundColor(.secondary)
                 }
                 Spacer()
                 Text("Il reste \(viewModel.formatAmount(max(budget.limit - progress.spent, 0)))")
-                    .font(.system(size: 12, weight: .medium))
+                    .font(.caption)
+                    .fontWeight(.medium)
                     .foregroundColor(.appGreen)
             }
         }
-        .padding(16)
-        .background(Color(UIColor.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 18))
-        .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.2 : 0.03), radius: 4, x: 0, y: 2)
-        .opacity(appeared ? 1 : 0)
-        .offset(y: appeared ? 0 : 15)
-        .onAppear {
-            withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) { appeared = true }
-        }
+        .padding(.vertical, 4)
     }
 }
 
