@@ -45,7 +45,7 @@ struct AddTransactionView: View {
                                 .foregroundStyle(.secondary)
                             TextField("0,00", text: $amountText)
                                 .font(.system(size: 44, weight: .bold, design: .rounded))
-                                .foregroundStyle(selectedType == .income ? .appGreen : .primary)
+                                .foregroundStyle(selectedType == .income ? Color.appGreen : Color.primary)
                                 .keyboardType(.decimalPad)
                                 .focused($amountFocused)
                                 .multilineTextAlignment(.center)
@@ -81,7 +81,7 @@ struct AddTransactionView: View {
                                 .frame(width: 30, height: 30)
                             Image(systemName: "pencil")
                                 .font(.system(size: 13, weight: .semibold))
-                                .foregroundStyle(.appBlue)
+                                .foregroundStyle(Color.appBlue)
                         }
                         TextField("Titre de la transaction", text: $title)
                     }
@@ -93,7 +93,7 @@ struct AddTransactionView: View {
                                 .frame(width: 30, height: 30)
                             Image(systemName: "calendar")
                                 .font(.system(size: 13, weight: .semibold))
-                                .foregroundStyle(.appPurple)
+                                .foregroundStyle(Color.appPurple)
                         }
                         DatePicker("Date", selection: $date, displayedComponents: .date)
                             .tint(.appBlue)
@@ -106,7 +106,7 @@ struct AddTransactionView: View {
                                 .frame(width: 30, height: 30)
                             Image(systemName: "note.text")
                                 .font(.system(size: 13, weight: .semibold))
-                                .foregroundStyle(.appOrange)
+                                .foregroundStyle(Color.appOrange)
                         }
                         .padding(.top, 3)
                         TextField("Note (optionnel)", text: $note, axis: .vertical)

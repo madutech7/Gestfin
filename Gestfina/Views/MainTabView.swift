@@ -253,7 +253,7 @@ struct SettingsView: View {
                     }
                 } icon: {
                     Image(systemName: "dollarsign.circle.fill")
-                        .foregroundStyle(.appBlue)
+                        .foregroundStyle(Color.appBlue)
                         .symbolRenderingMode(.hierarchical)
                         .font(.system(size: 22))
                 }
@@ -263,7 +263,7 @@ struct SettingsView: View {
                 HStack(spacing: 6) {
                     Text(viewModel.currencySymbol)
                         .font(.system(size: 15, weight: .bold, design: .rounded))
-                        .foregroundStyle(.appBlue)
+                        .foregroundStyle(Color.appBlue)
                     Text(viewModel.currency)
                         .font(.system(size: 14))
                         .foregroundStyle(.secondary)
@@ -287,7 +287,7 @@ struct SettingsView: View {
                     Text(authManager.biometricName)
                 } icon: {
                     Image(systemName: authManager.biometricIcon)
-                        .foregroundStyle(.appBlue)
+                        .foregroundStyle(Color.appBlue)
                 }
 
                 Spacer()
@@ -392,7 +392,7 @@ struct SettingsView: View {
             Spacer()
             Text("\(viewModel.transactions.count)")
                 .font(.system(size: 15, weight: .bold, design: .rounded))
-                .foregroundStyle(.appBlue)
+                .foregroundStyle(Color.appBlue)
         }
 
         HStack {
@@ -400,7 +400,7 @@ struct SettingsView: View {
             Spacer()
             Text("\(viewModel.budgets.count)")
                 .font(.system(size: 15, weight: .bold, design: .rounded))
-                .foregroundStyle(.appBlue)
+                .foregroundStyle(Color.appBlue)
         }
 
         Button {
@@ -449,7 +449,7 @@ struct SettingsView: View {
                                 .frame(width: 30, height: 30)
                             Image(systemName: "person.fill")
                                 .font(.system(size: 13, weight: .semibold))
-                                .foregroundStyle(.appBlue)
+                                .foregroundStyle(Color.appBlue)
                         }
                         TextField("Prénom", text: $tempName)
                     }

@@ -95,7 +95,7 @@ struct StatisticsView: View {
                             Image(systemName: "chevron.down")
                                 .font(.system(size: 10, weight: .bold))
                         }
-                        .foregroundStyle(.appBlue)
+                        .foregroundStyle(Color.appBlue)
                         .padding(.horizontal, 12)
                         .padding(.vertical, 6)
                         .background(Color.appBlue.opacity(0.1))
@@ -165,7 +165,7 @@ struct StatisticsView: View {
                 .chartYAxis(.hidden)
             } else {
                 HStack(alignment: .bottom, spacing: 8) {
-                    ForEach(viewModel.monthlyExpenses.indices, id: \.self) { i in
+                    ForEach(0..<viewModel.monthlyExpenses.count, id: \.self) { i in
                         let item = viewModel.monthlyExpenses[i]
                         let maxVal = viewModel.monthlyExpenses.map(\.amount).max() ?? 1
                         let isMax = item.amount == maxVal && maxVal > 0
@@ -181,7 +181,7 @@ struct StatisticsView: View {
 
                             Text(item.month)
                                 .font(.system(size: 10, weight: isMax ? .bold : .medium))
-                                .foregroundStyle(isMax ? .appBlue : .secondary)
+                                .foregroundStyle(isMax ? Color.appBlue : Color.secondary)
                         }
                         .frame(maxWidth: .infinity)
                     }
@@ -264,7 +264,7 @@ struct StatisticsView: View {
                     .frame(width: 28, height: 28)
                 Text("\(index + 1)")
                     .font(.system(size: 13, weight: .bold, design: .rounded))
-                    .foregroundStyle(index == 0 ? .appOrange : .secondary)
+                    .foregroundStyle(index == 0 ? Color.appOrange : Color.secondary)
             }
 
             ZStack {

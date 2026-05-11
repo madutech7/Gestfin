@@ -423,7 +423,7 @@ struct LockScreenView: View {
                 if let error = authManager.authError {
                     Text(error)
                         .font(.system(size: 14, weight: .medium))
-                        .foregroundStyle(.appRed)
+                        .foregroundStyle(Color.appRed)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 32)
                         .offset(x: shakeOffset)
@@ -443,7 +443,7 @@ struct LockScreenView: View {
                         Text("Utiliser \(authManager.biometricName)")
                             .font(.system(size: 16, weight: .semibold))
                     }
-                    .foregroundStyle(.appBlue)
+                    .foregroundStyle(Color.appBlue)
                     .padding(.horizontal, 28)
                     .padding(.vertical, 14)
                     .background(.ultraThinMaterial)

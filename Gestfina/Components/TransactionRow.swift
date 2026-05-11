@@ -56,7 +56,7 @@ struct TransactionRow: View {
             VStack(alignment: .trailing, spacing: 2) {
                 Text(transaction.formattedAmount)
                     .font(.system(size: 16, weight: .bold, design: .rounded))
-                    .foregroundStyle(transaction.type == .income ? .appGreen : .primary)
+                    .foregroundStyle(transaction.type == .income ? Color.appGreen : Color.primary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
 

@@ -20,13 +20,17 @@ struct TransactionsView: View {
                 Section {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 8) {
-                            PremiumFilterChip(title: "Tout", isSelected: viewModel.selectedFilter == nil, color: .appBlue) {
+                            let isAllSelected = viewModel.selectedFilter == nil
+                            let isIncomeSelected = viewModel.selectedFilter == .income
+                            let isExpenseSelected = viewModel.selectedFilter == .expense
+
+                            PremiumFilterChip(title: "Tout", isSelected: isAllSelected, color: Color.appBlue) {
                                 viewModel.selectedFilter = nil
                             }
-                            PremiumFilterChip(title: "Revenus", isSelected: viewModel.selectedFilter == .income, color: .appGreen) {
+                            PremiumFilterChip(title: "Revenus", isSelected: isIncomeSelected, color: Color.appGreen) {
                                 viewModel.selectedFilter = .income
                             }
-                            PremiumFilterChip(title: "Dépenses", isSelected: viewModel.selectedFilter == .expense, color: .appRed) {
+                            PremiumFilterChip(title: "Dépenses", isSelected: isExpenseSelected, color: Color.appRed) {
                                 viewModel.selectedFilter = .expense
                             }
 
@@ -36,7 +40,8 @@ struct TransactionsView: View {
                                 .padding(.horizontal, 4)
 
                             ForEach(FinanceViewModel.TimePeriod.allCases, id: \.self) { period in
-                                PremiumFilterChip(title: period.rawValue, isSelected: viewModel.selectedPeriod == period, color: .appBlue) {
+                                let isPeriodSelected = viewModel.selectedPeriod == period
+                                PremiumFilterChip(title: period.rawValue, isSelected: isPeriodSelected, color: Color.appBlue) {
                                     viewModel.selectedPeriod = period
                                 }
                             }
@@ -53,7 +58,7 @@ struct TransactionsView: View {
                             HStack(spacing: 6) {
                                 Image(systemName: "number")
                                     .font(.system(size: 13, weight: .bold))
-                                    .foregroundStyle(.appBlue)
+                                    .foregroundStyle(Color.appBlue)
                                 Text("\(viewModel.filteredTransactions.count) opérations")
                                     .font(.system(size: 14, weight: .semibold))
                                     .foregroundStyle(.secondary)
@@ -89,7 +94,7 @@ struct TransactionsView: View {
                                     .frame(width: 80, height: 80)
                                 Image(systemName: "tray")
                                     .font(.system(size: 32, weight: .light))
-                                    .foregroundStyle(.appBlue)
+                                    .foregroundStyle(Color.appBlue)
                             }
                             VStack(spacing: 6) {
                                 Text("Aucune transaction")

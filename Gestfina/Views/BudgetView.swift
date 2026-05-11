@@ -40,7 +40,7 @@ struct BudgetView: View {
                                     .frame(width: 80, height: 80)
                                 Image(systemName: "chart.pie")
                                     .font(.system(size: 32, weight: .light))
-                                    .foregroundStyle(.appBlue)
+                                    .foregroundStyle(Color.appBlue)
                             }
 
                             VStack(spacing: 6) {
@@ -113,7 +113,7 @@ struct BudgetView: View {
                         Image(systemName: "plus.circle.fill")
                             .font(.system(size: 22))
                             .symbolRenderingMode(.hierarchical)
-                            .foregroundStyle(.appBlue)
+                            .foregroundStyle(Color.appBlue)
                     }
                 }
             }
@@ -198,7 +198,7 @@ struct BudgetView: View {
                             }
                             Text(viewModel.formatAmount(totalSpent))
                                 .font(.system(size: 14, weight: .bold, design: .rounded))
-                                .foregroundStyle(.appRed)
+                                .foregroundStyle(Color.appRed)
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.5)
                         }
@@ -211,7 +211,7 @@ struct BudgetView: View {
                             }
                             Text(viewModel.formatAmount(remaining))
                                 .font(.system(size: 14, weight: .bold, design: .rounded))
-                                .foregroundStyle(.appGreen)
+                                .foregroundStyle(Color.appGreen)
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.5)
                         }
@@ -307,10 +307,10 @@ struct PremiumBudgetCard: View {
                     HStack(spacing: 4) {
                         Image(systemName: "exclamationmark.triangle.fill")
                             .font(.system(size: 11))
-                            .foregroundStyle(.appRed)
+                            .foregroundStyle(Color.appRed)
                         Text("\(Int(progress.percentage))% utilisé")
                             .font(.system(size: 12, weight: .bold))
-                            .foregroundStyle(.appRed)
+                            .foregroundStyle(Color.appRed)
                     }
                 } else {
                     Text("\(Int(progress.percentage))% utilisé")
@@ -320,7 +320,7 @@ struct PremiumBudgetCard: View {
                 Spacer()
                 Text("Reste \(viewModel.formatAmount(max(budget.limit - progress.spent, 0)))")
                     .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(.appGreen)
+                    .foregroundStyle(Color.appGreen)
             }
         }
         .padding(.vertical, 4)
