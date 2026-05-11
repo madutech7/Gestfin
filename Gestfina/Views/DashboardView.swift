@@ -264,7 +264,8 @@ struct QuickActionsRow: View {
                     .font(.caption.weight(.medium))
                     .foregroundStyle(.secondary)
                 Text(amount)
-                    .font(.subheadline.weight(.semibold).design(.rounded))
+                    .font(.subheadline.weight(.semibold))
+                    .fontDesign(.rounded)
                     .foregroundStyle(.primary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
@@ -337,7 +338,8 @@ struct CategoryAppleRow: View {
                         .font(.body)
                     Spacer()
                     Text(viewModel.formatAmount(item.amount))
-                        .font(.body.weight(.medium).design(.rounded))
+                        .font(.body.weight(.medium))
+                        .fontDesign(.rounded)
                 }
                 
                 GeometryReader { geo in
