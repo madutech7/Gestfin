@@ -29,6 +29,13 @@ struct MainTabView: View {
         
         // Cacher la TabBar native pour utiliser notre barre flottante personnalisée
         UITabBar.appearance().isHidden = true
+        
+        // Forcer le Liquid Glass sur la Navigation Bar (Barre du haut)
+        let navBarAppearance = UINavigationBarAppearance()
+        navBarAppearance.configureWithDefaultBackground()
+        navBarAppearance.backgroundEffect = UIBlurEffect(style: .systemThinMaterial)
+        UINavigationBar.appearance().standardAppearance = navBarAppearance
+        UINavigationBar.appearance().scrollEdgeAppearance = navBarAppearance
     }
     
     var body: some View {
