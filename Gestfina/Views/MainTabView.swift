@@ -18,7 +18,6 @@ struct MainTabView: View {
     enum AppTab: String, CaseIterable {
         case dashboard    = "Accueil"
         case transactions = "Transactions"
-        case add          = "Ajouter"
         case budget       = "Budget"
     }
 
@@ -34,46 +33,60 @@ struct MainTabView: View {
     }
 
     var body: some View {
-        TabView(selection: Binding(
-            get: { selectedTab },
-            set: { newTab in
-                if newTab == .add {
-                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                    showAddTransaction = true
-                } else {
+        ZStack(alignment: .bottom) {
+            TabView(selection: Binding(
+                get: { selectedTab },
+                set: { newTab in
                     if newTab != selectedTab {
                         UIImpactFeedbackGenerator(style: .light).impactOccurred()
                     }
                     selectedTab = newTab
                 }
+            )) {
+                DashboardView(authManager: authManager, notifManager: notifManager)
+                    .tabItem {
+                        Label("Accueil", systemImage: selectedTab == .dashboard ? "house.fill" : "house")
+                    }
+                    .tag(AppTab.dashboard)
+
+                TransactionsView()
+                    .tabItem {
+                        Label("Transactions", systemImage: "arrow.left.arrow.right")
+                    }
+                    .tag(AppTab.transactions)
+
+                BudgetView()
+                    .tabItem {
+                        Label("Budget", systemImage: selectedTab == .budget ? "chart.pie.fill" : "chart.pie")
+                    }
+                    .tag(AppTab.budget)
             }
-        )) {
-            DashboardView(authManager: authManager, notifManager: notifManager)
-                .tabItem {
-                    Label("Accueil", systemImage: selectedTab == .dashboard ? "house.fill" : "house")
+            .tint(.appBlue)
+            
+            // Apple-native separated floating pill button (iOS 16+ Home Screen Search style)
+            Button(action: {
+                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                showAddTransaction = true
+            }) {
+                HStack(spacing: 6) {
+                    Image(systemName: "plus")
+                        .font(.system(size: 14, weight: .bold))
+                    Text("Ajouter")
+                        .font(.system(size: 15, weight: .semibold, design: .rounded))
                 }
-                .tag(AppTab.dashboard)
-
-            TransactionsView()
-                .tabItem {
-                    Label("Transactions", systemImage: "arrow.left.arrow.right")
-                }
-                .tag(AppTab.transactions)
-
-            // Central "+" trigger tab
-            Color.clear
-                .tabItem {
-                    Label("Ajouter", systemImage: "plus.circle.fill")
-                }
-                .tag(AppTab.add)
-
-            BudgetView()
-                .tabItem {
-                    Label("Budget", systemImage: selectedTab == .budget ? "chart.pie.fill" : "chart.pie")
-                }
-                .tag(AppTab.budget)
+                .foregroundStyle(.primary)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 10)
+                .background(.ultraThinMaterial)
+                .clipShape(Capsule())
+                .shadow(color: Color.black.opacity(0.1), radius: 8, x: 0, y: 4)
+                .overlay(
+                    Capsule()
+                        .strokeBorder(Color.primary.opacity(0.05), lineWidth: 0.5)
+                )
+            }
+            .padding(.bottom, 60) // Positioned just above the TabBar
         }
-        .tint(.appBlue)
         .sheet(isPresented: $showAddTransaction) {
             AddTransactionView()
                 .environmentObject(viewModel)
