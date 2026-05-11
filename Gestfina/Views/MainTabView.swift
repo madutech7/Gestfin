@@ -35,119 +35,56 @@ struct MainTabView: View {
     }
     
     var body: some View {
-        TabView(selection: $selectedTab) {
-            DashboardView()
+        TabView(selection: Binding(
+            get: { selectedTab },
+            set: { newTab in
+                if newTab == .add {
+                    let impact = UIImpactFeedbackGenerator(style: .medium)
+                    impact.impactOccurred()
+                    showAddTransaction = true
+                } else {
+                    selectedTab = newTab
+                }
+            }
+        )) {
+            DashboardView(authManager: authManager, notifManager: notifManager)
+                .tabItem {
+                    Label("Accueil", systemImage: selectedTab == .dashboard ? "house.fill" : "house")
+                }
                 .tag(AppTab.dashboard)
-                .toolbar(.hidden, for: .tabBar)
             
             TransactionsView()
+                .tabItem {
+                    Label("Transactions", systemImage: "arrow.left.arrow.right")
+                }
                 .tag(AppTab.transactions)
-                .toolbar(.hidden, for: .tabBar)
             
+            // Onglet central "+" déclencheur
             Color.clear
+                .tabItem {
+                    Label("Ajouter", systemImage: "plus.circle.fill")
+                }
                 .tag(AppTab.add)
-                .toolbar(.hidden, for: .tabBar)
             
             BudgetView()
+                .tabItem {
+                    Label("Budget", systemImage: selectedTab == .budget ? "chart.pie.fill" : "chart.pie")
+                }
                 .tag(AppTab.budget)
-                .toolbar(.hidden, for: .tabBar)
             
-            SettingsView(authManager: authManager, notifManager: notifManager)
+            StatisticsView()
+                .tabItem {
+                    Label("Stats", systemImage: selectedTab == .statistics ? "chart.bar.fill" : "chart.bar")
+                }
                 .tag(AppTab.statistics)
-                .toolbar(.hidden, for: .tabBar)
         }
-        .safeAreaInset(edge: .bottom) {
-            customTabBar
-        }
-        .ignoresSafeArea(.keyboard)
+        .tint(.appBlue)
         .sheet(isPresented: $showAddTransaction) {
             AddTransactionView()
                 .environmentObject(viewModel)
                 .presentationDetents([.large])
                 .presentationDragIndicator(.visible)
                 .presentationCornerRadius(32)
-        }
-    }
-    
-    // MARK: - Custom Tab Bar
-    private var customTabBar: some View {
-        HStack(spacing: 12) {
-            // Pill Container for main tabs
-            HStack(spacing: 0) {
-                tabButton(tab: .dashboard, icon: "house.fill")
-                tabButton(tab: .transactions, icon: "arrow.left.arrow.right")
-                
-                // Add Button
-                Button {
-                    Haptics.play(.medium)
-                    showAddTransaction = true
-                } label: {
-                    VStack(spacing: 4) {
-                        Image(systemName: "plus.circle.fill")
-                            .font(.system(size: 24))
-                        Text("Ajouter")
-                            .font(.system(size: 10, weight: .medium))
-                    }
-                    .foregroundColor(.primary)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 60)
-                }
-                
-                tabButton(tab: .budget, icon: "chart.pie.fill")
-            }
-            .padding(.horizontal, 8)
-            .background(
-                Capsule()
-                    .fill(.ultraThinMaterial)
-                    .shadow(color: Color.black.opacity(0.12), radius: 20, x: 0, y: 8)
-            )
-            .overlay(
-                Capsule()
-                    .strokeBorder(Color.white.opacity(0.3), lineWidth: 0.5)
-            )
-            
-            // Separated Settings Button
-            Button {
-                Haptics.play(.light)
-                selectedTab = .statistics
-            } label: {
-                VStack(spacing: 4) {
-                    Image(systemName: "gearshape.fill")
-                        .font(.system(size: 24))
-                    Text("Réglages")
-                        .font(.system(size: 10, weight: .medium))
-                }
-                .foregroundColor(selectedTab == .statistics ? .appBlue : .secondary)
-                .frame(width: 70, height: 60)
-                .background(
-                    Capsule()
-                        .fill(.ultraThinMaterial)
-                        .shadow(color: Color.black.opacity(0.12), radius: 20, x: 0, y: 8)
-                )
-                .overlay(
-                    Capsule()
-                        .strokeBorder(Color.white.opacity(0.3), lineWidth: 0.5)
-                )
-            }
-        }
-        .padding(.horizontal, 20)
-        .padding(.bottom, 8) // Safe area padding is usually handled by ZStack, but a bit extra looks nice
-    }
-    
-    private func tabButton(tab: AppTab, icon: String) -> some View {
-        Button {
-            Haptics.play(.light)
-            selectedTab = tab
-        } label: {
-            VStack(spacing: 4) {
-                Image(systemName: icon)
-                    .font(.system(size: 24))
-                Text(tab.rawValue)
-                    .font(.system(size: 10, weight: .medium))
-            }
-            .foregroundColor(selectedTab == tab ? .appBlue : .secondary)
-            .frame(maxWidth: .infinity)
-            .frame(height: 60)
         }
     }
 }

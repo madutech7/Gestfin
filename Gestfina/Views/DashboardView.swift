@@ -11,7 +11,11 @@ struct DashboardView: View {
     @EnvironmentObject var viewModel: FinanceViewModel
     @State private var animateIn = false
     @State private var balanceVisible = true
+    @State private var showSettings = false
     @Environment(\.colorScheme) var colorScheme
+    
+    let authManager: AuthenticationManager
+    let notifManager: NotificationManager
     
     var body: some View {
         NavigationView {
@@ -49,6 +53,14 @@ struct DashboardView: View {
             .navigationTitle("Bonjour, \(viewModel.userName) 👋")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
+                        showSettings = true
+                    } label: {
+                        Image(systemName: "gearshape")
+                            .foregroundColor(.secondary)
+                    }
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         withAnimation(.spring(response: 0.3)) { balanceVisible.toggle() }
@@ -62,6 +74,12 @@ struct DashboardView: View {
                 withAnimation(.spring(response: 0.7, dampingFraction: 0.8).delay(0.1)) {
                     animateIn = true
                 }
+            }
+        }
+        .sheet(isPresented: $showSettings) {
+            NavigationView {
+                SettingsView(authManager: authManager, notifManager: notifManager)
+                    .environmentObject(viewModel)
             }
         }
     }
