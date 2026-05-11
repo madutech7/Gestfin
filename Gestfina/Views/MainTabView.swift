@@ -22,65 +22,58 @@ struct MainTabView: View {
         case budget       = "Budget"
     }
 
-    @Namespace private var animation
-
     init(authManager: AuthenticationManager, notifManager: NotificationManager) {
         self.authManager  = authManager
         self.notifManager = notifManager
+
+        // Premium tab bar appearance
+        let appearance = UITabBarAppearance()
+        appearance.configureWithDefaultBackground()
+        UITabBar.appearance().standardAppearance   = appearance
+        UITabBar.appearance().scrollEdgeAppearance = appearance
     }
 
     var body: some View {
-        ZStack(alignment: .bottom) {
-            // Main content
-            Group {
-                switch selectedTab {
-                case .dashboard:
-                    DashboardView(authManager: authManager, notifManager: notifManager)
-                case .transactions:
-                    TransactionsView()
-                case .add:
-                    EmptyView() // Ignored
-                case .budget:
-                    BudgetView()
-                }
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-
-            // Detached Floating Tab Bar
-            HStack(spacing: 12) {
-                // Main Navigation Pill
-                HStack(spacing: 8) {
-                    TabBarButton(tab: .dashboard, selectedTab: $selectedTab, icon: "house", selectedIcon: "house.fill", title: "Accueil", animation: animation)
-                    TabBarButton(tab: .transactions, selectedTab: $selectedTab, icon: "arrow.left.arrow.right", selectedIcon: "arrow.left.arrow.right", title: "Transactions", animation: animation)
-                    TabBarButton(tab: .budget, selectedTab: $selectedTab, icon: "chart.pie", selectedIcon: "chart.pie.fill", title: "Budget", animation: animation)
-                }
-                .padding(.horizontal, 8)
-                .padding(.vertical, 8)
-                .background(
-                    Capsule()
-                        .fill(.ultraThinMaterial)
-                        .shadow(color: Color.black.opacity(0.1), radius: 12, y: 6)
-                )
-
-                // Detached Add Action Button
-                Button {
+        TabView(selection: Binding(
+            get: { selectedTab },
+            set: { newTab in
+                if newTab == .add {
                     UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                     showAddTransaction = true
-                } label: {
-                    Image(systemName: "plus")
-                        .font(.system(size: 20, weight: .bold))
-                        .foregroundColor(.white)
-                        .frame(width: 50, height: 50)
-                        .background(Color.appBlue)
-                        .clipShape(Circle())
-                        .shadow(color: Color.appBlue.opacity(0.3), radius: 8, y: 4)
+                } else {
+                    if newTab != selectedTab {
+                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                    }
+                    selectedTab = newTab
                 }
-                .buttonStyle(.plain)
             }
-            .padding(.horizontal, 20)
-            .padding(.bottom, 24)
+        )) {
+            DashboardView(authManager: authManager, notifManager: notifManager)
+                .tabItem {
+                    Label("Accueil", systemImage: selectedTab == .dashboard ? "house.fill" : "house")
+                }
+                .tag(AppTab.dashboard)
+
+            TransactionsView()
+                .tabItem {
+                    Label("Transactions", systemImage: "arrow.left.arrow.right")
+                }
+                .tag(AppTab.transactions)
+
+            // Central "+" trigger tab
+            Color.clear
+                .tabItem {
+                    Label("Ajouter", systemImage: "plus.circle.fill")
+                }
+                .tag(AppTab.add)
+
+            BudgetView()
+                .tabItem {
+                    Label("Budget", systemImage: selectedTab == .budget ? "chart.pie.fill" : "chart.pie")
+                }
+                .tag(AppTab.budget)
         }
-        .ignoresSafeArea(.keyboard, edges: .bottom)
+        .tint(.appBlue)
         .sheet(isPresented: $showAddTransaction) {
             AddTransactionView()
                 .environmentObject(viewModel)
@@ -88,54 +81,6 @@ struct MainTabView: View {
                 .presentationDragIndicator(.visible)
                 .presentationCornerRadius(32)
         }
-    }
-}
-
-// MARK: - TabBarButton Component
-struct TabBarButton: View {
-    let tab: MainTabView.AppTab
-    @Binding var selectedTab: MainTabView.AppTab
-    let icon: String
-    let selectedIcon: String
-    let title: String
-    let animation: Namespace.ID
-    
-    var isSelected: Bool {
-        selectedTab == tab
-    }
-    
-    var body: some View {
-        Button {
-            if !isSelected {
-                UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                    selectedTab = tab
-                }
-            }
-        } label: {
-            HStack(spacing: 4) {
-                Image(systemName: isSelected ? selectedIcon : icon)
-                    .font(.system(size: 20, weight: isSelected ? .bold : .semibold))
-                
-                if isSelected {
-                    Text(title)
-                        .font(.system(size: 13, weight: .bold))
-                }
-            }
-            .foregroundColor(isSelected ? .white : .secondary)
-            .padding(.horizontal, isSelected ? 14 : 10)
-            .padding(.vertical, 10)
-            .background(
-                ZStack {
-                    if isSelected {
-                        Capsule()
-                            .fill(Color.appBlue)
-                            .matchedGeometryEffect(id: "TAB_BACKGROUND", in: animation)
-                    }
-                }
-            )
-        }
-        .buttonStyle(.plain)
     }
 }
 
