@@ -514,6 +514,6 @@ struct GlassCategoryRow: View {
 }
 
 #Preview {
-    DashboardView()
+    DashboardView(authManager: AuthenticationManager(), notifManager: NotificationManager())
         .environmentObject(FinanceViewModel())
 }
