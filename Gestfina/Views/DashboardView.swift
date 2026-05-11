@@ -45,7 +45,6 @@ struct DashboardView: View {
                     Spacer(minLength: 40)
                 }
             }
-            }
             .background(Color(UIColor.systemGroupedBackground))
             .navigationTitle("Bonjour, \(viewModel.userName) 👋")
             .navigationBarTitleDisplayMode(.large)
