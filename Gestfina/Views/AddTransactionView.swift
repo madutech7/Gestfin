@@ -123,7 +123,14 @@ struct AddTransactionView: View {
                 }
             }
             .background(
-                AnimatedMeshBackground(color1: .appBlue, color2: .appCyan)
+                ZStack {
+                    Color(UIColor.systemGroupedBackground).ignoresSafeArea()
+                    Circle()
+                        .fill(Color.appBlue.opacity(0.04))
+                        .frame(width: 300, height: 300)
+                        .blur(radius: 60)
+                        .offset(x: -150, y: -200)
+                }
             )
             .scrollContentBackground(.hidden)
             .navigationTitle("Nouvelle transaction")
@@ -167,7 +174,8 @@ struct AddTransactionView: View {
             note: note
         )
         viewModel.addTransaction(transaction)
-        Haptics.shared.notify(.success)
+        let impact = UIImpactFeedbackGenerator(style: .medium)
+        impact.impactOccurred()
         dismiss()
     }
 }

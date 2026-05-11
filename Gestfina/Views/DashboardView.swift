@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Charts
 
 struct DashboardView: View {
     @EnvironmentObject var viewModel: FinanceViewModel
@@ -43,18 +42,32 @@ struct DashboardView: View {
                         .padding(.horizontal, 20)
                         .padding(.top, 16)
                     
-                    Spacer(minLength: 120)
+                    Spacer(minLength: 40)
                 }
             }
             .background(
-                AnimatedMeshBackground(color1: .appBlue, color2: .appPurple)
+                ZStack {
+                    Color(UIColor.systemGroupedBackground).ignoresSafeArea()
+                    
+                    // Orbes d'ambiance ultra-subtils (Mode clair/sombre)
+                    Circle()
+                        .fill(Color.appBlue.opacity(colorScheme == .dark ? 0.05 : 0.03))
+                        .frame(width: 300, height: 300)
+                        .blur(radius: 60)
+                        .offset(x: -150, y: -200)
+                    
+                    Circle()
+                        .fill(Color.appPurple.opacity(colorScheme == .dark ? 0.05 : 0.03))
+                        .frame(width: 300, height: 300)
+                        .blur(radius: 60)
+                        .offset(x: 150, y: 100)
+                }
             )
             .navigationTitle("Bonjour, \(viewModel.userName) 👋")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
-                        Haptics.shared.play(.light)
                         withAnimation(.spring(response: 0.3)) { balanceVisible.toggle() }
                     } label: {
                         Image(systemName: balanceVisible ? "eye" : "eye.slash")
@@ -142,7 +155,6 @@ struct DashboardView: View {
             .padding(28)
         }
         .frame(height: 220)
-        .shimmer()
         .clipShape(RoundedRectangle(cornerRadius: 32, style: .continuous))
         .shadow(color: Color(hex: "0072FF").opacity(0.4), radius: 24, x: 0, y: 12)
         .overlay(
@@ -202,13 +214,9 @@ struct DashboardView: View {
             Spacer()
         }
         .padding(16)
-        .background(Material.ultraThinMaterial)
+        .background(Color(UIColor.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 18))
-        .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.2 : 0.05), radius: 10, x: 0, y: 4)
-        .overlay(
-            RoundedRectangle(cornerRadius: 18)
-                .stroke(Color.white.opacity(colorScheme == .dark ? 0.1 : 0.5), lineWidth: 1)
-        )
+        .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.2 : 0.03), radius: 6, x: 0, y: 2)
         .frame(maxWidth: .infinity)
     }
     
@@ -240,53 +248,12 @@ struct DashboardView: View {
                 }
             }
             
-            if #available(iOS 16.0, *) {
-                Chart {
-                    ForEach(viewModel.dailyExpenses.indices, id: \.self) { index in
-                        let item = viewModel.dailyExpenses[index]
-                        LineMark(
-                            x: .value("Jour", item.0),
-                            y: .value("Dépenses", item.1)
-                        )
-                        .foregroundStyle(Color.appBlue)
-                        .lineStyle(StrokeStyle(lineWidth: 3, lineCap: .round, lineJoin: .round))
-                        .interpolationMethod(.catmullRom)
-                        
-                        AreaMark(
-                            x: .value("Jour", item.0),
-                            y: .value("Dépenses", item.1)
-                        )
-                        .foregroundStyle(
-                            LinearGradient(
-                                colors: [Color.appBlue.opacity(0.4), Color.appPurple.opacity(0.0)],
-                                startPoint: .top,
-                                endPoint: .bottom
-                            )
-                        )
-                        .interpolationMethod(.catmullRom)
-                    }
-                }
-                .frame(height: 180)
-                .chartXAxis {
-                    AxisMarks(values: .automatic) { _ in
-                        AxisValueLabel()
-                            .font(.system(size: 10, weight: .medium))
-                            .foregroundStyle(Color.secondary)
-                    }
-                }
-                .chartYAxis(.hidden)
-            } else {
-                GlassBarChart(data: viewModel.dailyExpenses)
-            }
+            GlassBarChart(data: viewModel.dailyExpenses)
         }
         .padding(20)
-        .background(Material.ultraThinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 24))
-        .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.2 : 0.05), radius: 15, x: 0, y: 5)
-        .overlay(
-            RoundedRectangle(cornerRadius: 24)
-                .stroke(Color.white.opacity(colorScheme == .dark ? 0.1 : 0.4), lineWidth: 1)
-        )
+        .background(Color(UIColor.secondarySystemGroupedBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.2 : 0.03), radius: 6, x: 0, y: 2)
     }
     
     // MARK: - Catégories

@@ -59,33 +59,13 @@ struct TransactionRow: View {
                 .minimumScaleFactor(0.4)
         }
         .padding(14)
-        .background(Material.ultraThinMaterial)
+        .background(Color(UIColor.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 4)
-        .overlay(
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(Color.white.opacity(0.3), lineWidth: 1)
-        )
         .opacity(appeared ? 1 : 0)
         .offset(x: appeared ? 0 : 20)
         .onAppear {
             withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
                 appeared = true
-            }
-        }
-        .contextMenu {
-            Button {
-                UIPasteboard.general.string = transaction.formattedAmount
-                Haptics.shared.notify(.success)
-            } label: {
-                Label("Copier le montant", systemImage: "doc.on.doc")
-            }
-            
-            Button {
-                UIPasteboard.general.string = transaction.title
-                Haptics.shared.notify(.success)
-            } label: {
-                Label("Copier le titre", systemImage: "text.alignleft")
             }
         }
     }

@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Charts
 
 struct StatisticsView: View {
     @EnvironmentObject var viewModel: FinanceViewModel
@@ -60,9 +59,15 @@ struct StatisticsView: View {
                 }
             }
             .listStyle(.insetGrouped)
-            .safeAreaInset(edge: .bottom) { Color.clear.frame(height: 90) }
             .background(
-                AnimatedMeshBackground(color1: .appCyan, color2: .appPurple)
+                ZStack {
+                    Color(UIColor.systemGroupedBackground).ignoresSafeArea()
+                    Circle()
+                        .fill(Color.appCyan.opacity(colorScheme == .dark ? 0.05 : 0.03))
+                        .frame(width: 300, height: 300)
+                        .blur(radius: 60)
+                        .offset(x: -150, y: 150)
+                }
             )
             .scrollContentBackground(.hidden)
             .navigationTitle("Statistiques")
@@ -127,13 +132,9 @@ struct StatisticsView: View {
             Spacer()
         }
         .padding(14)
-        .background(Material.ultraThinMaterial)
+        .background(Color(UIColor.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.2 : 0.05), radius: 8, x: 0, y: 4)
-        .overlay(
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(Color.white.opacity(colorScheme == .dark ? 0.1 : 0.5), lineWidth: 1)
-        )
+        .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.2 : 0.03), radius: 4, x: 0, y: 2)
     }
     
     // MARK: - Chart View
@@ -153,59 +154,30 @@ struct StatisticsView: View {
                 .font(.system(size: 15, weight: .semibold))
                 .foregroundColor(.primary)
             
-            if #available(iOS 16.0, *) {
-                Chart {
-                    ForEach(viewModel.monthlyExpenses.indices, id: \.self) { i in
-                        let item = viewModel.monthlyExpenses[i]
-                        let maxVal = viewModel.monthlyExpenses.map(\.amount).max() ?? 1
-                        let isMax = item.amount == maxVal && maxVal > 0
-                        
-                        BarMark(
-                            x: .value("Mois", item.month),
-                            y: .value("Montant", item.amount)
-                        )
-                        .foregroundStyle(
-                            isMax 
+            HStack(alignment: .bottom, spacing: 8) {
+                ForEach(viewModel.monthlyExpenses.indices, id: \.self) { i in
+                    let item = viewModel.monthlyExpenses[i]
+                    let maxVal = viewModel.monthlyExpenses.map(\.amount).max() ?? 1
+                    let isMax = item.amount == maxVal && maxVal > 0
+                    
+                    VStack(spacing: 6) {
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(
+                                isMax
                                 ? AnyShapeStyle(LinearGradient(colors: [.appBlue, .appPurple], startPoint: .bottom, endPoint: .top))
                                 : AnyShapeStyle(Color.secondary.opacity(0.15))
-                        )
-                        .cornerRadius(6)
-                    }
-                }
-                .frame(height: 170)
-                .chartXAxis {
-                    AxisMarks(values: .automatic) { _ in
-                        AxisValueLabel()
-                            .font(.system(size: 10, weight: .medium))
-                    }
-                }
-                .chartYAxis(.hidden)
-            } else {
-                HStack(alignment: .bottom, spacing: 8) {
-                    ForEach(viewModel.monthlyExpenses.indices, id: \.self) { i in
-                        let item = viewModel.monthlyExpenses[i]
-                        let maxVal = viewModel.monthlyExpenses.map(\.amount).max() ?? 1
-                        let isMax = item.amount == maxVal && maxVal > 0
+                            )
+                            .frame(height: maxVal > 0 ? max(CGFloat(item.amount / maxVal) * 120, 6) : 6)
+                            .shadow(color: isMax ? Color.appBlue.opacity(0.3) : .clear, radius: 6, y: 3)
                         
-                        VStack(spacing: 6) {
-                            RoundedRectangle(cornerRadius: 8)
-                                .fill(
-                                    isMax
-                                    ? AnyShapeStyle(LinearGradient(colors: [.appBlue, .appPurple], startPoint: .bottom, endPoint: .top))
-                                    : AnyShapeStyle(Color.secondary.opacity(0.15))
-                                )
-                                .frame(height: maxVal > 0 ? max(CGFloat(item.amount / maxVal) * 120, 6) : 6)
-                                .shadow(color: isMax ? Color.appBlue.opacity(0.3) : .clear, radius: 6, y: 3)
-                            
-                            Text(item.month)
-                                .font(.system(size: 10, weight: isMax ? .bold : .medium))
-                                .foregroundColor(isMax ? .appBlue : .secondary)
-                        }
-                        .frame(maxWidth: .infinity)
+                        Text(item.month)
+                            .font(.system(size: 10, weight: isMax ? .bold : .medium))
+                            .foregroundColor(isMax ? .appBlue : .secondary)
                     }
+                    .frame(maxWidth: .infinity)
                 }
-                .frame(height: 170)
             }
+            .frame(height: 170)
         }
     }
     

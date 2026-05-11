@@ -87,9 +87,15 @@ struct BudgetView: View {
                 }
             }
             .listStyle(.insetGrouped)
-            .safeAreaInset(edge: .bottom) { Color.clear.frame(height: 90) }
             .background(
-                AnimatedMeshBackground(color1: .appOrange, color2: .appRed)
+                ZStack {
+                    Color(UIColor.systemGroupedBackground).ignoresSafeArea()
+                    Circle()
+                        .fill(Color.appOrange.opacity(colorScheme == .dark ? 0.05 : 0.03))
+                        .frame(width: 300, height: 300)
+                        .blur(radius: 60)
+                        .offset(x: -150, y: 200)
+                }
             )
             .scrollContentBackground(.hidden)
             .navigationTitle("Budgets")
@@ -190,13 +196,8 @@ struct BudgetView: View {
             }
         }
         .padding(20)
-        .background(Material.ultraThinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 24))
-        .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.2 : 0.05), radius: 15, x: 0, y: 5)
-        .overlay(
-            RoundedRectangle(cornerRadius: 24)
-                .stroke(Color.white.opacity(colorScheme == .dark ? 0.1 : 0.4), lineWidth: 1)
-        )
+        .background(Color(UIColor.secondarySystemGroupedBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 20))
         .padding(.horizontal, 16)
         .padding(.vertical, 8)
     }
@@ -293,13 +294,9 @@ struct BudgetCard: View {
             }
         }
         .padding(16)
-        .background(Material.ultraThinMaterial)
+        .background(Color(UIColor.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 18))
-        .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.2 : 0.05), radius: 8, x: 0, y: 4)
-        .overlay(
-            RoundedRectangle(cornerRadius: 18)
-                .stroke(Color.white.opacity(colorScheme == .dark ? 0.1 : 0.4), lineWidth: 1)
-        )
+        .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.2 : 0.03), radius: 4, x: 0, y: 2)
         .opacity(appeared ? 1 : 0)
         .offset(y: appeared ? 0 : 15)
         .onAppear {

@@ -27,53 +27,57 @@ struct MainTabView: View {
         self.authManager  = authManager
         self.notifManager = notifManager
         
-        // Cacher la TabBar native pour utiliser notre barre flottante personnalisée
-        UITabBar.appearance().isHidden = true
-        
-        // Forcer le Liquid Glass sur la Navigation Bar (Barre du haut)
-        let navBarAppearance = UINavigationBarAppearance()
-        navBarAppearance.configureWithDefaultBackground()
-        navBarAppearance.backgroundEffect = UIBlurEffect(style: .systemThinMaterial)
-        UINavigationBar.appearance().standardAppearance = navBarAppearance
-        UINavigationBar.appearance().scrollEdgeAppearance = navBarAppearance
+        // Tab Bar apparence native (translucide avec flou iOS)
+        let appearance = UITabBarAppearance()
+        appearance.configureWithDefaultBackground()
+        UITabBar.appearance().standardAppearance   = appearance
+        UITabBar.appearance().scrollEdgeAppearance = appearance
     }
     
     var body: some View {
-        ZStack(alignment: .bottom) {
-            TabView(selection: Binding(
-                get: { selectedTab },
-                set: { newTab in
-                    if newTab == .add {
-                        Haptics.shared.play(.medium)
-                        showAddTransaction = true
-                    } else {
-                        Haptics.shared.play(.light)
-                        selectedTab = newTab
-                    }
+        TabView(selection: Binding(
+            get: { selectedTab },
+            set: { newTab in
+                if newTab == .add {
+                    let impact = UIImpactFeedbackGenerator(style: .medium)
+                    impact.impactOccurred()
+                    showAddTransaction = true
+                } else {
+                    selectedTab = newTab
                 }
-            )) {
-                DashboardView()
-                    .tag(AppTab.dashboard)
-                
-                TransactionsView()
-                    .tag(AppTab.transactions)
-                
-                Color.clear
-                    .tag(AppTab.add)
-                
-                BudgetView()
-                    .tag(AppTab.budget)
-                
-                SettingsView(authManager: authManager, notifManager: notifManager)
-                    .tag(AppTab.statistics)
             }
+        )) {
+            DashboardView()
+                .tabItem {
+                    Label("Accueil", systemImage: selectedTab == .dashboard ? "house.fill" : "house")
+                }
+                .tag(AppTab.dashboard)
             
-            // Floating Custom Tab Bar
-            customFloatingTabBar
-                .padding(.horizontal, 20)
-                .padding(.bottom, 10)
+            TransactionsView()
+                .tabItem {
+                    Label("Transactions", systemImage: "arrow.left.arrow.right")
+                }
+                .tag(AppTab.transactions)
+            
+            // Onglet central "+" déclencheur
+            Color.clear
+                .tabItem {
+                    Label("Ajouter", systemImage: "plus.circle.fill")
+                }
+                .tag(AppTab.add)
+            
+            BudgetView()
+                .tabItem {
+                    Label("Budget", systemImage: selectedTab == .budget ? "chart.pie.fill" : "chart.pie")
+                }
+                .tag(AppTab.budget)
+            
+            SettingsView(authManager: authManager, notifManager: notifManager)
+                .tabItem {
+                    Label("Réglages", systemImage: selectedTab == .statistics ? "gearshape.fill" : "gearshape")
+                }
+                .tag(AppTab.statistics)
         }
-        .ignoresSafeArea(.keyboard)
         .tint(.appBlue)
         .sheet(isPresented: $showAddTransaction) {
             AddTransactionView()
@@ -83,80 +87,6 @@ struct MainTabView: View {
                 .presentationCornerRadius(32)
         }
     }
-    
-    // MARK: - Custom Tab Bar
-    
-    private var customFloatingTabBar: some View {
-        HStack(spacing: 0) {
-            tabBarItem(tab: .dashboard, icon: "house.fill", label: "Accueil")
-            tabBarItem(tab: .transactions, icon: "arrow.left.arrow.right", label: "Historique")
-            
-            // Bouton Central +
-            Button {
-                Haptics.shared.play(.heavy)
-                showAddTransaction = true
-            } label: {
-                ZStack {
-                    Circle()
-                        .fill(
-                            LinearGradient(
-                                colors: [.appBlue, .appPurple],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .frame(width: 56, height: 56)
-                        .shadow(color: .appBlue.opacity(0.4), radius: 12, x: 0, y: 6)
-                    
-                    Image(systemName: "plus")
-                        .font(.system(size: 24, weight: .semibold))
-                        .foregroundColor(.white)
-                }
-            }
-            .offset(y: -16)
-            
-            tabBarItem(tab: .budget, icon: "chart.pie.fill", label: "Budget")
-            tabBarItem(tab: .statistics, icon: "gearshape.fill", label: "Réglages")
-        }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 12)
-        .background(
-            Capsule()
-                .fill(Material.ultraThinMaterial)
-                .shadow(color: Color.black.opacity(0.1), radius: 20, x: 0, y: 10)
-        )
-        .overlay(
-            Capsule()
-                .stroke(Color.white.opacity(0.2), lineWidth: 0.5)
-        )
-    }
-    
-    private func tabBarItem(tab: AppTab, icon: String, label: String) -> some View {
-        Button {
-            Haptics.shared.play(.light)
-            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                selectedTab = tab
-            }
-        } label: {
-            VStack(spacing: 4) {
-                Image(systemName: icon)
-                    .font(.system(size: selectedTab == tab ? 22 : 20, weight: selectedTab == tab ? .semibold : .medium))
-                    .foregroundColor(selectedTab == tab ? .appBlue : .secondary)
-                
-                if selectedTab == tab {
-                    Circle()
-                        .fill(Color.appBlue)
-                        .frame(width: 4, height: 4)
-                        .matchedGeometryEffect(id: "tabIndicator", in: namespace)
-                } else {
-                    Color.clear.frame(width: 4, height: 4)
-                }
-            }
-            .frame(maxWidth: .infinity)
-        }
-    }
-    
-    @Namespace private var namespace
 }
 
 #Preview {
