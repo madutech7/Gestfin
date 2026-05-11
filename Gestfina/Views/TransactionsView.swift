@@ -33,7 +33,7 @@ struct TransactionsView: View {
                             Divider().frame(height: 20)
                             
                             ForEach(FinanceViewModel.TimePeriod.allCases, id: \.self) { period in
-                                FilterChip(title: period.rawValue, isSelected: viewModel.selectedPeriod == period, color: .appPurple) {
+                                FilterChip(title: period.rawValue, isSelected: viewModel.selectedPeriod == period, color: .appBlue) {
                                     viewModel.selectedPeriod = period
                                 }
                             }
@@ -69,12 +69,12 @@ struct TransactionsView: View {
                         VStack(spacing: 16) {
                             ZStack {
                                 Circle()
-                                    .fill(Color.appPurple.opacity(0.1))
+                                    .fill(Color.appBlue.opacity(0.1))
                                     .frame(width: 80, height: 80)
                                 Image(systemName: "tray.fill")
                                     .font(.system(size: 36))
-                                    .foregroundColor(.appPurple)
-                                    .shadow(color: Color.appPurple.opacity(0.5), radius: 10, x: 0, y: 5)
+                                    .foregroundColor(.appBlue)
+                                    .shadow(color: Color.appBlue.opacity(0.5), radius: 10, x: 0, y: 5)
                             }
                             Text("Aucune transaction")
                                 .font(.system(size: 20, weight: .bold, design: .rounded))

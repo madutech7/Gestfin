@@ -93,7 +93,7 @@ struct StatisticsView: View {
             metricCard(title: "Revenus", value: viewModel.formatAmount(viewModel.totalIncome), icon: "arrow.down.left", color: .appGreen)
             metricCard(title: "Dépenses", value: viewModel.formatAmount(viewModel.totalExpenses), icon: "arrow.up.right", color: .appRed)
             metricCard(title: "Épargne", value: viewModel.formatPercentage(viewModel.savingsRate), icon: "leaf.fill", color: .appCyan)
-            metricCard(title: "Opérations", value: "\(viewModel.filteredTransactions.count)", icon: "rectangle.stack.fill", color: .appPurple)
+            metricCard(title: "Opérations", value: "\(viewModel.filteredTransactions.count)", icon: "rectangle.stack.fill", color: .appBlue)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 8)
@@ -161,7 +161,7 @@ struct StatisticsView: View {
                         )
                         .foregroundStyle(
                             isMax 
-                            ? AnyShapeStyle(LinearGradient(colors: [.appBlue, .appPurple], startPoint: .bottom, endPoint: .top))
+                            ? AnyShapeStyle(LinearGradient(colors: [.appBlue, .appCyan], startPoint: .bottom, endPoint: .top))
                             : AnyShapeStyle(Color.secondary.opacity(0.15))
                         )
                         .cornerRadius(6)
@@ -186,7 +186,7 @@ struct StatisticsView: View {
                             RoundedRectangle(cornerRadius: 8)
                                 .fill(
                                     isMax
-                                    ? AnyShapeStyle(LinearGradient(colors: [.appBlue, .appPurple], startPoint: .bottom, endPoint: .top))
+                                    ? AnyShapeStyle(LinearGradient(colors: [.appBlue, .appCyan], startPoint: .bottom, endPoint: .top))
                                     : AnyShapeStyle(Color.secondary.opacity(0.15))
                                 )
                                 .frame(height: maxVal > 0 ? max(CGFloat(item.amount / maxVal) * 120, 6) : 6)

@@ -20,7 +20,6 @@ struct MainTabView: View {
         case transactions = "Transactions"
         case add          = "Ajouter"
         case budget       = "Budget"
-        case statistics   = "Stats"
     }
     
     init(authManager: AuthenticationManager, notifManager: NotificationManager) {
@@ -71,12 +70,6 @@ struct MainTabView: View {
                     Label("Budget", systemImage: selectedTab == .budget ? "chart.pie.fill" : "chart.pie")
                 }
                 .tag(AppTab.budget)
-            
-            StatisticsView()
-                .tabItem {
-                    Label("Stats", systemImage: selectedTab == .statistics ? "chart.bar.fill" : "chart.bar")
-                }
-                .tag(AppTab.statistics)
         }
         .tint(.appBlue)
         .sheet(isPresented: $showAddTransaction) {
@@ -210,7 +203,7 @@ struct SettingsView: View {
                     Circle()
                         .fill(
                             LinearGradient(
-                                colors: [Color.appBlue, Color.appPurple],
+                                colors: [Color.appBlue, Color.appCyan],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
@@ -368,7 +361,7 @@ struct SettingsView: View {
                     }
                 } icon: {
                     Image(systemName: "bell.fill")
-                        .foregroundColor(.appPurple)
+                        .foregroundColor(.appBlue)
                 }
             }
             .tint(.appBlue)

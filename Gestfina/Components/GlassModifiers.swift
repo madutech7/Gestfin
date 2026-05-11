@@ -75,7 +75,7 @@ struct LiquidGlassButton: ViewModifier {
 struct AnimatedGlassBorder: ViewModifier {
     @State private var rotation: Double = 0
     var cornerRadius: CGFloat = 24
-    var colors: [Color] = [.appBlue, .appPurple, .appGreen, .appBlue]
+    var colors: [Color] = [.appBlue, .appBlue, .appGreen, .appBlue]
     
     func body(content: Content) -> some View {
         content
@@ -84,7 +84,7 @@ struct AnimatedGlassBorder: ViewModifier {
                 RoundedRectangle(cornerRadius: cornerRadius)
                     .stroke(
                         LinearGradient(
-                            colors: [Color.appBlue.opacity(0.5), Color.appPurple.opacity(0.5)],
+                            colors: [Color.appBlue.opacity(0.5), Color.appBlue.opacity(0.5)],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         ),
@@ -163,7 +163,7 @@ extension View {
     }
     
     /// Bordure gradient subtile
-    func animatedGlassBorder(cornerRadius: CGFloat = 24, colors: [Color] = [.appBlue, .appPurple, .appGreen, .appBlue]) -> some View {
+    func animatedGlassBorder(cornerRadius: CGFloat = 24, colors: [Color] = [.appBlue, .appBlue, .appGreen, .appBlue]) -> some View {
         modifier(AnimatedGlassBorder(cornerRadius: cornerRadius, colors: colors))
     }
     

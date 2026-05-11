@@ -70,7 +70,7 @@ struct DashboardView: View {
         ZStack(alignment: .bottom) {
             // Grand fond gradient
             LinearGradient(
-                colors: [Color(hex: "4A00E0"), Color(hex: "6C3CE1"), Color(hex: "8E2DE2")],
+                colors: [Color(hex: "007AFF"), Color(hex: "0A84FF"), Color(hex: "34AADC")],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
@@ -440,7 +440,7 @@ struct GlassBarChart: View {
                     RoundedRectangle(cornerRadius: 8)
                         .fill(
                             isLast
-                            ? AnyShapeStyle(LinearGradient(colors: [.appBlue, .appPurple], startPoint: .bottom, endPoint: .top))
+                            ? AnyShapeStyle(LinearGradient(colors: [.appBlue, .appCyan], startPoint: .bottom, endPoint: .top))
                             : AnyShapeStyle(Color.secondary.opacity(0.15))
                         )
                         .frame(height: height)

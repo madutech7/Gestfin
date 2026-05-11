@@ -63,7 +63,7 @@ struct AddTransactionView: View {
                     
                     HStack {
                         Image(systemName: "calendar")
-                            .foregroundColor(.appPurple)
+                            .foregroundColor(.appBlue)
                             .frame(width: 28)
                         DatePicker("Date", selection: $date, displayedComponents: .date)
                             .tint(.appBlue)
