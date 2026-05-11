@@ -13,6 +13,10 @@ struct TransactionsView: View {
     @State private var transactionToDelete: Transaction?
     @Environment(\.colorScheme) var colorScheme
 
+    private var netBalance: Double {
+        viewModel.filteredTransactions.reduce(0) { $0 + $1.signedAmount }
+    }
+
     var body: some View {
         NavigationView {
             List {
@@ -63,14 +67,13 @@ struct TransactionsView: View {
 
                             Spacer()
 
-                            let netBalance = viewModel.filteredTransactions.reduce(0) { $0 + $1.signedAmount }
                             HStack(spacing: 4) {
                                 Image(systemName: netBalance >= 0 ? "arrow.up.right" : "arrow.down.right")
                                     .font(.system(size: 10, weight: .bold))
                                 Text(viewModel.formatAmount(netBalance))
                                     .font(.system(size: 14, weight: .bold, design: .rounded))
                             }
-                            .foregroundStyle(netBalance >= 0 ? .appGreen : .appRed)
+                            .foregroundStyle(netBalance >= 0 ? Color.appGreen : Color.appRed)
                         }
                     }
                 }
