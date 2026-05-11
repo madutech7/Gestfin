@@ -163,8 +163,9 @@ struct DashboardView: View {
         )
         .scaleEffect(animateIn ? 1 : 0.92)
         .opacity(animateIn ? 1 : 0)
+        .shimmer()
         // Effet de survol / parallaxe subtil
-        .rotation3DEffect(.degrees(animateIn ? 0 : 5), axis: (x: 1, y: 0, z: 0))
+        .rotation3DEffect(.degrees(animateIn ? 0 : 8), axis: (x: 1, y: 0.5, z: 0))
     }
     
     // MARK: - Stats rapides

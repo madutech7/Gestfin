@@ -61,6 +61,21 @@ struct TransactionRow: View {
         .padding(14)
         .background(Color(UIColor.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 16))
+        .contentShape(RoundedRectangle(cornerRadius: 16))
+        .contextMenu {
+            Button(action: {
+                Haptics.play(.light)
+                UIPasteboard.general.string = transaction.formattedAmount
+            }) {
+                Label("Copier le montant", systemImage: "doc.on.doc")
+            }
+            Button(action: {
+                Haptics.play(.light)
+                UIPasteboard.general.string = transaction.title
+            }) {
+                Label("Copier le titre", systemImage: "text.cursor")
+            }
+        }
         .opacity(appeared ? 1 : 0)
         .offset(x: appeared ? 0 : 20)
         .onAppear {

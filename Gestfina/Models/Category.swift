@@ -146,3 +146,11 @@ struct AppCurrency: Identifiable, Equatable {
     }
 }
 
+
+
+struct Haptics {
+    static func play(_ style: UIImpactFeedbackGenerator.FeedbackStyle) {
+        let generator = UIImpactFeedbackGenerator(style: style)
+        generator.impactOccurred()
+    }
+}

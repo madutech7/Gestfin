@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Charts
 
 struct StatisticsView: View {
     @EnvironmentObject var viewModel: FinanceViewModel
@@ -154,30 +155,59 @@ struct StatisticsView: View {
                 .font(.system(size: 15, weight: .semibold))
                 .foregroundColor(.primary)
             
-            HStack(alignment: .bottom, spacing: 8) {
-                ForEach(viewModel.monthlyExpenses.indices, id: \.self) { i in
-                    let item = viewModel.monthlyExpenses[i]
-                    let maxVal = viewModel.monthlyExpenses.map(\.amount).max() ?? 1
-                    let isMax = item.amount == maxVal && maxVal > 0
-                    
-                    VStack(spacing: 6) {
-                        RoundedRectangle(cornerRadius: 8)
-                            .fill(
-                                isMax
-                                ? AnyShapeStyle(LinearGradient(colors: [.appBlue, .appPurple], startPoint: .bottom, endPoint: .top))
-                                : AnyShapeStyle(Color.secondary.opacity(0.15))
-                            )
-                            .frame(height: maxVal > 0 ? max(CGFloat(item.amount / maxVal) * 120, 6) : 6)
-                            .shadow(color: isMax ? Color.appBlue.opacity(0.3) : .clear, radius: 6, y: 3)
+            if #available(iOS 16.0, *) {
+                Chart {
+                    ForEach(viewModel.monthlyExpenses.indices, id: \.self) { i in
+                        let item = viewModel.monthlyExpenses[i]
+                        let maxVal = viewModel.monthlyExpenses.map(\.amount).max() ?? 1
+                        let isMax = item.amount == maxVal && maxVal > 0
                         
-                        Text(item.month)
-                            .font(.system(size: 10, weight: isMax ? .bold : .medium))
-                            .foregroundColor(isMax ? .appBlue : .secondary)
+                        BarMark(
+                            x: .value("Mois", item.month),
+                            y: .value("Montant", item.amount)
+                        )
+                        .foregroundStyle(
+                            isMax 
+                            ? AnyShapeStyle(LinearGradient(colors: [.appBlue, .appPurple], startPoint: .bottom, endPoint: .top))
+                            : AnyShapeStyle(Color.secondary.opacity(0.15))
+                        )
+                        .cornerRadius(6)
                     }
-                    .frame(maxWidth: .infinity)
                 }
+                .frame(height: 170)
+                .chartXAxis {
+                    AxisMarks(values: .automatic) { _ in
+                        AxisValueLabel()
+                            .font(.system(size: 10, weight: .medium))
+                    }
+                }
+                .chartYAxis(.hidden)
+            } else {
+                HStack(alignment: .bottom, spacing: 8) {
+                    ForEach(viewModel.monthlyExpenses.indices, id: \.self) { i in
+                        let item = viewModel.monthlyExpenses[i]
+                        let maxVal = viewModel.monthlyExpenses.map(\.amount).max() ?? 1
+                        let isMax = item.amount == maxVal && maxVal > 0
+                        
+                        VStack(spacing: 6) {
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(
+                                    isMax
+                                    ? AnyShapeStyle(LinearGradient(colors: [.appBlue, .appPurple], startPoint: .bottom, endPoint: .top))
+                                    : AnyShapeStyle(Color.secondary.opacity(0.15))
+                                )
+                                .frame(height: maxVal > 0 ? max(CGFloat(item.amount / maxVal) * 120, 6) : 6)
+                                .shadow(color: isMax ? Color.appBlue.opacity(0.3) : .clear, radius: 6, y: 3)
+                            
+                            Text(item.month)
+                                .font(.system(size: 10, weight: isMax ? .bold : .medium))
+                                .foregroundColor(isMax ? .appBlue : .secondary)
+                        }
+                        .frame(maxWidth: .infinity)
+                    }
+                }
+                .frame(height: 170)
             }
-            .frame(height: 170)
         }
     }
     
