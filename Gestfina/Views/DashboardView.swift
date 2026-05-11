@@ -216,9 +216,9 @@ struct DashboardView: View {
                         .animation(.easeOut(duration: 0.1), value: selectedAmount)
                 }
                 Spacer()
-                // Period pills (compact, style Stocks)
+                // Period pills
                 HStack(spacing: 6) {
-                    ForEach(FinanceViewModel.TimePeriod.allCases, id: \.self) { p in
+                    ForEach(Array(FinanceViewModel.TimePeriod.allCases), id: \.self) { p in
                         let sel = viewModel.selectedPeriod == p
                         Button {
                             Haptics.play(.selection)
@@ -450,18 +450,6 @@ struct GlassCategoryRow: View {
     }
 }
 
-// ─────────────────────────────────────────────────────────────────────
-// MARK: – Haptics helper
-// ─────────────────────────────────────────────────────────────────────
-
-private extension Haptics {
-    static func play(_ style: UIImpactFeedbackGenerator.FeedbackStyle) {
-        UIImpactFeedbackGenerator(style: style).impactOccurred()
-    }
-    static func play(_ style: UISelectionFeedbackGenerator.Type) {
-        UISelectionFeedbackGenerator().selectionChanged()
-    }
-}
 
 #Preview {
     DashboardView(authManager: AuthenticationManager(), notifManager: NotificationManager())
