@@ -21,15 +21,13 @@ struct DashboardView: View {
         NavigationView {
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
-                    // Balance Hero Card
-                    balanceHeroCard
-                        .padding(.horizontal, 20)
-                        .padding(.top, 8)
+                    // Wave-style gradient header
+                    headerSection
                     
                     // Quick Stats
                     quickStatsRow
                         .padding(.horizontal, 20)
-                        .padding(.top, 16)
+                        .padding(.top, 20)
                     
                     // Graphique
                     weeklyChartSection
@@ -50,26 +48,8 @@ struct DashboardView: View {
                 }
             }
             .background(Color(UIColor.systemGroupedBackground))
-            .navigationTitle("Bonjour, \(viewModel.userName) 👋")
-            .navigationBarTitleDisplayMode(.large)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button {
-                        showSettings = true
-                    } label: {
-                        Image(systemName: "gearshape")
-                            .foregroundColor(.secondary)
-                    }
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        withAnimation(.spring(response: 0.3)) { balanceVisible.toggle() }
-                    } label: {
-                        Image(systemName: balanceVisible ? "eye" : "eye.slash")
-                            .foregroundColor(.secondary)
-                    }
-                }
-            }
+            .ignoresSafeArea(edges: .top)
+            .navigationBarHidden(true)
             .onAppear {
                 withAnimation(.spring(response: 0.7, dampingFraction: 0.8).delay(0.1)) {
                     animateIn = true
@@ -84,89 +64,175 @@ struct DashboardView: View {
         }
     }
     
-    // MARK: - Balance Hero Card (Ultra Premium)
+    // MARK: - Header Section (Wave-inspired)
     
-    private var balanceHeroCard: some View {
-        ZStack {
-            // Fond dégradé dynamique (Apple Card style)
+    private var headerSection: some View {
+        ZStack(alignment: .bottom) {
+            // Grand fond gradient
             LinearGradient(
-                colors: [Color(hex: "00C6FF"), Color(hex: "0072FF")],
+                colors: [Color(hex: "4A00E0"), Color(hex: "6C3CE1"), Color(hex: "8E2DE2")],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
-            
-            // Texture / Orbes
-            Circle()
-                .fill(Color.white.opacity(0.15))
-                .frame(width: 250, height: 250)
-                .blur(radius: 40)
-                .offset(x: 100, y: -80)
-            
-            Circle()
-                .fill(Color.appPurple.opacity(0.3))
-                .frame(width: 200, height: 200)
-                .blur(radius: 50)
-                .offset(x: -80, y: 100)
-            
-            VStack(alignment: .leading, spacing: 20) {
-                HStack {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Solde Total")
-                            .font(.system(size: 15, weight: .medium))
-                            .foregroundColor(.white.opacity(0.8))
-                        
-                        Text(balanceVisible ? viewModel.formatAmount(viewModel.totalBalance) : "••••••")
-                            .font(.system(size: 44, weight: .bold, design: .rounded))
-                            .foregroundColor(.white)
-                            .contentTransition(.numericText())
-                            .animation(.spring(response: 0.3), value: viewModel.totalBalance)
-                    }
-                    Spacer()
-                    // Puce / Icône de carte
-                    Image(systemName: "contactless.radiowaves.right")
-                        .font(.system(size: 28, weight: .regular))
-                        .foregroundColor(.white.opacity(0.7))
-                        .rotationEffect(.degrees(-90))
+            .frame(height: 340)
+            .overlay(
+                // Orbes décoratifs subtils
+                ZStack {
+                    Circle()
+                        .fill(Color.white.opacity(0.08))
+                        .frame(width: 200, height: 200)
+                        .blur(radius: 30)
+                        .offset(x: 120, y: -60)
+                    Circle()
+                        .fill(Color.white.opacity(0.06))
+                        .frame(width: 160, height: 160)
+                        .blur(radius: 25)
+                        .offset(x: -100, y: 40)
                 }
-                
-                Spacer()
-                
-                // Taux d'épargne
-                HStack(spacing: 8) {
-                    Image(systemName: viewModel.savingsRate >= 0 ? "arrow.up.right.circle.fill" : "arrow.down.right.circle.fill")
-                        .font(.system(size: 18))
-                        .foregroundColor(.white)
-                    
-                    Text("\(viewModel.formatPercentage(abs(viewModel.savingsRate))) d'épargne")
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundColor(.white)
+            )
+            
+            VStack(spacing: 0) {
+                // Top bar: gear + nom + eye
+                HStack {
+                    Button {
+                        Haptics.play(.light)
+                        showSettings = true
+                    } label: {
+                        Image(systemName: "gearshape.fill")
+                            .font(.system(size: 22, weight: .medium))
+                            .foregroundColor(.white.opacity(0.9))
+                            .frame(width: 44, height: 44)
+                            .background(Color.white.opacity(0.15))
+                            .clipShape(Circle())
+                    }
                     
                     Spacer()
                     
                     Text("SamaXaalis")
-                        .font(.system(size: 16, weight: .bold, design: .rounded))
-                        .foregroundColor(.white.opacity(0.6))
+                        .font(.system(size: 18, weight: .bold, design: .rounded))
+                        .foregroundColor(.white)
+                    
+                    Spacer()
+                    
+                    Button {
+                        Haptics.play(.light)
+                        withAnimation(.spring(response: 0.3)) { balanceVisible.toggle() }
+                    } label: {
+                        Image(systemName: balanceVisible ? "eye.fill" : "eye.slash.fill")
+                            .font(.system(size: 18, weight: .medium))
+                            .foregroundColor(.white.opacity(0.9))
+                            .frame(width: 44, height: 44)
+                            .background(Color.white.opacity(0.15))
+                            .clipShape(Circle())
+                    }
                 }
-                .padding(.horizontal, 14)
-                .padding(.vertical, 10)
-                .background(Color.white.opacity(0.15))
-                .background(Material.ultraThinMaterial.opacity(0.3))
-                .clipShape(Capsule())
+                .padding(.horizontal, 20)
+                .padding(.top, 60)
+                
+                Spacer()
+                
+                // Balance card flottante
+                balanceCard
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, -30)
             }
-            .padding(28)
+            .frame(height: 340)
         }
-        .frame(height: 220)
-        .clipShape(RoundedRectangle(cornerRadius: 32, style: .continuous))
-        .shadow(color: Color(hex: "0072FF").opacity(0.4), radius: 24, x: 0, y: 12)
-        .overlay(
-            RoundedRectangle(cornerRadius: 32, style: .continuous)
-                .stroke(Color.white.opacity(0.3), lineWidth: 1)
-        )
+        .padding(.bottom, 30)
+    }
+    
+    // MARK: - Balance Card
+    
+    private var balanceCard: some View {
+        VStack(spacing: 16) {
+            VStack(spacing: 6) {
+                Text("Solde Total")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                
+                Text(balanceVisible ? viewModel.formatAmount(viewModel.totalBalance) : "••••••")
+                    .font(.system(size: 36, weight: .bold, design: .rounded))
+                    .foregroundColor(.primary)
+                    .contentTransition(.numericText())
+                    .animation(.spring(response: 0.3), value: viewModel.totalBalance)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.5)
+            }
+            
+            HStack(spacing: 12) {
+                // Revenus
+                HStack(spacing: 6) {
+                    Image(systemName: "arrow.down.left.circle.fill")
+                        .foregroundColor(.appGreen)
+                        .font(.system(size: 20))
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text("Revenus")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                        Text(viewModel.formatAmount(viewModel.totalIncome))
+                            .font(.caption)
+                            .fontWeight(.bold)
+                            .fontDesign(.rounded)
+                            .foregroundColor(.primary)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.5)
+                    }
+                }
+                .frame(maxWidth: .infinity)
+                
+                Divider()
+                    .frame(height: 30)
+                
+                // Dépenses
+                HStack(spacing: 6) {
+                    Image(systemName: "arrow.up.right.circle.fill")
+                        .foregroundColor(.appRed)
+                        .font(.system(size: 20))
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text("Dépenses")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                        Text(viewModel.formatAmount(viewModel.totalExpenses))
+                            .font(.caption)
+                            .fontWeight(.bold)
+                            .fontDesign(.rounded)
+                            .foregroundColor(.primary)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.5)
+                    }
+                }
+                .frame(maxWidth: .infinity)
+                
+                Divider()
+                    .frame(height: 30)
+                
+                // Épargne
+                HStack(spacing: 6) {
+                    Image(systemName: viewModel.savingsRate >= 0 ? "arrow.up.right.circle.fill" : "arrow.down.right.circle.fill")
+                        .foregroundColor(viewModel.savingsRate >= 0 ? .appGreen : .appRed)
+                        .font(.system(size: 20))
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text("Épargne")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                        Text(viewModel.formatPercentage(abs(viewModel.savingsRate)))
+                            .font(.caption)
+                            .fontWeight(.bold)
+                            .fontDesign(.rounded)
+                            .foregroundColor(.primary)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.5)
+                    }
+                }
+                .frame(maxWidth: .infinity)
+            }
+        }
+        .padding(20)
+        .background(Color(UIColor.secondarySystemGroupedBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .shadow(color: Color.black.opacity(0.1), radius: 16, x: 0, y: 8)
         .scaleEffect(animateIn ? 1 : 0.92)
         .opacity(animateIn ? 1 : 0)
-        .shimmer()
-        // Effet de survol / parallaxe subtil
-        .rotation3DEffect(.degrees(animateIn ? 0 : 8), axis: (x: 1, y: 0.5, z: 0))
     }
     
     // MARK: - Stats rapides

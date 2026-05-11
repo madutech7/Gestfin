@@ -29,38 +29,38 @@ enum TransactionCategory: String, Codable, CaseIterable, Identifiable {
     /// Icône SF Symbol pour chaque catégorie
     var icon: String {
         switch self {
-        case .salary: return "briefcase.fill"
+        case .salary: return "banknote.fill"
         case .freelance: return "laptopcomputer"
         case .investment: return "chart.line.uptrend.xyaxis"
-        case .food: return "cart.fill"
+        case .food: return "fork.knife"
         case .housing: return "house.fill"
-        case .transport: return "car.fill"
-        case .utilities: return "bolt.fill"
-        case .entertainment: return "gamecontroller.fill"
+        case .transport: return "bus.fill"
+        case .utilities: return "bolt.circle.fill"
+        case .entertainment: return "film.fill"
         case .shopping: return "bag.fill"
-        case .health: return "heart.fill"
-        case .education: return "book.fill"
-        case .savings: return "banknote.fill"
-        case .other: return "ellipsis.circle.fill"
+        case .health: return "cross.case.fill"
+        case .education: return "graduationcap.fill"
+        case .savings: return "building.columns.fill"
+        case .other: return "square.grid.2x2.fill"
         }
     }
     
     /// Couleur associée à chaque catégorie
     var color: Color {
         switch self {
-        case .salary: return Color(hex: "4CAF50")
-        case .freelance: return Color(hex: "8BC34A")
-        case .investment: return Color(hex: "00BCD4")
-        case .food: return Color(hex: "FF9800")
-        case .housing: return Color(hex: "795548")
-        case .transport: return Color(hex: "2196F3")
-        case .utilities: return Color(hex: "FFC107")
-        case .entertainment: return Color(hex: "E91E63")
-        case .shopping: return Color(hex: "9C27B0")
-        case .health: return Color(hex: "F44336")
-        case .education: return Color(hex: "3F51B5")
-        case .savings: return Color(hex: "009688")
-        case .other: return Color(hex: "607D8B")
+        case .salary: return Color(hex: "34C759")
+        case .freelance: return Color(hex: "30D158")
+        case .investment: return Color(hex: "32ADE6")
+        case .food: return Color(hex: "FF9500")
+        case .housing: return Color(hex: "A2845E")
+        case .transport: return Color(hex: "007AFF")
+        case .utilities: return Color(hex: "FFD60A")
+        case .entertainment: return Color(hex: "FF375F")
+        case .shopping: return Color(hex: "AF52DE")
+        case .health: return Color(hex: "FF3B30")
+        case .education: return Color(hex: "5856D6")
+        case .savings: return Color(hex: "00C7BE")
+        case .other: return Color(hex: "8E8E93")
         }
     }
     
