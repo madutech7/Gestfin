@@ -98,8 +98,12 @@ struct MainTabView: View {
             .padding(.horizontal, 8)
             .background(
                 Capsule()
-                    .fill(Color(UIColor.systemBackground))
-                    .shadow(color: Color.black.opacity(0.1), radius: 15, x: 0, y: 5)
+                    .fill(.ultraThinMaterial)
+                    .shadow(color: Color.black.opacity(0.12), radius: 20, x: 0, y: 8)
+            )
+            .overlay(
+                Capsule()
+                    .strokeBorder(Color.white.opacity(0.3), lineWidth: 0.5)
             )
             
             // Separated Settings Button
@@ -117,8 +121,12 @@ struct MainTabView: View {
                 .frame(width: 70, height: 60)
                 .background(
                     Capsule()
-                        .fill(Color(UIColor.systemBackground))
-                        .shadow(color: Color.black.opacity(0.1), radius: 15, x: 0, y: 5)
+                        .fill(.ultraThinMaterial)
+                        .shadow(color: Color.black.opacity(0.12), radius: 20, x: 0, y: 8)
+                )
+                .overlay(
+                    Capsule()
+                        .strokeBorder(Color.white.opacity(0.3), lineWidth: 0.5)
                 )
             }
         }
