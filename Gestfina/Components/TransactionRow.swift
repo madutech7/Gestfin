@@ -58,10 +58,7 @@ struct TransactionRow: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.4)
         }
-        .padding(14)
-        .background(Color(UIColor.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .contentShape(RoundedRectangle(cornerRadius: 16))
+        .padding(.vertical, 4)
         .contextMenu {
             Button(action: {
                 Haptics.play(.light)

@@ -42,8 +42,6 @@ struct TransactionsView: View {
                     }
                 }
                 .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
-                .listRowBackground(Color.clear)
-                .listRowSeparator(.hidden)
                 
                 // Résumé rapide
                 if !viewModel.filteredTransactions.isEmpty {
@@ -90,8 +88,7 @@ struct TransactionsView: View {
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 60)
                         .background(Color(UIColor.secondarySystemGroupedBackground))
-                        .clipShape(RoundedRectangle(cornerRadius: 24))
-                        .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.2 : 0.03), radius: 10, x: 0, y: 4)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
@@ -99,9 +96,6 @@ struct TransactionsView: View {
                     Section {
                         ForEach(viewModel.filteredTransactions) { transaction in
                             TransactionRow(transaction: transaction)
-                                .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
-                                .listRowBackground(Color.clear)
-                                .listRowSeparator(.hidden)
                                 .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                                     Button(role: .destructive) {
                                         transactionToDelete = transaction
@@ -115,16 +109,7 @@ struct TransactionsView: View {
                 }
             }
             .listStyle(.insetGrouped)
-            .background(
-                ZStack {
-                    Color(UIColor.systemGroupedBackground).ignoresSafeArea()
-                    Circle()
-                        .fill(Color.appGreen.opacity(colorScheme == .dark ? 0.05 : 0.03))
-                        .frame(width: 300, height: 300)
-                        .blur(radius: 60)
-                        .offset(x: 150, y: -200)
-                }
-            )
+            .background(Color(UIColor.systemGroupedBackground))
             .scrollContentBackground(.hidden)
             .searchable(text: $viewModel.searchText, prompt: "Rechercher une transaction")
             .navigationTitle("Transactions")

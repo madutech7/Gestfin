@@ -122,16 +122,7 @@ struct AddTransactionView: View {
                     Text("Catégorie")
                 }
             }
-            .background(
-                ZStack {
-                    Color(UIColor.systemGroupedBackground).ignoresSafeArea()
-                    Circle()
-                        .fill(Color.appBlue.opacity(0.04))
-                        .frame(width: 300, height: 300)
-                        .blur(radius: 60)
-                        .offset(x: -150, y: -200)
-                }
-            )
+            .background(Color(UIColor.systemGroupedBackground))
             .scrollContentBackground(.hidden)
             .navigationTitle("Nouvelle transaction")
             .navigationBarTitleDisplayMode(.inline)

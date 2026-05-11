@@ -45,24 +45,8 @@ struct DashboardView: View {
                     Spacer(minLength: 40)
                 }
             }
-            .background(
-                ZStack {
-                    Color(UIColor.systemGroupedBackground).ignoresSafeArea()
-                    
-                    // Orbes d'ambiance ultra-subtils (Mode clair/sombre)
-                    Circle()
-                        .fill(Color.appBlue.opacity(colorScheme == .dark ? 0.05 : 0.03))
-                        .frame(width: 300, height: 300)
-                        .blur(radius: 60)
-                        .offset(x: -150, y: -200)
-                    
-                    Circle()
-                        .fill(Color.appPurple.opacity(colorScheme == .dark ? 0.05 : 0.03))
-                        .frame(width: 300, height: 300)
-                        .blur(radius: 60)
-                        .offset(x: 150, y: 100)
-                }
-            )
+            }
+            .background(Color(UIColor.systemGroupedBackground))
             .navigationTitle("Bonjour, \(viewModel.userName) 👋")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
@@ -327,9 +311,15 @@ struct DashboardView: View {
                 }
                 .padding(.vertical, 30)
             } else {
-                VStack(spacing: 8) {
-                    ForEach(viewModel.recentTransactions) { transaction in
+                VStack(spacing: 0) {
+                    ForEach(Array(viewModel.recentTransactions.enumerated()), id: \.element.id) { index, transaction in
                         TransactionRow(transaction: transaction)
+                            .padding(.vertical, 8)
+                        
+                        if index < viewModel.recentTransactions.count - 1 {
+                            Divider()
+                                .padding(.leading, 60)
+                        }
                     }
                 }
             }
