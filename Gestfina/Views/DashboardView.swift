@@ -216,28 +216,7 @@ struct DashboardView: View {
                         .animation(.easeOut(duration: 0.1), value: selectedAmount)
                 }
                 Spacer()
-                // Period pills
-                HStack(spacing: 6) {
-                    ForEach(FinanceViewModel.TimePeriod.allCases as [FinanceViewModel.TimePeriod], id: \.self) { p in
-                        let sel = viewModel.selectedPeriod == p
-                        Button {
-                            Haptics.play(.selection)
-                            withAnimation(.spring(response: 0.25)) {
-                                viewModel.selectedPeriod = p
-                                selectedDay = nil; selectedAmount = nil
-                            }
-                        } label: {
-                            Text(p.rawValue)
-                                .font(.caption.weight(.semibold))
-                                .foregroundStyle(sel ? Color(UIColor.systemBackground) : .primary)
-                                .padding(.horizontal, 9)
-                                .padding(.vertical, 4)
-                                .background(sel ? Color(UIColor.label) : Color(UIColor.secondarySystemFill))
-                                .clipShape(Capsule())
-                        }
-                        .buttonStyle(.plain)
-                    }
-                }
+                periodPills
             }
             .padding(.horizontal, 16)
             .padding(.top, 14)
@@ -319,6 +298,34 @@ struct DashboardView: View {
                                 }
                         )
                 }
+            }
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // MARK: – Period Pills (extracted for type inference)
+    // ─────────────────────────────────────────────────────────────────
+    private var periodPills: some View {
+        let periods: [FinanceViewModel.TimePeriod] = FinanceViewModel.TimePeriod.allCases
+        return HStack(spacing: 6) {
+            ForEach(periods, id: \.self) { p in
+                let sel = viewModel.selectedPeriod == p
+                Button {
+                    Haptics.play(.selection)
+                    withAnimation(.spring(response: 0.25)) {
+                        viewModel.selectedPeriod = p
+                        selectedDay = nil; selectedAmount = nil
+                    }
+                } label: {
+                    Text(p.rawValue)
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(sel ? Color(UIColor.systemBackground) : .primary)
+                        .padding(.horizontal, 9)
+                        .padding(.vertical, 4)
+                        .background(sel ? Color(UIColor.label) : Color(UIColor.secondarySystemFill))
+                        .clipShape(Capsule())
+                }
+                .buttonStyle(.plain)
             }
         }
     }
