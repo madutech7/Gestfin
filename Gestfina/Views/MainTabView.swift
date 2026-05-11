@@ -153,7 +153,7 @@ struct SettingsView: View {
                     Text("Notifications")
                 } footer: {
                     if notifManager.authorizationStatus == .denied {
-                        Text("Notifications désactivées. Activez-les dans Réglages > Gestfina.")
+                        Text("Notifications désactivées. Activez-les dans Réglages > SamaXaalis.")
                     }
                 }
                 

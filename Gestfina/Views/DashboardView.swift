@@ -125,7 +125,7 @@ struct DashboardView: View {
                     
                     Spacer()
                     
-                    Text("Gestfina")
+                    Text("SamaXaalis")
                         .font(.system(size: 16, weight: .bold, design: .rounded))
                         .foregroundColor(.white.opacity(0.6))
                 }

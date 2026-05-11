@@ -125,7 +125,7 @@ class AuthenticationManager: ObservableObject {
             return
         }
         
-        let reason = "Déverrouillez Gestfina pour accéder à vos finances."
+        let reason = "Déverrouillez SamaXaalis pour accéder à vos finances."
         
         context.evaluatePolicy(policy, localizedReason: reason) { success, authError in
             DispatchQueue.main.async {
@@ -318,7 +318,7 @@ class NotificationManager: ObservableObject {
         cancelDailyReminder()
         
         let content = UNMutableNotificationContent()
-        content.title = "Gestfina — Suivi du jour"
+        content.title = "SamaXaalis — Suivi du jour"
         content.body  = "N'oubliez pas d'enregistrer vos dépenses du jour pour garder vos finances à jour."
         content.sound = .default
         
@@ -385,7 +385,7 @@ struct LockScreenView: View {
                     .scaleEffect(logoScale)
                     .opacity(logoOpacity)
                 
-                Text("Gestfina est verrouillé")
+                Text("SamaXaalis est verrouillé")
                     .font(.system(size: 20, weight: .semibold))
                     .foregroundColor(.primary)
                     .opacity(logoOpacity)
