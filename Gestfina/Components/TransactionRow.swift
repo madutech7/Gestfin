@@ -68,6 +68,21 @@ struct TransactionRow: View {
                 appeared = true
             }
         }
+        .contextMenu {
+            Button {
+                UIPasteboard.general.string = transaction.formattedAmount
+                Haptics.shared.notify(.success)
+            } label: {
+                Label("Copier le montant", systemImage: "doc.on.doc")
+            }
+            
+            Button {
+                UIPasteboard.general.string = transaction.title
+                Haptics.shared.notify(.success)
+            } label: {
+                Label("Copier le titre", systemImage: "text.alignleft")
+            }
+        }
     }
 }
 

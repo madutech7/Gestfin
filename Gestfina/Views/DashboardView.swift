@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Charts
 
 struct DashboardView: View {
     @EnvironmentObject var viewModel: FinanceViewModel
@@ -42,7 +43,7 @@ struct DashboardView: View {
                         .padding(.horizontal, 20)
                         .padding(.top, 16)
                     
-                    Spacer(minLength: 40)
+                    Spacer(minLength: 120)
                 }
             }
             .background(
@@ -68,6 +69,7 @@ struct DashboardView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
+                        Haptics.shared.play(.light)
                         withAnimation(.spring(response: 0.3)) { balanceVisible.toggle() }
                     } label: {
                         Image(systemName: balanceVisible ? "eye" : "eye.slash")
@@ -155,6 +157,7 @@ struct DashboardView: View {
             .padding(28)
         }
         .frame(height: 220)
+        .shimmer()
         .clipShape(RoundedRectangle(cornerRadius: 32, style: .continuous))
         .shadow(color: Color(hex: "0072FF").opacity(0.4), radius: 24, x: 0, y: 12)
         .overlay(
@@ -248,7 +251,36 @@ struct DashboardView: View {
                 }
             }
             
-            GlassBarChart(data: viewModel.dailyExpenses)
+            if #available(iOS 16.0, *) {
+                Chart {
+                    ForEach(viewModel.dailyExpenses.indices, id: \.self) { index in
+                        let item = viewModel.dailyExpenses[index]
+                        BarMark(
+                            x: .value("Jour", item.0),
+                            y: .value("Dépenses", item.1)
+                        )
+                        .foregroundStyle(
+                            LinearGradient(
+                                colors: [Color.appBlue.opacity(0.8), Color.appPurple.opacity(0.6)],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            )
+                        )
+                        .cornerRadius(6)
+                    }
+                }
+                .frame(height: 180)
+                .chartXAxis {
+                    AxisMarks(values: .automatic) { _ in
+                        AxisValueLabel()
+                            .font(.system(size: 10, weight: .medium))
+                            .foregroundStyle(Color.secondary)
+                    }
+                }
+                .chartYAxis(.hidden)
+            } else {
+                GlassBarChart(data: viewModel.dailyExpenses)
+            }
         }
         .padding(20)
         .background(Color(UIColor.secondarySystemGroupedBackground))

@@ -174,8 +174,7 @@ struct AddTransactionView: View {
             note: note
         )
         viewModel.addTransaction(transaction)
-        let impact = UIImpactFeedbackGenerator(style: .medium)
-        impact.impactOccurred()
+        Haptics.shared.notify(.success)
         dismiss()
     }
 }

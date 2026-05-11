@@ -115,6 +115,7 @@ struct TransactionsView: View {
                 }
             }
             .listStyle(.insetGrouped)
+            .safeAreaInset(edge: .bottom) { Color.clear.frame(height: 90) }
             .background(
                 ZStack {
                     Color(UIColor.systemGroupedBackground).ignoresSafeArea()
