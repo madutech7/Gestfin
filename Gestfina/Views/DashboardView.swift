@@ -20,14 +20,7 @@ struct DashboardView: View {
     let authManager:  AuthenticationManager
     let notifManager: NotificationManager
 
-    private var greeting: String {
-        let hour = Calendar.current.component(.hour, from: Date())
-        switch hour {
-        case 5..<12:  return "Bonjour"
-        case 12..<18: return "Bon après-midi"
-        default:      return "Bonsoir"
-        }
-    }
+
 
     var body: some View {
         NavigationView {
@@ -36,14 +29,12 @@ struct DashboardView: View {
 
                     // ── GREETING ──
                     HStack {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(greeting + ",")
-                                .font(.system(size: 16, weight: .medium))
-                                .foregroundStyle(.secondary)
-                            Text(viewModel.userName)
-                                .font(.system(size: 28, weight: .bold, design: .rounded))
-                                .foregroundStyle(.primary)
-                        }
+                        Image("SamaXaalisLogo")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 50)
+                            .padding(.vertical, 4)
+                        
                         Spacer()
                         Button {
                             UIImpactFeedbackGenerator(style: .light).impactOccurred()
