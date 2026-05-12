@@ -98,7 +98,14 @@ struct DashboardView: View {
 
                             VStack(spacing: 0) {
                                 ForEach(Array(viewModel.expensesByCategory.prefix(5).enumerated()), id: \.element.category) { index, item in
-                                    PremiumCategoryRow(item: item, viewModel: viewModel)
+                                    // Use budget-based percentage if a budget exists for this category
+                                    let budgetPercentage = viewModel.budgetPercentage(for: item.category)
+                                    let displayItem = (
+                                        category: item.category,
+                                        amount: item.amount,
+                                        percentage: budgetPercentage ?? item.percentage
+                                    )
+                                    PremiumCategoryRow(item: displayItem, viewModel: viewModel)
                                     if index < min(viewModel.expensesByCategory.count, 5) - 1 {
                                         Divider()
                                             .padding(.leading, 68)

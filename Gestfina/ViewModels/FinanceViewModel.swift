@@ -221,6 +221,14 @@ class FinanceViewModel: ObservableObject {
         return (spent: spent, percentage: min(percentage, 100))
     }
     
+    /// Retourne le pourcentage budget (spent/limit) pour une catégorie, ou nil si aucun budget n'existe
+    func budgetPercentage(for category: TransactionCategory) -> Double? {
+        guard let budget = budgets.first(where: { $0.category == category && $0.isActive }) else {
+            return nil
+        }
+        return budgetProgress(for: budget).percentage
+    }
+    
     /// Transactions récentes (5 dernières)
     var recentTransactions: [Transaction] {
         Array(transactions.sorted { $0.date > $1.date }.prefix(5))

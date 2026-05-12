@@ -18,8 +18,8 @@ struct MainTabView: View {
     enum AppTab: String, CaseIterable {
         case dashboard    = "Accueil"
         case transactions = "Transactions"
-        case add          = "Ajouter"
         case budget       = "Budget"
+        case add          = "Ajouter"
     }
 
     init(authManager: AuthenticationManager, notifManager: NotificationManager) {
@@ -60,18 +60,18 @@ struct MainTabView: View {
                 }
                 .tag(AppTab.transactions)
 
-            // Central "+" trigger tab
-            Color.clear
-                .tabItem {
-                    Label("Ajouter", systemImage: "plus.circle.fill")
-                }
-                .tag(AppTab.add)
-
             BudgetView()
                 .tabItem {
                     Label("Budget", systemImage: selectedTab == .budget ? "chart.pie.fill" : "chart.pie")
                 }
                 .tag(AppTab.budget)
+
+            // "+" trigger tab (last position)
+            Color.clear
+                .tabItem {
+                    Label("Ajouter", systemImage: "plus.circle.fill")
+                }
+                .tag(AppTab.add)
         }
         .tint(.appBlue)
         .sheet(isPresented: $showAddTransaction) {
