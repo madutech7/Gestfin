@@ -24,7 +24,7 @@ class AdService: NSObject, FullScreenContentDelegate {
     
     func loadInterstitial() {
         let request = Request()
-        InterstitialAd.load(withAdUnitID: interstitialID, request: request) { [weak self] ad, error in
+        InterstitialAd.load(with: interstitialID, request: request) { [weak self] ad, error in
             if let error = error {
                 print("Erreur chargement pub interstitielle: \(error.localizedDescription)")
                 return
@@ -41,8 +41,9 @@ class AdService: NSObject, FullScreenContentDelegate {
             return
         }
         
-        if let rootVC = UIApplication.shared.windows.first?.rootViewController {
-            interstitial.present(fromRootViewController: rootVC)
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let rootVC = windowScene.windows.first?.rootViewController {
+            interstitial.present(from: rootVC)
         }
     }
     
