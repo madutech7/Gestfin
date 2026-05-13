@@ -22,7 +22,7 @@ private struct BannerViewControllerRepresentable: UIViewControllerRepresentable 
     
     func makeUIViewController(context: Context) -> UIViewController {
         let viewController = UIViewController()
-        let bannerView = GADBannerView(adSize: GADAdSizeBanner)
+        let bannerView = BannerView(adSize: AdSizeBanner)
         
         bannerView.adUnitID = adUnitID
         bannerView.rootViewController = viewController
@@ -35,7 +35,7 @@ private struct BannerViewControllerRepresentable: UIViewControllerRepresentable 
             bannerView.centerXAnchor.constraint(equalTo: viewController.view.centerXAnchor)
         ])
         
-        bannerView.load(GADRequest())
+        bannerView.load(Request())
         
         return viewController
     }

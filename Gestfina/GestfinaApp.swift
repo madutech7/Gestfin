@@ -17,7 +17,7 @@ struct GestfinaApp: App {
     @Environment(\.scenePhase) private var scenePhase
     
     init() {
-        GADMobileAds.sharedInstance.start(completionHandler: nil)
+        MobileAds.shared.start(completionHandler: nil)
     }
     
     var body: some Scene {
