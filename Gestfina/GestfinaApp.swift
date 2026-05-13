@@ -43,6 +43,8 @@ struct GestfinaApp: App {
             case .active:
                 // Rafraîchir le statut des notifications
                 notifManager.checkAuthorizationStatus()
+                // Afficher la publicité plein écran au démarrage
+                AdService.shared.showInterstitial()
             default:
                 break
             }

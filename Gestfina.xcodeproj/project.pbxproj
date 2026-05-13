@@ -23,6 +23,7 @@
 		AA0000000000000000000E /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0000000000000000000E; };
 		AA0000000000000000000F /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0000000000000000000F; };
 		AA00000000000000000011 /* AdMobBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000011; };
+		AA00000000000000000012 /* AdService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000012; };
 		AA00000000000000000010 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000010; };
 /* End PBXBuildFile section */
 
@@ -43,6 +44,7 @@
 		FA0000000000000000000E /* Color+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extensions.swift"; sourceTree = "<group>"; };
 		FA0000000000000000000F /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
 		FA00000000000000000011 /* AdMobBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdMobBannerView.swift; sourceTree = "<group>"; };
+		FA0000000000000000012 /* AdService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdService.swift; sourceTree = "<group>"; };
 		FA00000000000000000010 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FA00000000000000000020 /* Gestfina.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gestfina.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -76,6 +78,7 @@
 				CA00000000000000000006 /* Components */,
 				CA00000000000000000007 /* Extensions */,
 				FA00000000000000000010 /* Assets.xcassets */,
+				CA00000000000000000009 /* Utils */,
 			);
 			path = Gestfina;
 			sourceTree = "<group>";
@@ -136,6 +139,14 @@
 				FA00000000000000000020 /* Gestfina.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		CA00000000000000000009 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				FA0000000000000000012 /* AdService.swift */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -224,6 +235,7 @@
 				AA0000000000000000000E /* Color+Extensions.swift in Sources */,
 				AA0000000000000000000F /* Date+Extensions.swift in Sources */,
 				AA00000000000000000011 /* AdMobBannerView.swift in Sources */,
+				AA00000000000000000012 /* AdService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
