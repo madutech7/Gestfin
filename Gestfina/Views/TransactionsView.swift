@@ -70,7 +70,7 @@ struct TransactionsView: View {
                             HStack(spacing: 4) {
                                 Image(systemName: netBalance >= 0 ? "arrow.up.right" : "arrow.down.right")
                                     .font(.system(size: 10, weight: .bold))
-                                Text(viewModel.formatAmount(netBalance))
+                                Text(viewModel.isBalanceVisible ? viewModel.formatAmount(netBalance) : "••••")
                                     .font(.system(size: 14, weight: .bold, design: .rounded))
                             }
                             .foregroundStyle(netBalance >= 0 ? Color.appGreen : Color.appRed)

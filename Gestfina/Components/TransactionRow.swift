@@ -9,6 +9,7 @@ import SwiftUI
 
 struct TransactionRow: View {
     let transaction: Transaction
+    @EnvironmentObject var viewModel: FinanceViewModel
     @State private var appeared = false
 
     var body: some View {
@@ -54,7 +55,7 @@ struct TransactionRow: View {
             Spacer()
 
             VStack(alignment: .trailing, spacing: 2) {
-                Text(transaction.formattedAmount)
+                Text(viewModel.isBalanceVisible ? transaction.formattedAmount : "••••")
                     .font(.system(size: 16, weight: .bold, design: .rounded))
                     .foregroundStyle(transaction.type == .income ? Color.appGreen : Color.primary)
                     .lineLimit(1)
@@ -92,4 +93,5 @@ struct TransactionRow: View {
     }
     .padding()
     .background(Color(UIColor.systemGroupedBackground))
+    .environmentObject(FinanceViewModel())
 }

@@ -28,6 +28,9 @@ class FinanceViewModel: ObservableObject {
     @Published var currency: String = "EUR" {
         didSet { UserDefaults.standard.set(currency, forKey: "gestfina_currency") }
     }
+    @Published var isBalanceVisible: Bool = true {
+        didSet { UserDefaults.standard.set(isBalanceVisible, forKey: "gestfina_is_balance_visible") }
+    }
     
     /// Symbole de la devise active
     var currencySymbol: String {
@@ -40,6 +43,7 @@ class FinanceViewModel: ObservableObject {
     private let budgetsKey       = "gestfina_budgets"
     private let userNameKey      = "gestfina_username"
     private let currencyKey      = "gestfina_currency"
+    private let isBalanceVisibleKey = "gestfina_is_balance_visible"
     
     // MARK: - Init
     
@@ -49,6 +53,9 @@ class FinanceViewModel: ObservableObject {
         loadUserName()
         if let saved = UserDefaults.standard.string(forKey: currencyKey) {
             currency = saved
+        }
+        if UserDefaults.standard.object(forKey: isBalanceVisibleKey) != nil {
+            isBalanceVisible = UserDefaults.standard.bool(forKey: isBalanceVisibleKey)
         }
         // Pas de données mock - l'utilisateur commence avec une application vide
     }

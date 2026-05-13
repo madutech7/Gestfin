@@ -110,9 +110,9 @@ struct StatisticsView: View {
 
     private var metricsGrid: some View {
         LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 10) {
-            StatMetricCard(title: "Revenus", value: viewModel.formatAmount(viewModel.totalIncome), icon: "arrow.down.left.circle.fill", color: .appGreen)
-            StatMetricCard(title: "Dépenses", value: viewModel.formatAmount(viewModel.totalExpenses), icon: "arrow.up.right.circle.fill", color: .appRed)
-            StatMetricCard(title: "Épargne", value: viewModel.formatPercentage(viewModel.savingsRate), icon: "leaf.circle.fill", color: .appCyan)
+            StatMetricCard(title: "Revenus", value: viewModel.isBalanceVisible ? viewModel.formatAmount(viewModel.totalIncome) : "••••", icon: "arrow.down.left.circle.fill", color: .appGreen)
+            StatMetricCard(title: "Dépenses", value: viewModel.isBalanceVisible ? viewModel.formatAmount(viewModel.totalExpenses) : "••••", icon: "arrow.up.right.circle.fill", color: .appRed)
+            StatMetricCard(title: "Épargne", value: viewModel.isBalanceVisible ? viewModel.formatPercentage(viewModel.savingsRate) : "••••", icon: "leaf.circle.fill", color: .appCyan)
             StatMetricCard(title: "Opérations", value: "\(viewModel.filteredTransactions.count)", icon: "number.circle.fill", color: .appBlue)
         }
         .padding(.horizontal, 16)
@@ -223,7 +223,7 @@ struct StatisticsView: View {
                             Text(item.category.rawValue)
                                 .font(.system(size: 14, weight: .semibold))
                             Spacer()
-                            Text(viewModel.formatAmount(item.amount))
+                            Text(viewModel.isBalanceVisible ? viewModel.formatAmount(item.amount) : "••••")
                                 .font(.system(size: 14, weight: .bold, design: .rounded))
                             Text(viewModel.formatPercentage(item.percentage))
                                 .font(.system(size: 11, weight: .medium))
@@ -286,7 +286,7 @@ struct StatisticsView: View {
 
             Spacer()
 
-            Text(viewModel.formatAmount(item.amount))
+            Text(viewModel.isBalanceVisible ? viewModel.formatAmount(item.amount) : "••••")
                 .font(.system(size: 16, weight: .bold, design: .rounded))
         }
     }

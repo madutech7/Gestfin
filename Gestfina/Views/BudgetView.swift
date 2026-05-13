@@ -154,7 +154,7 @@ struct NativeOverviewCard: View {
                     Text("Budget global")
                         .font(.system(size: 13, weight: .regular))
                         .foregroundStyle(.secondary)
-                    Text(viewModel.formatAmount(totalBudget))
+                    Text(viewModel.isBalanceVisible ? viewModel.formatAmount(totalBudget) : "••••")
                         .font(.system(size: 20, weight: .bold, design: .rounded))
                 }
                 
@@ -163,7 +163,7 @@ struct NativeOverviewCard: View {
                         Text("Dépensé")
                             .font(.system(size: 11, weight: .regular))
                             .foregroundStyle(.secondary)
-                        Text(viewModel.formatAmount(totalSpent))
+                        Text(viewModel.isBalanceVisible ? viewModel.formatAmount(totalSpent) : "••••")
                             .font(.system(size: 13, weight: .semibold, design: .rounded))
                             .foregroundStyle(Color.appRed)
                     }
@@ -172,7 +172,7 @@ struct NativeOverviewCard: View {
                         Text("Restant")
                             .font(.system(size: 11, weight: .regular))
                             .foregroundStyle(.secondary)
-                        Text(viewModel.formatAmount(remaining))
+                        Text(viewModel.isBalanceVisible ? viewModel.formatAmount(remaining) : "••••")
                             .font(.system(size: 13, weight: .semibold, design: .rounded))
                             .foregroundStyle(Color.appBlue)
                     }
@@ -220,9 +220,9 @@ struct NativeBudgetCard: View {
 
                 // Amounts
                 VStack(alignment: .trailing, spacing: 2) {
-                    Text(viewModel.formatAmount(progress.spent))
+                    Text(viewModel.isBalanceVisible ? viewModel.formatAmount(progress.spent) : "••••")
                         .font(.system(size: 17, weight: .semibold, design: .rounded))
-                    Text("sur \(budget.formattedLimit)")
+                    Text("sur \(viewModel.isBalanceVisible ? budget.formattedLimit : "••••")")
                         .font(.system(size: 13, weight: .regular))
                         .foregroundStyle(.secondary)
                 }
@@ -253,7 +253,7 @@ struct NativeBudgetCard: View {
                     Spacer()
                     
                     let remainingAmount = max(budget.limit - progress.spent, 0)
-                    Text("Reste \(viewModel.formatAmount(remainingAmount))")
+                    Text("Reste \(viewModel.isBalanceVisible ? viewModel.formatAmount(remainingAmount) : "••••")")
                         .font(.system(size: 12, weight: .regular))
                         .foregroundStyle(.secondary)
                 }

@@ -11,7 +11,6 @@ import Charts
 struct DashboardView: View {
     @EnvironmentObject var viewModel: FinanceViewModel
     @State private var showSettings   = false
-    @State private var balanceVisible = true
     @State private var greetingScale: CGFloat = 0.95
     @State private var greetingOpacity: Double = 0
     @State private var cardAppeared = false
@@ -56,7 +55,7 @@ struct DashboardView: View {
                     .opacity(greetingOpacity)
 
                     // ── 1. BALANCE CARD — APPLE WALLET PREMIUM ──
-                    BalanceCardView(viewModel: viewModel, balanceVisible: $balanceVisible)
+                    BalanceCardView(viewModel: viewModel)
                         .padding(.horizontal, 20)
                         .opacity(cardAppeared ? 1 : 0)
                         .offset(y: cardAppeared ? 0 : 20)
@@ -201,7 +200,6 @@ struct DashboardView: View {
 
 struct BalanceCardView: View {
     @ObservedObject var viewModel: FinanceViewModel
-    @Binding var balanceVisible: Bool
     @Environment(\.colorScheme) var colorScheme
     @State private var gradientPhase: CGFloat = 0
 
@@ -218,7 +216,7 @@ struct BalanceCardView: View {
                     }
                     .foregroundStyle(Color.white.opacity(0.7))
 
-                    Text(balanceVisible
+                    Text(viewModel.isBalanceVisible
                          ? viewModel.formatAmount(viewModel.totalBalance)
                          : "••••••")
                         .font(.system(size: 38, weight: .bold, design: .rounded))
@@ -233,10 +231,10 @@ struct BalanceCardView: View {
                 Button {
                     UIImpactFeedbackGenerator(style: .light).impactOccurred()
                     withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                        balanceVisible.toggle()
+                        viewModel.isBalanceVisible.toggle()
                     }
                 } label: {
-                    Image(systemName: balanceVisible ? "eye.fill" : "eye.slash.fill")
+                    Image(systemName: viewModel.isBalanceVisible ? "eye.fill" : "eye.slash.fill")
                         .font(.system(size: 15, weight: .medium))
                         .foregroundStyle(.white.opacity(0.9))
                         .padding(10)
@@ -333,13 +331,13 @@ struct QuickMetricsRow: View {
         HStack(spacing: 12) {
             MetricPill(
                 title: "Revenus",
-                amount: viewModel.formatAmount(viewModel.totalIncome),
+                amount: viewModel.isBalanceVisible ? viewModel.formatAmount(viewModel.totalIncome) : "••••",
                 icon: "arrow.down.left",
                 color: .appGreen
             )
             MetricPill(
                 title: "Dépenses",
-                amount: viewModel.formatAmount(viewModel.totalExpenses),
+                amount: viewModel.isBalanceVisible ? viewModel.formatAmount(viewModel.totalExpenses) : "••••",
                 icon: "arrow.up.right",
                 color: .appRed
             )
@@ -394,7 +392,7 @@ struct SparklineChartCard: View {
             // Total for period
             let total = viewModel.dailyExpenses.reduce(0) { $0 + $1.amount }
             if total > 0 {
-                Text(viewModel.formatAmount(total))
+                Text(viewModel.isBalanceVisible ? viewModel.formatAmount(total) : "••••")
                     .font(.system(size: 24, weight: .bold, design: .rounded))
                     .foregroundStyle(.primary)
             }
@@ -467,7 +465,7 @@ struct PremiumCategoryRow: View {
                     Text(item.category.rawValue)
                         .font(.system(size: 15, weight: .medium))
                     Spacer()
-                    Text(viewModel.formatAmount(item.amount))
+                    Text(viewModel.isBalanceVisible ? viewModel.formatAmount(item.amount) : "••••")
                         .font(.system(size: 15, weight: .bold, design: .rounded))
                 }
 
