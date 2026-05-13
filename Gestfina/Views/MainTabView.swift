@@ -34,46 +34,52 @@ struct MainTabView: View {
     }
 
     var body: some View {
-        TabView(selection: Binding(
-            get: { selectedTab },
-            set: { newTab in
-                if newTab == .add {
-                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                    showAddTransaction = true
-                } else {
-                    if newTab != selectedTab {
-                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        VStack(spacing: 0) {
+            TabView(selection: Binding(
+                get: { selectedTab },
+                set: { newTab in
+                    if newTab == .add {
+                        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                        showAddTransaction = true
+                    } else {
+                        if newTab != selectedTab {
+                            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                        }
+                        selectedTab = newTab
                     }
-                    selectedTab = newTab
                 }
+            )) {
+                DashboardView(authManager: authManager, notifManager: notifManager)
+                    .tabItem {
+                        Label("Accueil", systemImage: selectedTab == .dashboard ? "house.fill" : "house")
+                    }
+                    .tag(AppTab.dashboard)
+
+                TransactionsView()
+                    .tabItem {
+                        Label("Transactions", systemImage: "arrow.left.arrow.right")
+                    }
+                    .tag(AppTab.transactions)
+
+                BudgetView()
+                    .tabItem {
+                        Label("Budget", systemImage: selectedTab == .budget ? "chart.pie.fill" : "chart.pie")
+                    }
+                    .tag(AppTab.budget)
+
+                // "+" trigger tab (last position)
+                Color.clear
+                    .tabItem {
+                        Label("Ajouter", systemImage: "plus.circle.fill")
+                    }
+                    .tag(AppTab.add)
             }
-        )) {
-            DashboardView(authManager: authManager, notifManager: notifManager)
-                .tabItem {
-                    Label("Accueil", systemImage: selectedTab == .dashboard ? "house.fill" : "house")
-                }
-                .tag(AppTab.dashboard)
-
-            TransactionsView()
-                .tabItem {
-                    Label("Transactions", systemImage: "arrow.left.arrow.right")
-                }
-                .tag(AppTab.transactions)
-
-            BudgetView()
-                .tabItem {
-                    Label("Budget", systemImage: selectedTab == .budget ? "chart.pie.fill" : "chart.pie")
-                }
-                .tag(AppTab.budget)
-
-            // "+" trigger tab (last position)
-            Color.clear
-                .tabItem {
-                    Label("Ajouter", systemImage: "plus.circle.fill")
-                }
-                .tag(AppTab.add)
+            .tint(.appBlue)
+            
+            // Publicité en bas
+            AdMobBannerView(adUnitID: "ca-app-pub-3940256099942544/2934735716") // ID de test Google
+                .background(Color(UIColor.secondarySystemGroupedBackground))
         }
-        .tint(.appBlue)
         .sheet(isPresented: $showAddTransaction) {
             AddTransactionView()
                 .environmentObject(viewModel)

@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import GoogleMobileAds
 
 @main
 struct GestfinaApp: App {
@@ -14,6 +15,10 @@ struct GestfinaApp: App {
     @StateObject private var authManager      = AuthenticationManager()
     @StateObject private var notifManager     = NotificationManager.shared
     @Environment(\.scenePhase) private var scenePhase
+    
+    init() {
+        GADMobileAds.sharedInstance().start(completionHandler: nil)
+    }
     
     var body: some Scene {
         WindowGroup {

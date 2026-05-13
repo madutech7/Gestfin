@@ -6,14 +6,17 @@ workflows:
     environment:
       xcode: latest
       vars:
-        XCODE_PROJECT: "Gestfina.xcodeproj"
+        XCODE_WORKSPACE: "Gestfina.xcworkspace"
         XCODE_SCHEME: "Gestfina"
         BUNDLE_ID: "com.madu.gestfina"
     scripts:
+      - name: Install dependencies
+        script: |
+          pod install
       - name: Build iOS archive
         script: |
           xcodebuild archive \
-            -project "$XCODE_PROJECT" \
+            -workspace "$XCODE_WORKSPACE" \
             -scheme "$XCODE_SCHEME" \
             -sdk iphoneos \
             -configuration Release \
