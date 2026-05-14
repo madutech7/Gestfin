@@ -22,8 +22,6 @@
 		AA0000000000000000000D /* GlassModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0000000000000000000D; };
 		AA0000000000000000000E /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0000000000000000000E; };
 		AA0000000000000000000F /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0000000000000000000F; };
-		AA00000000000000000011 /* AdMobBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000011; };
-		AA00000000000000000012 /* AdService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000012; };
 		AA00000000000000000010 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000010; };
 /* End PBXBuildFile section */
 
@@ -43,8 +41,6 @@
 		FA0000000000000000000D /* GlassModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassModifiers.swift; sourceTree = "<group>"; };
 		FA0000000000000000000E /* Color+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extensions.swift"; sourceTree = "<group>"; };
 		FA0000000000000000000F /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
-		FA00000000000000000011 /* AdMobBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdMobBannerView.swift; sourceTree = "<group>"; };
-		FA00000000000000000012 /* AdService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdService.swift; sourceTree = "<group>"; };
 		FA00000000000000000010 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FA00000000000000000020 /* Gestfina.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gestfina.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -78,7 +74,6 @@
 				CA00000000000000000006 /* Components */,
 				CA00000000000000000007 /* Extensions */,
 				FA00000000000000000010 /* Assets.xcassets */,
-				CA00000000000000000009 /* Utils */,
 			);
 			path = Gestfina;
 			sourceTree = "<group>";
@@ -119,7 +114,6 @@
 			children = (
 				FA0000000000000000000C /* TransactionRow.swift */,
 				FA0000000000000000000D /* GlassModifiers.swift */,
-				FA00000000000000000011 /* AdMobBannerView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -139,14 +133,6 @@
 				FA00000000000000000020 /* Gestfina.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		CA00000000000000000009 /* Utils */ = {
-			isa = PBXGroup;
-			children = (
-				FA00000000000000000012 /* AdService.swift */,
-			);
-			path = Utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -234,8 +220,6 @@
 				AA0000000000000000000D /* GlassModifiers.swift in Sources */,
 				AA0000000000000000000E /* Color+Extensions.swift in Sources */,
 				AA0000000000000000000F /* Date+Extensions.swift in Sources */,
-				AA00000000000000000011 /* AdMobBannerView.swift in Sources */,
-				AA00000000000000000012 /* AdService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -255,7 +239,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -283,7 +267,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
@@ -305,7 +289,6 @@
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = SamaXaalis;
-				INFOPLIST_KEY_GADApplicationIdentifier = "ca-app-pub-3940256099942544~1458002511";
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "SamaXaalis utilise Face ID pour protéger vos données";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -337,7 +320,6 @@
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = SamaXaalis;
-				INFOPLIST_KEY_GADApplicationIdentifier = "ca-app-pub-3940256099942544~1458002511";
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "SamaXaalis utilise Face ID pour protéger vos données";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

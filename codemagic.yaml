@@ -6,17 +6,65 @@ workflows:
     environment:
       xcode: latest
       vars:
-        XCODE_WORKSPACE: "Gestfina.xcworkspace"
+        XCODE_PROJECT: "Gestfina.xcodeproj"
         XCODE_SCHEME: "Gestfina"
         BUNDLE_ID: "com.madu.gestfina"
     scripts:
-      - name: Install dependencies
+      - name: Configure Xcode Project (Add Lottie & Files)
         script: |
-          pod install
+          gem install xcodeproj
+          cat << 'EOF' > add_lottie.rb
+          require 'xcodeproj'
+          project_path = ENV['XCODE_PROJECT'] || 'Gestfina.xcodeproj'
+          project = Xcodeproj::Project.open(project_path)
+          target = project.targets.first
+          
+          # 1. Add Lottie SPM
+          if project.root_object.package_references.none? { |p| p.repositoryURL.include?('lottie-ios') }
+            package = Xcodeproj::Project::Object::XCRemoteSwiftPackageReference.new(project, project.generate_uuid)
+            package.repositoryURL = "https://github.com/airbnb/lottie-ios"
+            package.requirement = { "kind" => "upToNextMajorVersion", "minimumVersion" => "4.4.1" }
+            project.root_object.package_references << package
+            
+            ref = Xcodeproj::Project::Object::XCSwiftPackageProductDependency.new(project, project.generate_uuid)
+            ref.package = package
+            ref.product_name = "Lottie"
+            target.package_product_dependencies << ref
+            
+            build_file = project.new(Xcodeproj::Project::Object::PBXBuildFile)
+            build_file.product_ref = ref
+            target.frameworks_build_phase.files << build_file
+          end
+          
+          # 2. Add New Swift Files
+          views_group = project.main_group.find_subpath('Gestfina/Views', true)
+          unless views_group.files.any? { |f| f.path == 'OnboardingView.swift' }
+            file_ref = views_group.new_file('OnboardingView.swift')
+            target.source_build_phase.add_file_reference(file_ref)
+          end
+          
+          comp_group = project.main_group.find_subpath('Gestfina/Components', true)
+          unless comp_group.files.any? { |f| f.path == 'LottieView.swift' }
+            file_ref = comp_group.new_file('LottieView.swift')
+            target.source_build_phase.add_file_reference(file_ref)
+          end
+          
+          # 3. Add Lottie JSONs
+          lotties_group = project.main_group.find_subpath('Gestfina/Lotties', true)
+          ['wallet.json', 'chart.json', 'security.json'].each do |file|
+            unless lotties_group.files.any? { |f| f.path == file }
+              f_ref = lotties_group.new_file(file)
+              target.resources_build_phase.add_file_reference(f_ref)
+            end
+          end
+          
+          project.save
+          EOF
+          ruby add_lottie.rb
       - name: Build iOS archive
         script: |
           xcodebuild archive \
-            -workspace "$XCODE_WORKSPACE" \
+            -project "$XCODE_PROJECT" \
             -scheme "$XCODE_SCHEME" \
             -sdk iphoneos \
             -configuration Release \

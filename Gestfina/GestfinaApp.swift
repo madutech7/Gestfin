@@ -7,7 +7,6 @@
 //
 
 import SwiftUI
-import GoogleMobileAds
 
 @main
 struct GestfinaApp: App {
@@ -16,9 +15,7 @@ struct GestfinaApp: App {
     @StateObject private var notifManager     = NotificationManager.shared
     @Environment(\.scenePhase) private var scenePhase
     
-    init() {
-        MobileAds.shared.start(completionHandler: nil)
-    }
+    @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding: Bool = false
     
     var body: some Scene {
         WindowGroup {
@@ -32,6 +29,13 @@ struct GestfinaApp: App {
                         .transition(.opacity)
                         .zIndex(1000)
                 }
+                
+                // Onboarding par-dessus tout au premier lancement
+                if !hasSeenOnboarding {
+                    OnboardingView(hasSeenOnboarding: $hasSeenOnboarding)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                        .zIndex(2000)
+                }
             }
             .animation(.easeInOut(duration: 0.25), value: authManager.isUnlocked)
         }
@@ -43,8 +47,6 @@ struct GestfinaApp: App {
             case .active:
                 // Rafraîchir le statut des notifications
                 notifManager.checkAuthorizationStatus()
-                // Afficher la publicité plein écran au démarrage
-                AdService.shared.showInterstitial()
             default:
                 break
             }
