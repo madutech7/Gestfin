@@ -52,8 +52,9 @@ workflows:
           # 3. Add Lottie JSONs
           lotties_group = project.main_group.find_subpath('Gestfina/Lotties', true)
           ['wallet.json', 'chart.json', 'security.json'].each do |file|
-            unless lotties_group.files.any? { |f| f.path == file }
-              f_ref = lotties_group.new_file(file)
+            unless lotties_group.files.any? { |f| f.path == "Gestfina/Lotties/#{file}" || f.path == file }
+              f_ref = project.main_group.new_reference("Gestfina/Lotties/#{file}")
+              lotties_group << f_ref
               target.resources_build_phase.add_file_reference(f_ref)
             end
           end
