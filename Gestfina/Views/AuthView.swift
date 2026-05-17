@@ -2,7 +2,7 @@
 //  AuthView.swift
 //  Gestfina
 //
-//  Écran d'authentification ultra-premium (Design Native Apple / iOS 17)
+//  Écran d'authentification "iOS 26 Liquid Glass" natif
 //
 
 import SwiftUI
@@ -28,59 +28,44 @@ struct AuthView: View {
         case name, email, password
     }
     
-    // Animations state
-    @State private var appearAnimation = false
+    // Google Sign-In Simulator
     @State private var showGoogleAlert = false
     @State private var googleEmailInput = ""
     
-    // Dégradé Premium (Mesh-like)
-    private let meshGradient = LinearGradient(
-        colors: [
-            Color(red: 0.15, green: 0.1, blue: 0.25),
-            Color(red: 0.08, green: 0.08, blue: 0.15),
-            Color(red: 0.05, green: 0.05, blue: 0.1)
-        ],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
+    // Animations state
+    @State private var appearAnimation = false
+    
+    // SF Haptics
+    private let hapticFeedback = UIImpactFeedbackGenerator(style: .light)
+    private let notificationFeedback = UINotificationFeedbackGenerator()
     
     var body: some View {
         ZStack {
-            // ── FOND DYNAMIQUE APPLE-LIKE ──
-            meshGradient
-                .ignoresSafeArea()
-            
-            // Orbes lumineuses ultra-fluides (style Siri / iOS 17 Backgrounds)
+            // ── FOND DYNAMIQUE "IOS 26 LIQUID GLASS" ──
             GeometryReader { proxy in
                 ZStack {
-                    Circle()
-                        .fill(Color.purple.opacity(0.4))
-                        .frame(width: proxy.size.width * 1.2)
-                        .offset(x: appearAnimation ? -proxy.size.width * 0.2 : proxy.size.width * 0.2,
-                                y: appearAnimation ? -proxy.size.height * 0.2 : proxy.size.height * 0.1)
-                        .blur(radius: 120)
+                    Color(UIColor.systemBackground).ignoresSafeArea()
                     
                     Circle()
-                        .fill(Color.blue.opacity(0.3))
+                        .fill(Color.appBlue.opacity(0.15))
+                        .frame(width: proxy.size.width * 1.5)
+                        .blur(radius: 80)
+                        .offset(x: appearAnimation ? -100 : 100, y: appearAnimation ? -150 : 100)
+                    
+                    Circle()
+                        .fill(Color.appPurple.opacity(0.12))
                         .frame(width: proxy.size.width)
-                        .offset(x: appearAnimation ? proxy.size.width * 0.4 : -proxy.size.width * 0.1,
-                                y: appearAnimation ? proxy.size.height * 0.4 : proxy.size.height * 0.6)
-                        .blur(radius: 100)
+                        .blur(radius: 60)
+                        .offset(x: appearAnimation ? 150 : -100, y: appearAnimation ? 200 : -100)
                 }
-            }
-            .ignoresSafeArea()
-            
-            // Couche de verre subtile (Ultra Thin Material) pour unifier le fond
-            Rectangle()
-                .fill(.ultraThinMaterial)
-                .opacity(0.3)
                 .ignoresSafeArea()
+            }
             
             // ── CONTENU PRINCIPAL ──
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 32) {
                     
-                    // En-tête (Logo + Textes)
+                    // En-tête (Icône + Textes)
                     headerSection
                         .padding(.top, 40)
                     
@@ -89,164 +74,349 @@ struct AuthView: View {
                         modeSelector
                         
                         if showError, let msg = errorMessage {
-                                .font(.system(size: 12, weight: .medium))
-                                .foregroundStyle(.secondary)
-                                .padding(.horizontal, 8)
-                            VStack { Divider().background(.white.opacity(0.12)) }
+                            errorBanner(message: msg)
                         }
-                        .padding(.vertical, 8)
                         
-                        // ── BOUTON GOOGLE ULTRA-PREMIUM ──
-                        Button {
-                            handleGoogleLogin()
-                        } label: {
-                            HStack(spacing: 12) {
-                                // Logo Google stylisé multicolore en SwiftUI natif
-                                HStack(spacing: 2) {
-                                    Circle().fill(.red).frame(width: 6, height: 6)
-                                    Circle().fill(.blue).frame(width: 6, height: 6)
-                                    Circle().fill(.yellow).frame(width: 6, height: 6)
-                                    Circle().fill(.green).frame(width: 6, height: 6)
-                                }
-                                
-                                Text("Continuer avec Google")
-                                    .font(.system(size: 15, weight: .semibold))
-                                    .foregroundStyle(.white)
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
-                            .background(.white.opacity(0.05))
-                            .clipShape(RoundedRectangle(cornerRadius: 14))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 14)
-                                    .stroke(.white.opacity(0.12), lineWidth: 1)
-                            )
+                        VStack(spacing: 20) {
+                            formFields
+                            
+                            actionButton
+                                .padding(.top, 12)
                         }
-                        .disabled(isLoading)
-                        
+                        .padding(24)
                     }
-                    .padding(24)
-                    .background(.white.opacity(0.03))
-                    .background(.ultraThinMaterial)
-                    .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 24)
-                            .stroke(.white.opacity(0.08), lineWidth: 1)
-                    )
-                    .padding(.horizontal, 20)
-                    .shadow(color: .black.opacity(0.2), radius: 30, y: 15)
+                    .liquidGlass(cornerRadius: 32, opacity: 0.05)
+                    .padding(.horizontal, 24)
                     
-                    Spacer(minLength: 40)
+                    // Section Google Sign In
+                    googleSignInSection
+                        .padding(.top, 8)
+                        .padding(.bottom, 40)
                 }
             }
         }
-        .preferredColorScheme(.dark)
+        .onAppear {
+            withAnimation(.easeInOut(duration: 8).repeatForever(autoreverses: true)) {
+                appearAnimation = true
+            }
+        }
+        .onTapGesture {
+            focusedField = nil
+        }
         .alert("Connexion Google", isPresented: $showGoogleAlert) {
-            TextField("Adresse Email Google", text: $googleEmailInput)
-                .textInputAutocapitalization(.none)
+            TextField("Votre e-mail Google", text: $googleEmailInput)
                 .keyboardType(.emailAddress)
-            
+                .autocapitalization(.none)
             Button("Annuler", role: .cancel) { }
             Button("Se connecter") {
-                executeGoogleLogin(email: googleEmailInput)
+                simulateGoogleLogin(email: googleEmailInput)
             }
         } message: {
-            Text("Entrez votre adresse email Google pour simuler l'authentification OAuth2 Firebase de manière sécurisée.")
+            Text("Entrez l'adresse e-mail de votre compte Google pour simuler la connexion.")
         }
     }
     
-    // MARK: - Éléments personnalisés SwiftUI
+    // MARK: - Subviews
     
-    @ViewBuilder
-    private func customTextField(
-        value: Binding<String>,
-        placeholder: String,
-        icon: String,
-        keyboardType: UIKeyboardType = .default
-    ) -> some View {
-        HStack(spacing: 12) {
-            Image(systemName: icon)
-                .font(.system(size: 16))
-                .foregroundStyle(.secondary)
-                .frame(width: 24)
+    private var headerSection: some View {
+        VStack(spacing: 16) {
+            // Icône premium de l'application (Liquid Glass Style)
+            ZStack {
+                Circle()
+                    .fill(Color(UIColor.secondarySystemGroupedBackground))
+                    .frame(width: 88, height: 88)
+                    .shadow(color: Color.black.opacity(0.05), radius: 15, x: 0, y: 8)
+                
+                Circle()
+                    .stroke(Color.appBlue.opacity(0.3), lineWidth: 1)
+                    .frame(width: 88, height: 88)
+                
+                Image(systemName: "chart.pie.fill")
+                    .font(.system(size: 38))
+                    .foregroundStyle(
+                        LinearGradient(colors: [Color.appBlue, Color.blue], startPoint: .topLeading, endPoint: .bottomTrailing)
+                    )
+            }
+            .padding(.bottom, 8)
             
-            TextField("", text: value, prompt: Text(placeholder).foregroundColor(.white.opacity(0.35)))
-                .font(.system(size: 15))
-                .foregroundStyle(.white)
-                .keyboardType(keyboardType)
-                .textInputAutocapitalization(.none)
-                .autocorrectionDisabled()
+            Text("SamaXaalis")
+                .font(.system(size: 36, weight: .heavy, design: .rounded))
+                .foregroundColor(.primary)
+                .tracking(0.5)
+            
+            Text(isLoginMode ? "Gérez vos finances avec élégance." : "Prenez le contrôle de votre argent.")
+                .font(.system(size: 16, weight: .medium))
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 40)
         }
-        .padding(14)
-        .background(.white.opacity(0.04))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .overlay(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(.white.opacity(0.08), lineWidth: 1)
-        )
     }
     
-    @ViewBuilder
-    private func customPasswordField() -> some View {
-        HStack(spacing: 12) {
-            Image(systemName: "lock.fill")
-                .font(.system(size: 16))
-                .foregroundStyle(.secondary)
-                .frame(width: 24)
-            
-            ZStack(alignment: .leading) {
-                if isPasswordVisible {
-                    TextField("", text: $password, prompt: Text("Mot de passe").foregroundColor(.white.opacity(0.35)))
-                        .font(.system(size: 15))
-                        .foregroundStyle(.white)
-                        .textInputAutocapitalization(.none)
-                        .autocorrectionDisabled()
-                } else {
-                    SecureField("", text: $password, prompt: Text("Mot de passe").foregroundColor(.white.opacity(0.35)))
-                        .font(.system(size: 15))
-                        .foregroundStyle(.white)
-                        .textInputAutocapitalization(.none)
-                        .autocorrectionDisabled()
+    private var modeSelector: some View {
+        HStack(spacing: 0) {
+            Button {
+                hapticFeedback.impactOccurred()
+                withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                    isLoginMode = true
+                    errorMessage = nil
+                    focusedField = nil
                 }
+            } label: {
+                Text("Connexion")
+                    .font(.system(size: 15, weight: isLoginMode ? .semibold : .medium))
+                    .foregroundColor(isLoginMode ? .primary : .secondary)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 12)
+                    .background(
+                        ZStack {
+                            if isLoginMode {
+                                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                    .fill(Color(UIColor.tertiarySystemGroupedBackground))
+                                    .shadow(color: Color.black.opacity(0.04), radius: 4, y: 2)
+                                    .matchedGeometryEffect(id: "MODE_SELECTOR", in: animationNamespace)
+                            }
+                        }
+                    )
             }
             
             Button {
+                hapticFeedback.impactOccurred()
+                withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                    isLoginMode = false
+                    errorMessage = nil
+                    focusedField = nil
+                }
+            } label: {
+                Text("Inscription")
+                    .font(.system(size: 15, weight: !isLoginMode ? .semibold : .medium))
+                    .foregroundColor(!isLoginMode ? .primary : .secondary)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 12)
+                    .background(
+                        ZStack {
+                            if !isLoginMode {
+                                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                    .fill(Color(UIColor.tertiarySystemGroupedBackground))
+                                    .shadow(color: Color.black.opacity(0.04), radius: 4, y: 2)
+                                    .matchedGeometryEffect(id: "MODE_SELECTOR", in: animationNamespace)
+                            }
+                        }
+                    )
+            }
+        }
+        .padding(4)
+        .background(Color(UIColor.secondarySystemGroupedBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke(Color.black.opacity(0.05), lineWidth: 1)
+        )
+        .padding(.horizontal, 24)
+        .padding(.top, 24)
+        .padding(.bottom, 8)
+    }
+    
+    @Namespace private var animationNamespace
+    
+    private func errorBanner(message: String) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundColor(Color.appRed)
+            
+            Text(message)
+                .font(.system(size: 14, weight: .medium))
+                .foregroundColor(.primary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .padding(16)
+        .background(Color.appRed.opacity(0.1))
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke(Color.appRed.opacity(0.2), lineWidth: 1)
+        )
+        .padding(.horizontal, 24)
+        .padding(.top, 8)
+        .transition(.move(edge: .top).combined(with: .opacity))
+    }
+    
+    private var formFields: some View {
+        VStack(spacing: 16) {
+            if !isLoginMode {
+                inputField(
+                    icon: "person.fill",
+                    placeholder: "Nom complet",
+                    text: $name,
+                    field: .name
+                )
+                .transition(.move(edge: .top).combined(with: .opacity))
+            }
+            
+            inputField(
+                icon: "envelope.fill",
+                placeholder: "Adresse e-mail",
+                text: $email,
+                field: .email,
+                isEmail: true
+            )
+            
+            passwordField
+        }
+    }
+    
+    private func inputField(icon: String, placeholder: String, text: Binding<String>, field: Field, isEmail: Bool = false) -> some View {
+        HStack(spacing: 16) {
+            Image(systemName: icon)
+                .font(.system(size: 18, weight: .medium))
+                .foregroundColor(focusedField == field ? Color.appBlue : .secondary)
+                .frame(width: 24)
+            
+            TextField(placeholder, text: text)
+                .font(.system(size: 16, weight: .regular))
+                .foregroundColor(.primary)
+                .focused($focusedField, equals: field)
+                .keyboardType(isEmail ? .emailAddress : .default)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+        }
+        .padding(.horizontal, 20)
+        .padding(.vertical, 18)
+        .background(Color(UIColor.secondarySystemGroupedBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke(focusedField == field ? Color.appBlue : Color.black.opacity(0.05), lineWidth: focusedField == field ? 2 : 1)
+        )
+        .shadow(color: focusedField == field ? Color.appBlue.opacity(0.15) : Color.clear, radius: 8, y: 4)
+        .animation(.easeInOut(duration: 0.2), value: focusedField)
+    }
+    
+    private var passwordField: some View {
+        HStack(spacing: 16) {
+            Image(systemName: "lock.fill")
+                .font(.system(size: 18, weight: .medium))
+                .foregroundColor(focusedField == .password ? Color.appBlue : .secondary)
+                .frame(width: 24)
+            
+            Group {
+                if isPasswordVisible {
+                    TextField("Mot de passe", text: $password)
+                } else {
+                    SecureField("Mot de passe", text: $password)
+                }
+            }
+            .font(.system(size: 16, weight: .regular))
+            .foregroundColor(.primary)
+            .focused($focusedField, equals: .password)
+            .textInputAutocapitalization(.never)
+            
+            Button {
+                hapticFeedback.impactOccurred()
                 isPasswordVisible.toggle()
             } label: {
                 Image(systemName: isPasswordVisible ? "eye.slash.fill" : "eye.fill")
-                    .font(.system(size: 15))
-                    .foregroundStyle(.secondary)
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundColor(.secondary)
             }
         }
-        .padding(14)
-        .background(.white.opacity(0.04))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .padding(.horizontal, 20)
+        .padding(.vertical, 18)
+        .background(Color(UIColor.secondarySystemGroupedBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
         .overlay(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(.white.opacity(0.08), lineWidth: 1)
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke(focusedField == .password ? Color.appBlue : Color.black.opacity(0.05), lineWidth: focusedField == .password ? 2 : 1)
         )
+        .shadow(color: focusedField == .password ? Color.appBlue.opacity(0.15) : Color.clear, radius: 8, y: 4)
+        .animation(.easeInOut(duration: 0.2), value: focusedField)
+    }
+    
+    private var actionButton: some View {
+        Button {
+            focusedField = nil
+            handleAuthAction()
+        } label: {
+            ZStack {
+                LinearGradient(colors: [Color.appBlue, Color.blue], startPoint: .topLeading, endPoint: .bottomTrailing)
+                    .opacity(isLoading ? 0.7 : 1)
+                
+                if isLoading {
+                    ProgressView()
+                        .tint(.white)
+                } else {
+                    Text(isLoginMode ? "Se connecter" : "Créer mon compte")
+                        .font(.system(size: 18, weight: .bold, design: .rounded))
+                        .foregroundColor(.white)
+                }
+            }
+            .frame(height: 56)
+            .clipShape(Capsule())
+            .shadow(color: Color.appBlue.opacity(0.4), radius: 15, x: 0, y: 8)
+        }
+        .disabled(isLoading)
+    }
+    
+    private var googleSignInSection: some View {
+        VStack(spacing: 24) {
+            HStack(spacing: 16) {
+                Rectangle()
+                    .fill(Color.secondary.opacity(0.2))
+                    .frame(height: 1)
+                
+                Text("OU")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundColor(.secondary)
+                
+                Rectangle()
+                    .fill(Color.secondary.opacity(0.2))
+                    .frame(height: 1)
+            }
+            .padding(.horizontal, 40)
+            
+            Button {
+                hapticFeedback.impactOccurred()
+                showGoogleAlert = true
+            } label: {
+                HStack(spacing: 12) {
+                    Image(systemName: "g.circle.fill")
+                        .font(.system(size: 20))
+                    
+                    Text("Continuer avec Google")
+                        .font(.system(size: 16, weight: .semibold))
+                }
+                .foregroundColor(.primary)
+                .frame(maxWidth: .infinity)
+                .frame(height: 56)
+                .background(Color(UIColor.secondarySystemGroupedBackground))
+                .clipShape(Capsule())
+                .overlay(
+                    Capsule()
+                        .stroke(Color.black.opacity(0.05), lineWidth: 1)
+                )
+                .shadow(color: Color.black.opacity(0.05), radius: 10, y: 4)
+            }
+            .padding(.horizontal, 24)
+        }
     }
     
     // MARK: - Actions
     
-    private func handleSubmit() {
-        guard !email.isEmpty, !password.isEmpty else {
-            setError("Veuillez remplir tous les champs obligatoires.")
+    private func handleAuthAction() {
+        if email.isEmpty || password.isEmpty {
+            setError("Veuillez remplir tous les champs.")
             return
         }
         
         if !isLoginMode && name.isEmpty {
-            setError("Veuillez entrer votre nom complet.")
+            setError("Veuillez entrer votre nom.")
             return
         }
         
-        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-        
-        withAnimation {
-            isLoading = true
-            showError = false
-            errorMessage = nil
-        }
+        hapticFeedback.impactOccurred()
+        isLoading = true
+        errorMessage = nil
+        showError = false
         
         if isLoginMode {
             APIManager.shared.login(email: email, password: password) { result in
@@ -261,57 +431,51 @@ struct AuthView: View {
     
     private func handleAuthResult(_ result: Result<[String: Any], Error>) {
         DispatchQueue.main.async {
-            isLoading = false
+            self.isLoading = false
+            
             switch result {
-            case .success:
-                print("🔑 Authentification réussie ! Téléchargement des données cloud...")
-                // Mettre à jour le nom de l'utilisateur dans l'application
-                if let name = UserDefaults.standard.string(forKey: "gestfina_user_name") {
-                    viewModel.userName = name
-                    viewModel.saveUserName()
+            case .success(let data):
+                self.notificationFeedback.notificationOccurred(.success)
+                if let user = data["user"] as? [String: Any],
+                   let token = data["access_token"] as? String,
+                   let userEmail = user["email"] as? String,
+                   let userName = user["name"] as? String {
+                    
+                    BackendAuthManager.shared.setLoginState(
+                        token: token,
+                        email: userEmail,
+                        name: userName
+                    )
                 }
-                
-                // Charger les transactions et budgets cloud de cet utilisateur
-                viewModel.fetchCloudData()
-                
             case .failure(let error):
-                setError(error.localizedDescription)
+                self.setError(error.localizedDescription)
             }
         }
     }
     
-    private func handleGoogleLogin() {
-        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-        googleEmailInput = ""
-        showGoogleAlert = true
-    }
-    
-    private func executeGoogleLogin(email: String) {
-        guard !email.isEmpty && email.contains("@") else {
-            setError("Veuillez entrer une adresse email Google valide.")
-            return
-        }
+    private func simulateGoogleLogin(email: String) {
+        guard !email.isEmpty else { return }
         
-        withAnimation {
-            isLoading = true
-            showError = false
-            errorMessage = nil
-        }
+        isLoading = true
         
-        // Simuler le jeton ID Firebase avec le préfixe de simulation du backend
-        let mockToken = "mock-google-token-\(email.lowercased().trimmingCharacters(in: .whitespacesAndNewlines))"
-        
+        let mockToken = "mock_google_id_token_for_\(email)"
         APIManager.shared.googleLogin(idToken: mockToken) { result in
             handleAuthResult(result)
         }
     }
     
     private func setError(_ message: String) {
-        UINotificationFeedbackGenerator().notificationOccurred(.error)
+        notificationFeedback.notificationOccurred(.error)
         withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
             errorMessage = message
             showError = true
             isLoading = false
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            withAnimation {
+                showError = false
+            }
         }
     }
 }
