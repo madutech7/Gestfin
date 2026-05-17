@@ -4,7 +4,8 @@ struct OnboardingStep: Identifiable {
     let id = UUID()
     let title: String
     let description: String
-    let animationName: String
+    let systemImage: String
+    let iconColors: [Color]
 }
 
 struct OnboardingView: View {
@@ -19,17 +20,20 @@ struct OnboardingView: View {
         OnboardingStep(
             title: "Bienvenue sur SamaXaalis",
             description: "La façon la plus simple et élégante de gérer votre portefeuille et vos finances personnelles au quotidien.",
-            animationName: "wallet"
+            systemImage: "wallet.pass.fill",
+            iconColors: [Color.appBlue, Color.blue]
         ),
         OnboardingStep(
             title: "Suivez vos dépenses",
             description: "Obtenez des statistiques claires, fluides et précises sur vos habitudes de consommation.",
-            animationName: "chart"
+            systemImage: "chart.pie.fill",
+            iconColors: [Color.indigo, Color.purple]
         ),
         OnboardingStep(
             title: "Sécurité absolue",
             description: "Vos données sont protégées par Face ID et chiffrées en toute sécurité sur votre appareil.",
-            animationName: "security"
+            systemImage: "faceid",
+            iconColors: [Color.green, Color.teal]
         )
     ]
     
@@ -152,20 +156,28 @@ struct OnboardingPageView: View {
         VStack(spacing: 40) {
             Spacer()
             
-            // Glassmorphism Container for Lottie
+            // Glassmorphism Container for SF Symbol Animation
             ZStack {
                 Circle()
-                    .fill(Color.appBlue.opacity(0.05))
+                    .fill(
+                        LinearGradient(colors: step.iconColors.map { $0.opacity(0.15) }, startPoint: .topLeading, endPoint: .bottomTrailing)
+                    )
                     .frame(width: 280, height: 280)
                 
                 // Glass effect behind animation
                 Circle()
                     .fill(.ultraThinMaterial)
                     .frame(width: 240, height: 240)
-                    .shadow(color: Color.black.opacity(0.05), radius: 20, x: 0, y: 10)
+                    .shadow(color: step.iconColors.first?.opacity(0.1) ?? Color.black.opacity(0.05), radius: 20, x: 0, y: 10)
                 
-                LottieView(animationName: step.animationName, loopMode: .loop)
-                    .frame(width: 180, height: 180)
+                Image(systemName: step.systemImage)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 100, height: 100)
+                    .foregroundStyle(
+                        LinearGradient(colors: step.iconColors, startPoint: .topLeading, endPoint: .bottomTrailing)
+                    )
+                    .symbolEffect(.bounce, options: .repeating, value: isVisible)
                     .scaleEffect(isVisible ? 1 : 0.6)
                     .opacity(isVisible ? 1 : 0)
             }

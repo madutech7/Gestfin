@@ -57,7 +57,9 @@ class FinanceViewModel: ObservableObject {
         if UserDefaults.standard.object(forKey: isBalanceVisibleKey) != nil {
             isBalanceVisible = UserDefaults.standard.bool(forKey: isBalanceVisibleKey)
         }
-        // Pas de données mock - l'utilisateur commence avec une application vide
+        
+        // Synchroniser automatiquement au lancement si connecté
+        SyncManager.shared.triggerSynchronization()
     }
     
     // MARK: - Période de temps
@@ -248,6 +250,10 @@ class FinanceViewModel: ObservableObject {
         withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
             transactions.append(transaction)
         }
+        
+        // Sync hors-ligne / en-ligne automatique
+        SyncManager.shared.queueAction(itemId: transaction.id, itemType: .transaction, actionType: .create)
+        
         // Notification confirmation
         let notif = NotificationManager.shared
         notif.sendTransactionAdded(
@@ -282,12 +288,16 @@ class FinanceViewModel: ObservableObject {
         withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
             transactions.removeAll { $0.id == transaction.id }
         }
+        // Enregistrer la suppression hors-ligne
+        SyncManager.shared.queueAction(itemId: transaction.id, itemType: .transaction, actionType: .delete)
     }
     
     /// Modifier une transaction
     func updateTransaction(_ transaction: Transaction) {
         if let index = transactions.firstIndex(where: { $0.id == transaction.id }) {
             transactions[index] = transaction
+            // Mettre à jour sur le backend
+            SyncManager.shared.queueAction(itemId: transaction.id, itemType: .transaction, actionType: .create)
         }
     }
     
@@ -296,6 +306,8 @@ class FinanceViewModel: ObservableObject {
         withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
             budgets.append(budget)
         }
+        // Sync hors-ligne / en-ligne
+        SyncManager.shared.queueAction(itemId: budget.id, itemType: .budget, actionType: .create)
     }
     
     /// Supprimer un budget
@@ -303,12 +315,16 @@ class FinanceViewModel: ObservableObject {
         withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
             budgets.removeAll { $0.id == budget.id }
         }
+        // Enregistrer la suppression hors-ligne
+        SyncManager.shared.queueAction(itemId: budget.id, itemType: .budget, actionType: .delete)
     }
     
     /// Mettre à jour un budget
     func updateBudget(_ budget: Budget) {
         if let index = budgets.firstIndex(where: { $0.id == budget.id }) {
             budgets[index] = budget
+            // Mettre à jour sur le backend
+            SyncManager.shared.queueAction(itemId: budget.id, itemType: .budget, actionType: .create)
         }
     }
     
@@ -370,5 +386,23 @@ class FinanceViewModel: ObservableObject {
     func resetAllData() {
         transactions = []
         budgets = []
+        BackendAuthManager.shared.logout()
+    }
+    
+    /// Charger les données depuis le backend NestJS/Firebase
+    func fetchCloudData() {
+        APIManager.shared.fetchTransactions { [weak self] txs in
+            guard let self = self, let txs = txs else { return }
+            DispatchQueue.main.async {
+                self.transactions = txs
+            }
+        }
+        
+        APIManager.shared.fetchBudgets { [weak self] bgts in
+            guard let self = self, let bgts = bgts else { return }
+            DispatchQueue.main.async {
+                self.budgets = bgts
+            }
+        }
     }
 }

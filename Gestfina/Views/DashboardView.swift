@@ -35,6 +35,10 @@ struct DashboardView: View {
                             .padding(.vertical, 4)
                         
                         Spacer()
+                        
+                        ConnectionStatusView()
+                            .padding(.trailing, 4)
+                        
                         Button {
                             UIImpactFeedbackGenerator(style: .light).impactOccurred()
                             showSettings = true
@@ -182,6 +186,7 @@ struct DashboardView: View {
                 }
             }
             .onAppear {
+                SyncManager.shared.triggerSynchronization()
                 withAnimation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.1)) {
                     greetingScale = 1
                     greetingOpacity = 1
@@ -582,6 +587,59 @@ struct GlassCategoryRow: View {
                 }.frame(height: 3)
             }
         }.padding(.vertical, 3)
+    }
+}
+
+struct ConnectionStatusView: View {
+    @ObservedObject var networkMonitor = NetworkMonitor.shared
+    @ObservedObject var syncManager = SyncManager.shared
+    
+    var body: some View {
+        HStack(spacing: 6) {
+            if !networkMonitor.isConnected {
+                HStack(spacing: 4) {
+                    Image(systemName: "wifi.slash")
+                        .font(.system(size: 11, weight: .bold))
+                    Text("Hors-ligne")
+                        .font(.system(size: 11, weight: .bold))
+                }
+                .foregroundStyle(Color.white)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 5)
+                .background(.red.opacity(0.75))
+                .clipShape(Capsule())
+                .transition(.scale.combined(with: .opacity))
+            } else if syncManager.isSyncing {
+                HStack(spacing: 4) {
+                    Image(systemName: "arrow.triangle.2.circlepath")
+                        .font(.system(size: 10, weight: .bold))
+                    Text("Sync...")
+                        .font(.system(size: 11, weight: .bold))
+                }
+                .foregroundStyle(Color.white)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 5)
+                .background(Color.appBlue)
+                .clipShape(Capsule())
+                .transition(.scale.combined(with: .opacity))
+            } else if syncManager.pendingCount > 0 {
+                HStack(spacing: 4) {
+                    Image(systemName: "clock.fill")
+                        .font(.system(size: 10, weight: .bold))
+                    Text("\(syncManager.pendingCount) en attente")
+                        .font(.system(size: 11, weight: .semibold))
+                }
+                .foregroundStyle(Color.primary)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 5)
+                .background(.ultraThinMaterial)
+                .clipShape(Capsule())
+                .transition(.scale.combined(with: .opacity))
+            }
+        }
+        .animation(.spring(response: 0.35, dampingFraction: 0.7), value: networkMonitor.isConnected)
+        .animation(.spring(response: 0.35, dampingFraction: 0.7), value: syncManager.isSyncing)
+        .animation(.spring(response: 0.35, dampingFraction: 0.7), value: syncManager.pendingCount)
     }
 }
 

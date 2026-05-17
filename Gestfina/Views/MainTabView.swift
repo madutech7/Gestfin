@@ -158,7 +158,7 @@ struct SettingsView: View {
                 } header: {
                     Text("Données")
                 } footer: {
-                    Text("Toutes vos données sont stockées uniquement sur votre appareil.")
+                    Text("Vos données sont stockées localement et synchronisées de manière sécurisée sur votre compte SamaXaalis Cloud.")
                 }
 
                 // MARK: - À propos
@@ -404,9 +404,16 @@ struct SettingsView: View {
         }
 
         Button {
+            viewModel.resetAllData()
+        } label: {
+            Label("Se déconnecter", systemImage: "rectangle.portrait.and.arrow.right")
+                .foregroundColor(.orange)
+        }
+
+        Button {
             showResetAlert = true
         } label: {
-            Label("Réinitialiser toutes les données", systemImage: "trash")
+            Label("Réinitialiser l'appareil (Local)", systemImage: "trash")
                 .foregroundColor(.appRed)
         }
     }

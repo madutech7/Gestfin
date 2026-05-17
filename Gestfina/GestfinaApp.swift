@@ -16,12 +16,18 @@ struct GestfinaApp: App {
     @Environment(\.scenePhase) private var scenePhase
     
     @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding: Bool = false
+    @ObservedObject private var backendAuth = BackendAuthManager.shared
     
     var body: some Scene {
         WindowGroup {
             ZStack {
-                MainTabView(authManager: authManager, notifManager: notifManager)
-                    .environmentObject(viewModel)
+                if backendAuth.isLoggedIn {
+                    MainTabView(authManager: authManager, notifManager: notifManager)
+                        .environmentObject(viewModel)
+                } else {
+                    AuthView()
+                        .environmentObject(viewModel)
+                }
                 
                 // Écran de verrouillage par-dessus si non déverrouillé
                 if authManager.isAuthEnabled && !authManager.isUnlocked {
@@ -38,6 +44,7 @@ struct GestfinaApp: App {
                 }
             }
             .animation(.easeInOut(duration: 0.25), value: authManager.isUnlocked)
+            .animation(.spring(response: 0.45, dampingFraction: 0.8), value: backendAuth.isLoggedIn)
         }
         .onChange(of: scenePhase) {
             switch scenePhase {
