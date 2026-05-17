@@ -114,11 +114,10 @@ struct AuthView: View {
                     .stroke(Color.appBlue.opacity(0.3), lineWidth: 1)
                     .frame(width: 88, height: 88)
                 
-                Image(systemName: "chart.pie.fill")
-                    .font(.system(size: 38))
-                    .foregroundStyle(
-                        LinearGradient(colors: [Color.appBlue, Color.blue], startPoint: .topLeading, endPoint: .bottomTrailing)
-                    )
+                Image("SamaXaalisLogo")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 64, height: 64)
             }
             .padding(.bottom, 8)
             
