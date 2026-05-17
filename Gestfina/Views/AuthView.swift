@@ -423,7 +423,7 @@ struct AuthView: View {
     }
     
     private func setError(_ message: String) {
-        UIImpactFeedbackGenerator(style: .error).impactOccurred()
+        UINotificationFeedbackGenerator().notificationOccurred(.error)
         withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
             errorMessage = message
             showError = true
