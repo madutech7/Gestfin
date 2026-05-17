@@ -476,7 +476,7 @@ struct AuthView: View {
             DispatchQueue.main.async {
                 if let error = error {
                     self.isLoading = false
-                    if (error as NSError).code != ASWebAuthenticationSessionError.canceledLoginFlow.rawValue {
+                    if (error as NSError).code != ASWebAuthenticationSessionError.canceledLogin.rawValue {
                         self.setError("Connexion annulée ou erreur : \(error.localizedDescription)")
                     }
                     return
@@ -540,7 +540,10 @@ import AuthenticationServices
 class WindowContextProvider: NSObject, ASWebAuthenticationPresentationContextProviding {
     static let shared = WindowContextProvider()
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-        return UIApplication.shared.windows.first { $0.isKeyWindow } ?? ASPresentationAnchor()
+        let scenes = UIApplication.shared.connectedScenes
+        let windowScene = scenes.first as? UIWindowScene
+        let window = windowScene?.windows.first { $0.isKeyWindow }
+        return window ?? ASPresentationAnchor()
     }
 }
 
