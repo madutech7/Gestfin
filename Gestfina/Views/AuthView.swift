@@ -338,6 +338,53 @@ struct AuthView: View {
         .disabled(isLoading)
     }
     
+    private var googleSignInSection: some View {
+        VStack(spacing: 24) {
+            HStack(spacing: 16) {
+                Rectangle()
+                    .fill(Color.secondary.opacity(0.2))
+                    .frame(height: 1)
+                
+                Text("OU")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundColor(.secondary)
+                
+                Rectangle()
+                    .fill(Color.secondary.opacity(0.2))
+                    .frame(height: 1)
+            }
+            .padding(.horizontal, 40)
+            
+            Button {
+                hapticFeedback.impactOccurred()
+                startNativeGoogleLogin()
+            } label: {
+                HStack(spacing: 12) {
+                    // Icône Google Multicolore
+                    HStack(spacing: 2) {
+                        Circle().fill(Color.appRed).frame(width: 6, height: 6)
+                        Circle().fill(Color.appBlue).frame(width: 6, height: 6)
+                        Circle().fill(Color.appYellow).frame(width: 6, height: 6)
+                        Circle().fill(Color.appGreen).frame(width: 6, height: 6)
+                    }
+                    
+                    Text("Continuer avec Google")
+                        .font(.system(size: 16, weight: .semibold))
+                }
+                .foregroundColor(.primary)
+                .frame(maxWidth: .infinity)
+                .frame(height: 56)
+                .background(Color(UIColor.secondarySystemGroupedBackground))
+                .clipShape(Capsule())
+                .overlay(
+                    Capsule()
+                        .stroke(Color.black.opacity(0.05), lineWidth: 1)
+                )
+                .shadow(color: Color.black.opacity(0.05), radius: 10, y: 4)
+            }
+            .padding(.horizontal, 24)
+        }
+    }
     
     // MARK: - Actions
     
@@ -392,6 +439,76 @@ struct AuthView: View {
         }
     }
     
+    // MARK: - Native Google Login (ASWebAuthenticationSession)
+    
+    private func startNativeGoogleLogin() {
+        // ⚠️ INSTRUCTIONS POUR LE DEV (WINDOWS) ⚠️
+        // Remplace ces valeurs par celles de ton projet Firebase
+        // 1. Va sur la console Google Cloud > Identifiants
+        // 2. Trouve ton ID client Web (pas iOS, mais WEB)
+        let webClientId = "REMPLACE_PAR_TON_CLIENT_ID_WEB_GOOGLE"
+        let redirectUri = "https://madutech7-samaxaalis-backend.hf.space/auth/google/callback" // URL bidon pour intercepter
+        
+        // Si les identifiants ne sont pas configurés
+        if webClientId == "REMPLACE_PAR_TON_CLIENT_ID_WEB_GOOGLE" {
+            setError("Google SignIn non configuré. Remplis le Client ID dans AuthView.swift.")
+            return
+        }
+        
+        isLoading = true
+        
+        let authUrlString = "https://accounts.google.com/o/oauth2/v2/auth?client_id=\(webClientId)&redirect_uri=\(redirectUri)&response_type=id_token&scope=email%20profile&nonce=random_nonce"
+        
+        guard let authUrl = URL(string: authUrlString) else {
+            setError("Erreur de configuration URL Google")
+            return
+        }
+        
+        let session = ASWebAuthenticationSession(url: authUrl, callbackURLScheme: "https") { callbackURL, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    self.isLoading = false
+                    if (error as NSError).code != ASWebAuthenticationSessionError.canceledLoginFlow.rawValue {
+                        self.setError("Erreur Google: \(error.localizedDescription)")
+                    }
+                    return
+                }
+                
+                guard let url = callbackURL, let fragment = url.fragment else {
+                    self.isLoading = false
+                    self.setError("Impossible de récupérer le jeton Google")
+                    return
+                }
+                
+                // Extraire le id_token de l'URL de retour (fragment)
+                let parameters = fragment.components(separatedBy: "&")
+                var idToken: String? = nil
+                
+                for param in parameters {
+                    let pairs = param.components(separatedBy: "=")
+                    if pairs.count == 2 && pairs[0] == "id_token" {
+                        idToken = pairs[1]
+                        break
+                    }
+                }
+                
+                if let token = idToken {
+                    // Envoyer le vrai jeton Google au backend
+                    APIManager.shared.googleLogin(idToken: token) { result in
+                        self.handleAuthResult(result)
+                    }
+                } else {
+                    self.isLoading = false
+                    self.setError("Jeton Google introuvable")
+                }
+            }
+        }
+        
+        // Permet l'affichage de la popup
+        session.presentationContextProvider = WindowContextProvider.shared
+        session.start()
+    }
+    
     private func setError(_ message: String) {
         notificationFeedback.notificationOccurred(.error)
         withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
@@ -405,6 +522,16 @@ struct AuthView: View {
                 showError = false
             }
         }
+    }
+}
+
+// Classe requise pour présenter la fenêtre web OAuth sur iOS
+import AuthenticationServices
+
+class WindowContextProvider: NSObject, ASWebAuthenticationPresentationContextProviding {
+    static let shared = WindowContextProvider()
+    func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
+        return UIApplication.shared.windows.first { $0.isKeyWindow } ?? ASPresentationAnchor()
     }
 }
 
