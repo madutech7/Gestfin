@@ -437,7 +437,7 @@ struct AuthView: View {
             case .success(let data):
                 self.notificationFeedback.notificationOccurred(.success)
                 if let user = data["user"] as? [String: Any],
-                   let token = data["access_token"] as? String,
+                   let token = data["accessToken"] as? String,
                    let userEmail = user["email"] as? String,
                    let userName = user["name"] as? String {
                     
@@ -458,7 +458,7 @@ struct AuthView: View {
         
         isLoading = true
         
-        let mockToken = "mock_google_id_token_for_\(email)"
+        let mockToken = "mock-google-token-\(email)"
         APIManager.shared.googleLogin(idToken: mockToken) { result in
             handleAuthResult(result)
         }
