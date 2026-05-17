@@ -103,6 +103,19 @@ class BackendAuthManager: ObservableObject {
         }
     }
     
+    func skipAuthentication() {
+        // Enregistre un faux token "GUEST_MODE" pour contourner la vue d'authentification
+        UserDefaults.standard.set("GUEST_MODE", forKey: "gestfina_jwt_token")
+        UserDefaults.standard.set("Mode Hors-ligne", forKey: "gestfina_user_name")
+        UserDefaults.standard.set("invité@gestfina.local", forKey: "gestfina_user_email")
+        
+        DispatchQueue.main.async {
+            self.isLoggedIn = true
+            self.currentUserName = "Mode Hors-ligne"
+            self.currentUserEmail = "invité@gestfina.local"
+        }
+    }
+    
     func logout() {
         UserDefaults.standard.removeObject(forKey: "gestfina_jwt_token")
         UserDefaults.standard.removeObject(forKey: "gestfina_user_email")

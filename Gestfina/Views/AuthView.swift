@@ -78,6 +78,8 @@ struct AuthView: View {
                             
                             actionButton
                                 .padding(.top, 12)
+                                
+                            skipButton
                         }
                         .padding(24)
                     }
@@ -334,6 +336,22 @@ struct AuthView: View {
             .frame(height: 56)
             .clipShape(Capsule())
             .shadow(color: Color.appBlue.opacity(0.4), radius: 15, x: 0, y: 8)
+        }
+        .disabled(isLoading)
+    }
+    
+    private var skipButton: some View {
+        Button {
+            hapticFeedback.impactOccurred()
+            withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                BackendAuthManager.shared.skipAuthentication()
+            }
+        } label: {
+            Text("Continuer sans compte")
+                .font(.system(size: 15, weight: .semibold, design: .rounded))
+                .foregroundColor(.secondary)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 8)
         }
         .disabled(isLoading)
     }
