@@ -443,45 +443,55 @@ struct AuthView: View {
     
     private func startNativeGoogleLogin() {
         // ⚠️ INSTRUCTIONS POUR LE DEV (WINDOWS) ⚠️
-        // Remplace ces valeurs par celles de ton projet Firebase
-        // 1. Va sur la console Google Cloud > Identifiants
-        // 2. Trouve ton ID client Web (pas iOS, mais WEB)
-        let webClientId = "REMPLACE_PAR_TON_CLIENT_ID_WEB_GOOGLE"
-        let redirectUri = "https://madutech7-samaxaalis-backend.hf.space/auth/google/callback" // URL bidon pour intercepter
+        // Puisque tu utilises Firebase, Firebase a automatiquement créé ces identifiants pour ton app iOS !
+        // 1. Va sur la Console Firebase > Paramètres du projet > Général > Tes applications (iOS)
+        // 2. Télécharge ou ouvre le fichier "GoogleService-Info.plist" avec un éditeur de texte (Bloc-notes).
+        // 3. Copie la valeur de "CLIENT_ID" et colle-la ci-dessous :
+        let clientId = "REMPLACE_PAR_TON_CLIENT_ID_IOS" 
         
-        // Si les identifiants ne sont pas configurés
-        if webClientId == "REMPLACE_PAR_TON_CLIENT_ID_WEB_GOOGLE" {
-            setError("Google SignIn non configuré. Remplis le Client ID dans AuthView.swift.")
+        // 4. Copie la valeur de "REVERSED_CLIENT_ID" et colle-la ci-dessous :
+        let reversedClientId = "REMPLACE_PAR_TON_REVERSED_CLIENT_ID"
+        
+        if clientId == "REMPLACE_PAR_TON_CLIENT_ID_IOS" {
+            setError("Google SignIn : Remplis le CLIENT_ID et REVERSED_CLIENT_ID dans AuthView.swift (ligne 399).")
             return
         }
         
         isLoading = true
         
-        let authUrlString = "https://accounts.google.com/o/oauth2/v2/auth?client_id=\(webClientId)&redirect_uri=\(redirectUri)&response_type=id_token&scope=email%20profile&nonce=random_nonce"
+        // Le flux OAuth2 natif iOS demande un 'code' ou 'id_token' (selon la configuration). 
+        // L'utilisation du reversed_client_id permet à iOS d'intercepter la redirection proprement !
+        let redirectUri = "\(reversedClientId):/oauth2redirect"
+        let authUrlString = "https://accounts.google.com/o/oauth2/v2/auth?client_id=\(clientId)&redirect_uri=\(redirectUri)&response_type=id_token&scope=email%20profile&nonce=random_nonce_gestfina"
         
         guard let authUrl = URL(string: authUrlString) else {
             setError("Erreur de configuration URL Google")
             return
         }
         
-        let session = ASWebAuthenticationSession(url: authUrl, callbackURLScheme: "https") { callbackURL, error in
+        // Le callbackURLScheme est la première partie du REVERSED_CLIENT_ID (ex: com.googleusercontent.apps.12345)
+        let scheme = reversedClientId
+        
+        let session = ASWebAuthenticationSession(url: authUrl, callbackURLScheme: scheme) { callbackURL, error in
             DispatchQueue.main.async {
                 if let error = error {
                     self.isLoading = false
                     if (error as NSError).code != ASWebAuthenticationSessionError.canceledLoginFlow.rawValue {
-                        self.setError("Erreur Google: \(error.localizedDescription)")
+                        self.setError("Connexion annulée ou erreur : \(error.localizedDescription)")
                     }
                     return
                 }
                 
-                guard let url = callbackURL, let fragment = url.fragment else {
+                // Google renvoie les données soit dans la query, soit dans le fragment
+                guard let url = callbackURL else {
                     self.isLoading = false
-                    self.setError("Impossible de récupérer le jeton Google")
+                    self.setError("Impossible de récupérer la réponse de Google")
                     return
                 }
                 
-                // Extraire le id_token de l'URL de retour (fragment)
-                let parameters = fragment.components(separatedBy: "&")
+                // Extraire le id_token du fragment (ex: com.google...:/oauth2redirect#id_token=XXXX&...)
+                let fragmentString = url.fragment ?? url.query ?? ""
+                let parameters = fragmentString.components(separatedBy: "&")
                 var idToken: String? = nil
                 
                 for param in parameters {
@@ -493,18 +503,17 @@ struct AuthView: View {
                 }
                 
                 if let token = idToken {
-                    // Envoyer le vrai jeton Google au backend
+                    // Envoyer le VRAI jeton Google Firebase au backend NestJS
                     APIManager.shared.googleLogin(idToken: token) { result in
                         self.handleAuthResult(result)
                     }
                 } else {
                     self.isLoading = false
-                    self.setError("Jeton Google introuvable")
+                    self.setError("Impossible d'extraire le jeton d'authentification Google")
                 }
             }
         }
         
-        // Permet l'affichage de la popup
         session.presentationContextProvider = WindowContextProvider.shared
         session.start()
     }
