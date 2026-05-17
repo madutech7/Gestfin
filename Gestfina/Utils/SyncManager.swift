@@ -109,6 +109,9 @@ class BackendAuthManager: ObservableObject {
         UserDefaults.standard.set("Mode Hors-ligne", forKey: "gestfina_user_name")
         UserDefaults.standard.set("invité@gestfina.local", forKey: "gestfina_user_email")
         
+        // Vider la file d'attente hors-ligne pour le mode invité pur
+        UserDefaults.standard.removeObject(forKey: "gestfina_pending_sync_queue")
+        
         DispatchQueue.main.async {
             self.isLoggedIn = true
             self.currentUserName = "Mode Hors-ligne"
@@ -147,7 +150,7 @@ class APIManager {
     }
     
     func ensureAuthenticated(completion: @escaping (Bool) -> Void) {
-        if token != nil {
+        if let t = token, t != "GUEST_MODE" {
             completion(true)
         } else {
             completion(false)
@@ -489,6 +492,9 @@ class SyncManager: ObservableObject {
     }
     
     func queueAction(itemId: UUID, itemType: PendingSyncAction.PendingItemType, actionType: PendingActionType) {
+        // Si on est en mode invité (hors-ligne), on ne met rien en file d'attente
+        guard let token = APIManager.shared.token, token != "GUEST_MODE" else { return }
+        
         // Retirer toute action doublon sur le même item pour optimiser la file
         var current = pendingActions
         current.removeAll { $0.itemId == itemId }
@@ -515,6 +521,9 @@ class SyncManager: ObservableObject {
     
     func triggerSynchronization() {
         guard NetworkMonitor.shared.isConnected, !isSyncing else { return }
+        // Si on est en mode invité (hors-ligne), on ne tente aucune synchronisation
+        guard let token = APIManager.shared.token, token != "GUEST_MODE" else { return }
+        
         let actions = pendingActions
         guard !actions.isEmpty else { return }
         

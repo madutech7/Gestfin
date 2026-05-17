@@ -45,6 +45,8 @@ class FinanceViewModel: ObservableObject {
     private let currencyKey      = "gestfina_currency"
     private let isBalanceVisibleKey = "gestfina_is_balance_visible"
     
+    private var cancellables = Set<AnyCancellable>()
+    
     // MARK: - Init
     
     init() {
@@ -57,6 +59,18 @@ class FinanceViewModel: ObservableObject {
         if UserDefaults.standard.object(forKey: isBalanceVisibleKey) != nil {
             isBalanceVisible = UserDefaults.standard.bool(forKey: isBalanceVisibleKey)
         }
+        
+        // Écouter les changements de nom d'utilisateur depuis BackendAuthManager
+        BackendAuthManager.shared.$currentUserName
+            .receive(on: RunLoop.main)
+            .sink { [weak self] newName in
+                if !newName.isEmpty {
+                    self?.userName = newName
+                } else {
+                    self?.userName = "Madu"
+                }
+            }
+            .store(in: &cancellables)
         
         // Synchroniser automatiquement au lancement si connecté
         SyncManager.shared.triggerSynchronization()
@@ -380,6 +394,13 @@ class FinanceViewModel: ObservableObject {
     
     func saveUserName() {
         UserDefaults.standard.set(userName, forKey: userNameKey)
+        // Synchroniser avec BackendAuthManager
+        if BackendAuthManager.shared.currentUserName != userName {
+            DispatchQueue.main.async {
+                BackendAuthManager.shared.currentUserName = self.userName
+            }
+            UserDefaults.standard.set(userName, forKey: "gestfina_user_name")
+        }
     }
     
     /// Réinitialiser toutes les données
