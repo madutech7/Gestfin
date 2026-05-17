@@ -112,63 +112,87 @@ struct SettingsView: View {
 
     var body: some View {
         NavigationView {
-            List {
+            ZStack {
+                Color(UIColor.systemBackground).ignoresSafeArea()
+                Circle().fill(Color.appBlue.opacity(0.12)).frame(width: 300).blur(radius: 60).offset(x: -100, y: -200)
+                Circle().fill(Color.appPurple.opacity(0.1)).frame(width: 300).blur(radius: 60).offset(x: 150, y: 300)
 
-                // MARK: - Profil
-                Section {
-                    profileRow
-                } header: {
-                    Text("Profil")
-                }
-
-                // MARK: - Devise
-                Section {
-                    currencyRow
-                } header: {
-                    Text("Devise")
-                } footer: {
-                    Text("La devise sélectionnée sera utilisée pour toutes les transactions et les budgets.")
-                }
-
-                // MARK: - Sécurité
-                Section {
-                    securitySection
-                } header: {
-                    Text("Sécurité")
-                } footer: {
-                    Text(authManager.isAuthEnabled
-                         ? "L'application se verrouille automatiquement en arrière-plan."
-                         : "Activez \(authManager.biometricName) pour protéger vos données financières.")
-                }
-
-                // MARK: - Notifications
-                Section {
-                    notificationsSection
-                } header: {
-                    Text("Notifications")
-                } footer: {
-                    if notifManager.authorizationStatus == .denied {
-                        Text("Notifications désactivées. Activez-les dans Réglages > SamaXaalis.")
+                ScrollView(.vertical, showsIndicators: false) {
+                    VStack(spacing: 30) {
+                        
+                        // MARK: - Profil
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("PROFIL").font(.system(size: 12, weight: .bold)).foregroundColor(.secondary).padding(.leading, 8)
+                            profileRow
+                                .padding(16)
+                                .liquidGlass(cornerRadius: 24, opacity: colorScheme == .dark ? 0.1 : 0.03)
+                        }
+                        
+                        // MARK: - Général
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("GÉNÉRAL").font(.system(size: 12, weight: .bold)).foregroundColor(.secondary).padding(.leading, 8)
+                            VStack(spacing: 0) {
+                                currencyRow.padding(16)
+                                Divider().padding(.leading, 56)
+                                securitySection.padding(16)
+                            }
+                            .liquidGlass(cornerRadius: 24, opacity: colorScheme == .dark ? 0.1 : 0.03)
+                        }
+                        
+                        // MARK: - Notifications
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("NOTIFICATIONS").font(.system(size: 12, weight: .bold)).foregroundColor(.secondary).padding(.leading, 8)
+                            VStack(spacing: 0) {
+                                notificationsSection
+                            }
+                            .liquidGlass(cornerRadius: 24, opacity: colorScheme == .dark ? 0.1 : 0.03)
+                        }
+                        
+                        // MARK: - Données
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("DONNÉES").font(.system(size: 12, weight: .bold)).foregroundColor(.secondary).padding(.leading, 8)
+                            VStack(spacing: 0) {
+                                dataSection
+                            }
+                            .liquidGlass(cornerRadius: 24, opacity: colorScheme == .dark ? 0.1 : 0.03)
+                        }
+                        
+                        // MARK: - À Propos
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("À PROPOS").font(.system(size: 12, weight: .bold)).foregroundColor(.secondary).padding(.leading, 8)
+                            VStack(spacing: 0) {
+                                aboutSection
+                            }
+                            .liquidGlass(cornerRadius: 24, opacity: colorScheme == .dark ? 0.1 : 0.03)
+                        }
+                        
+                        // MARK: - Déconnexion
+                        Button {
+                            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                            BackendAuthManager.shared.logout()
+                        } label: {
+                            HStack {
+                                Spacer()
+                                Text("Se déconnecter")
+                                    .font(.system(size: 16, weight: .bold, design: .rounded))
+                                    .foregroundColor(.white)
+                                Spacer()
+                            }
+                            .padding(.vertical, 16)
+                            .background(Color.appRed)
+                            .clipShape(Capsule())
+                            .shadow(color: Color.appRed.opacity(0.3), radius: 10, y: 5)
+                        }
+                        .padding(.top, 10)
+                        
+                        Text("SamaXaalis Cloud Sync est actif.")
+                            .font(.system(size: 12))
+                            .foregroundColor(.secondary)
+                            .padding(.bottom, 40)
                     }
-                }
-
-                // MARK: - Données
-                Section {
-                    dataSection
-                } header: {
-                    Text("Données")
-                } footer: {
-                    Text("Vos données sont stockées localement et synchronisées de manière sécurisée sur votre compte SamaXaalis Cloud.")
-                }
-
-                // MARK: - À propos
-                Section {
-                    aboutSection
-                } header: {
-                    Text("À propos")
+                    .padding(20)
                 }
             }
-            .listStyle(.insetGrouped)
             .navigationTitle("Réglages")
             .navigationBarTitleDisplayMode(.large)
             .alert("Réinitialiser toutes les données ?", isPresented: $showResetAlert) {
@@ -178,7 +202,7 @@ struct SettingsView: View {
                     UINotificationFeedbackGenerator().notificationOccurred(.warning)
                 }
             } message: {
-                Text("Toutes vos transactions et budgets seront supprimés définitivement. Cette action est irréversible.")
+                Text("Toutes vos transactions et budgets locaux seront supprimés définitivement. Cette action est irréversible.")
             }
             .sheet(isPresented: $showNameEditor) {
                 nameEditorSheet
@@ -330,6 +354,7 @@ struct SettingsView: View {
                 Label("Activer les notifications", systemImage: "bell.badge.fill")
                     .foregroundColor(.appBlue)
             }
+            .padding(16)
         } else if notifManager.authorizationStatus == .denied {
             Button {
                 notifManager.openSettings()
@@ -337,11 +362,13 @@ struct SettingsView: View {
                 Label("Ouvrir les Réglages système", systemImage: "gear")
                     .foregroundColor(.appBlue)
             }
+            .padding(16)
         } else {
             Toggle(isOn: $notifManager.budgetAlertEnabled) {
                 Label {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Alertes budget")
+                            .foregroundColor(.primary)
                         Text("Quand 80% ou 100% est atteint")
                             .font(.system(size: 11))
                             .foregroundColor(.secondary)
@@ -352,11 +379,15 @@ struct SettingsView: View {
                 }
             }
             .tint(.appBlue)
+            .padding(16)
+
+            Divider().padding(.leading, 56)
 
             Toggle(isOn: $notifManager.dailyReminderEnabled) {
                 Label {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Rappel quotidien")
+                            .foregroundColor(.primary)
                         Text("Saisir vos dépenses du jour")
                             .font(.system(size: 11))
                             .foregroundColor(.secondary)
@@ -367,18 +398,22 @@ struct SettingsView: View {
                 }
             }
             .tint(.appBlue)
+            .padding(16)
 
             if notifManager.dailyReminderEnabled {
+                Divider().padding(.leading, 56)
                 HStack {
                     Label("Heure du rappel", systemImage: "clock")
+                        .foregroundColor(.primary)
                     Spacer()
                     Stepper("", value: $notifManager.reminderHour, in: 6...23)
                         .labelsHidden()
                     Text("\(notifManager.reminderHour)h00")
-                        .font(.system(size: 15, weight: .semibold, design: .rounded))
+                        .font(.system(size: 15, weight: .bold, design: .rounded))
                         .foregroundColor(.appBlue)
                         .frame(width: 52, alignment: .trailing)
                 }
+                .padding(16)
             }
         }
     }
@@ -389,26 +424,27 @@ struct SettingsView: View {
     private var dataSection: some View {
         HStack {
             Label("Transactions enregistrées", systemImage: "arrow.left.arrow.right")
+                .foregroundColor(.primary)
             Spacer()
             Text("\(viewModel.transactions.count)")
                 .font(.system(size: 15, weight: .bold, design: .rounded))
                 .foregroundStyle(Color.appBlue)
         }
+        .padding(16)
+
+        Divider().padding(.leading, 56)
 
         HStack {
             Label("Budgets actifs", systemImage: "chart.pie")
+                .foregroundColor(.primary)
             Spacer()
             Text("\(viewModel.budgets.count)")
                 .font(.system(size: 15, weight: .bold, design: .rounded))
                 .foregroundStyle(Color.appBlue)
         }
+        .padding(16)
 
-        Button {
-            viewModel.resetAllData()
-        } label: {
-            Label("Se déconnecter", systemImage: "rectangle.portrait.and.arrow.right")
-                .foregroundColor(.orange)
-        }
+        Divider().padding(.leading, 56)
 
         Button {
             showResetAlert = true
@@ -416,6 +452,7 @@ struct SettingsView: View {
             Label("Réinitialiser l'appareil (Local)", systemImage: "trash")
                 .foregroundColor(.appRed)
         }
+        .padding(16)
     }
 
     // MARK: - À propos
@@ -424,23 +461,35 @@ struct SettingsView: View {
     private var aboutSection: some View {
         HStack {
             Label("Version", systemImage: "info.circle")
+                .foregroundColor(.primary)
             Spacer()
             Text("1.0.0")
                 .foregroundColor(.secondary)
         }
+        .padding(16)
+        
+        Divider().padding(.leading, 56)
+        
         HStack {
             Label("Développeur", systemImage: "hammer.fill")
+                .foregroundColor(.primary)
             Spacer()
             Text("Madu")
-                .font(.system(size: 15, weight: .semibold))
-                .foregroundColor(.secondary)
+                .font(.system(size: 15, weight: .bold))
+                .foregroundColor(.appBlue)
         }
+        .padding(16)
+        
+        Divider().padding(.leading, 56)
+        
         HStack {
-            Label("Données 100% locales", systemImage: "internaldrive")
+            Label("Synchronisation Cloud", systemImage: "cloud.fill")
+                .foregroundColor(.primary)
             Spacer()
             Image(systemName: "checkmark.shield.fill")
                 .foregroundColor(.appGreen)
         }
+        .padding(16)
     }
 
     // MARK: - Éditeur de nom
