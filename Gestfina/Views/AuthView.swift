@@ -28,10 +28,6 @@ struct AuthView: View {
         case name, email, password
     }
     
-    // Google Sign-In Simulator
-    @State private var showGoogleAlert = false
-    @State private var googleEmailInput = ""
-    
     // Animations state
     @State private var appearAnimation = false
     
@@ -87,11 +83,7 @@ struct AuthView: View {
                     }
                     .liquidGlass(cornerRadius: 32, opacity: 0.05)
                     .padding(.horizontal, 24)
-                    
-                    // Section Google Sign In
-                    googleSignInSection
-                        .padding(.top, 8)
-                        .padding(.bottom, 40)
+                    .padding(.bottom, 40)
                 }
             }
         }
@@ -102,17 +94,6 @@ struct AuthView: View {
         }
         .onTapGesture {
             focusedField = nil
-        }
-        .alert("Connexion Google", isPresented: $showGoogleAlert) {
-            TextField("Votre e-mail Google", text: $googleEmailInput)
-                .keyboardType(.emailAddress)
-                .autocapitalization(.none)
-            Button("Annuler", role: .cancel) { }
-            Button("Se connecter") {
-                simulateGoogleLogin(email: googleEmailInput)
-            }
-        } message: {
-            Text("Entrez l'adresse e-mail de votre compte Google pour simuler la connexion.")
         }
     }
     
@@ -357,48 +338,6 @@ struct AuthView: View {
         .disabled(isLoading)
     }
     
-    private var googleSignInSection: some View {
-        VStack(spacing: 24) {
-            HStack(spacing: 16) {
-                Rectangle()
-                    .fill(Color.secondary.opacity(0.2))
-                    .frame(height: 1)
-                
-                Text("OU")
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundColor(.secondary)
-                
-                Rectangle()
-                    .fill(Color.secondary.opacity(0.2))
-                    .frame(height: 1)
-            }
-            .padding(.horizontal, 40)
-            
-            Button {
-                hapticFeedback.impactOccurred()
-                showGoogleAlert = true
-            } label: {
-                HStack(spacing: 12) {
-                    Image(systemName: "g.circle.fill")
-                        .font(.system(size: 20))
-                    
-                    Text("Continuer avec Google")
-                        .font(.system(size: 16, weight: .semibold))
-                }
-                .foregroundColor(.primary)
-                .frame(maxWidth: .infinity)
-                .frame(height: 56)
-                .background(Color(UIColor.secondarySystemGroupedBackground))
-                .clipShape(Capsule())
-                .overlay(
-                    Capsule()
-                        .stroke(Color.black.opacity(0.05), lineWidth: 1)
-                )
-                .shadow(color: Color.black.opacity(0.05), radius: 10, y: 4)
-            }
-            .padding(.horizontal, 24)
-        }
-    }
     
     // MARK: - Actions
     
@@ -450,17 +389,6 @@ struct AuthView: View {
             case .failure(let error):
                 self.setError(error.localizedDescription)
             }
-        }
-    }
-    
-    private func simulateGoogleLogin(email: String) {
-        guard !email.isEmpty else { return }
-        
-        isLoading = true
-        
-        let mockToken = "mock-google-token-\(email)"
-        APIManager.shared.googleLogin(idToken: mockToken) { result in
-            handleAuthResult(result)
         }
     }
     
