@@ -447,10 +447,10 @@ struct AuthView: View {
         // 1. Va sur la Console Firebase > Paramètres du projet > Général > Tes applications (iOS)
         // 2. Télécharge ou ouvre le fichier "GoogleService-Info.plist" avec un éditeur de texte (Bloc-notes).
         // 3. Copie la valeur de "CLIENT_ID" et colle-la ci-dessous :
-        let clientId = "REMPLACE_PAR_TON_CLIENT_ID_IOS" 
+        let clientId = "659116637496-pvv58d9882vmmgtgm4b3ld6lkrlssu7q.apps.googleusercontent.com" 
         
         // 4. Copie la valeur de "REVERSED_CLIENT_ID" et colle-la ci-dessous :
-        let reversedClientId = "REMPLACE_PAR_TON_REVERSED_CLIENT_ID"
+        let reversedClientId = "com.googleusercontent.apps.659116637496-pvv58d9882vmmgtgm4b3ld6lkrlssu7q"
         
         if clientId == "REMPLACE_PAR_TON_CLIENT_ID_IOS" {
             setError("Google SignIn : Remplis le CLIENT_ID et REVERSED_CLIENT_ID dans AuthView.swift (ligne 399).")
