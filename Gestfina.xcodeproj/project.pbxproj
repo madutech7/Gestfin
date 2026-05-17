@@ -23,6 +23,8 @@
 		AA0000000000000000000E /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0000000000000000000E; };
 		AA0000000000000000000F /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0000000000000000000F; };
 		AA00000000000000000010 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000010; };
+		AA00000000000000000011 /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000011; };
+		AA00000000000000000012 /* SyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000012; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +44,8 @@
 		FA0000000000000000000E /* Color+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extensions.swift"; sourceTree = "<group>"; };
 		FA0000000000000000000F /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
 		FA00000000000000000010 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FA00000000000000000011 /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
+		FA00000000000000000012 /* SyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils/SyncManager.swift; sourceTree = "<group>"; };
 		FA00000000000000000020 /* Gestfina.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gestfina.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -74,6 +78,7 @@
 				CA00000000000000000006 /* Components */,
 				CA00000000000000000007 /* Extensions */,
 				FA00000000000000000010 /* Assets.xcassets */,
+				FA00000000000000000012 /* SyncManager.swift */,
 			);
 			path = Gestfina;
 			sourceTree = "<group>";
@@ -105,6 +110,7 @@
 				FA00000000000000000009 /* AddTransactionView.swift */,
 				FA0000000000000000000A /* BudgetView.swift */,
 				FA0000000000000000000B /* StatisticsView.swift */,
+				FA00000000000000000011 /* AuthView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -220,6 +226,8 @@
 				AA0000000000000000000D /* GlassModifiers.swift in Sources */,
 				AA0000000000000000000E /* Color+Extensions.swift in Sources */,
 				AA0000000000000000000F /* Date+Extensions.swift in Sources */,
+				AA00000000000000000011 /* AuthView.swift in Sources */,
+				AA00000000000000000012 /* SyncManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
