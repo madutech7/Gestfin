@@ -95,6 +95,7 @@ class BackendAuthManager: ObservableObject {
         UserDefaults.standard.set(token, forKey: "gestfina_jwt_token")
         UserDefaults.standard.set(email, forKey: "gestfina_user_email")
         UserDefaults.standard.set(name, forKey: "gestfina_user_name")
+        UserDefaults.standard.set(name, forKey: "gestfina_username") // Synchroniser avec FinanceViewModel
         
         DispatchQueue.main.async {
             self.isLoggedIn = true
@@ -108,6 +109,7 @@ class BackendAuthManager: ObservableObject {
         UserDefaults.standard.set("GUEST_MODE", forKey: "gestfina_jwt_token")
         UserDefaults.standard.set("Mode Hors-ligne", forKey: "gestfina_user_name")
         UserDefaults.standard.set("invité@gestfina.local", forKey: "gestfina_user_email")
+        UserDefaults.standard.set("Mode Hors-ligne", forKey: "gestfina_username") // Synchroniser
         
         // Vider la file d'attente hors-ligne pour le mode invité pur
         UserDefaults.standard.removeObject(forKey: "gestfina_pending_sync_queue")
@@ -123,6 +125,7 @@ class BackendAuthManager: ObservableObject {
         UserDefaults.standard.removeObject(forKey: "gestfina_jwt_token")
         UserDefaults.standard.removeObject(forKey: "gestfina_user_email")
         UserDefaults.standard.removeObject(forKey: "gestfina_user_name")
+        UserDefaults.standard.removeObject(forKey: "gestfina_username") // Reset
         
         // Vider la file d'attente hors-ligne
         UserDefaults.standard.removeObject(forKey: "gestfina_pending_sync_queue")

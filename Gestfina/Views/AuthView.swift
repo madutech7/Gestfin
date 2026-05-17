@@ -450,6 +450,9 @@ struct AuthView: View {
                         email: userEmail,
                         name: userName
                     )
+                    
+                    // Récupérer immédiatement les transactions et budgets depuis le cloud NestJS
+                    viewModel.fetchCloudData()
                 }
             case .failure(let error):
                 self.setError(error.localizedDescription)

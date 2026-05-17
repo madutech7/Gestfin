@@ -74,6 +74,11 @@ class FinanceViewModel: ObservableObject {
         
         // Synchroniser automatiquement au lancement si connecté
         SyncManager.shared.triggerSynchronization()
+        
+        // Charger les dernières données cloud au lancement si l'utilisateur est connecté
+        if BackendAuthManager.shared.isLoggedIn && APIManager.shared.token != "GUEST_MODE" {
+            fetchCloudData()
+        }
     }
     
     // MARK: - Période de temps
