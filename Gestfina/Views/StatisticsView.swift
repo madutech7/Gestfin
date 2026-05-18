@@ -11,7 +11,9 @@ import Charts
 struct StatisticsView: View {
     @EnvironmentObject var viewModel: FinanceViewModel
     @State private var selectedChart: ChartType = .expenses
+    @State private var showPaywall = false
     @Environment(\.colorScheme) var colorScheme
+    @ObservedObject private var subManager = SubscriptionManager.shared
 
     enum ChartType: String, CaseIterable {
         case expenses = "Dépenses"
@@ -65,10 +67,12 @@ struct StatisticsView: View {
                         }
                     }
                 }
-            }
             .listStyle(.insetGrouped)
             .background(Color(UIColor.systemGroupedBackground))
             .scrollContentBackground(.hidden)
+            .sheet(isPresented: $showPaywall) {
+                PaywallView()
+            }
             .navigationTitle("Statistiques")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
@@ -124,7 +128,62 @@ struct StatisticsView: View {
     @ViewBuilder
     private var chartView: some View {
         if selectedChart == .trend {
-            trendChart
+            if subManager.isPremium {
+                trendChart
+            } else {
+                ZStack {
+                    trendChart
+                        .blur(radius: 8)
+                        .disabled(true)
+                    
+                    // Glassmorphic Premium Overlay
+                    VStack(spacing: 12) {
+                        Image(systemName: "crown.fill")
+                            .font(.system(size: 26))
+                            .foregroundStyle(
+                                LinearGradient(
+                                    colors: [Color.appBlue, Color.appPurple],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
+                        
+                        Text("Analyse de Tendance Premium")
+                            .font(.system(size: 15, weight: .bold))
+                            .foregroundColor(.primary)
+                        
+                        Text("Débloquez les analyses de tendance mensuelles et l'historique d'épargne complet.")
+                            .font(.system(size: 12))
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 16)
+                        
+                        Button {
+                            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                            showPaywall = true
+                        } label: {
+                            Text("Débloquer SamaXaalis Premium")
+                                .font(.system(size: 12, weight: .bold))
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 8)
+                                .background(
+                                    LinearGradient(
+                                        colors: [Color.appBlue, Color.appPurple],
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
+                                )
+                                .clipShape(Capsule())
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    .padding()
+                    .background(.ultraThinMaterial)
+                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    .shadow(color: Color.black.opacity(0.1), radius: 10, y: 5)
+                }
+            }
         } else {
             breakdownChart
         }

@@ -11,7 +11,9 @@ struct BudgetView: View {
     @EnvironmentObject var viewModel: FinanceViewModel
     @State private var showAddBudget = false
     @State private var budgetToEdit: Budget? = nil
+    @State private var showPaywall = false
     @Environment(\.colorScheme) var colorScheme
+    @ObservedObject private var subManager = SubscriptionManager.shared
 
     var body: some View {
         NavigationView {
@@ -76,7 +78,11 @@ struct BudgetView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                        showAddBudget = true
+                        if viewModel.budgets.count >= 2 && !subManager.isPremium {
+                            showPaywall = true
+                        } else {
+                            showAddBudget = true
+                        }
                     } label: {
                         Image(systemName: "plus")
                             .font(.system(size: 17, weight: .semibold))
@@ -91,6 +97,9 @@ struct BudgetView: View {
             .sheet(item: $budgetToEdit) { budget in
                 NativeBudgetFormSheet(viewModel: viewModel, budgetToEdit: budget)
                     .presentationDragIndicator(.visible)
+            }
+            .sheet(isPresented: $showPaywall) {
+                PaywallView()
             }
         }
     }
