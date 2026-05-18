@@ -70,46 +70,26 @@ struct PaywallView: View {
     
     var body: some View {
         ZStack {
-            // Background mesh fluide interactif (Apple Arcade Style)
+            // Background sobre ultra-premium Apple
             if colorScheme == .dark {
                 Color.black.ignoresSafeArea()
                 
-                ZStack {
-                    Circle()
-                        .fill(Color.appBlue.opacity(0.12))
-                        .frame(width: 320, height: 320)
-                        .offset(x: -120, y: -220)
-                        .blur(radius: 90)
-                    
-                    Circle()
-                        .fill(Color.appPurple.opacity(0.15))
-                        .frame(width: 350, height: 350)
-                        .offset(x: 120, y: 120)
-                        .blur(radius: 90)
-                    
-                    Circle()
-                        .fill(Color.appPink.opacity(0.08))
-                        .frame(width: 250, height: 250)
-                        .offset(x: 0, y: -50)
-                        .blur(radius: 70)
-                }
+                RadialGradient(
+                    colors: [Color.white.opacity(0.035), Color.clear],
+                    center: .top,
+                    startRadius: 0,
+                    endRadius: 500
+                )
                 .ignoresSafeArea()
             } else {
-                Color(UIColor.systemGroupedBackground).ignoresSafeArea()
+                Color(UIColor.systemBackground).ignoresSafeArea()
                 
-                ZStack {
-                    Circle()
-                        .fill(Color.appBlue.opacity(0.07))
-                        .frame(width: 380, height: 380)
-                        .offset(x: -150, y: -260)
-                        .blur(radius: 70)
-                    
-                    Circle()
-                        .fill(Color.appPurple.opacity(0.08))
-                        .frame(width: 380, height: 380)
-                        .offset(x: 150, y: 180)
-                        .blur(radius: 70)
-                }
+                RadialGradient(
+                    colors: [Color.black.opacity(0.015), Color.clear],
+                    center: .top,
+                    startRadius: 0,
+                    endRadius: 500
+                )
                 .ignoresSafeArea()
             }
             
@@ -135,37 +115,51 @@ struct PaywallView: View {
                         
                         // ── 1. CARTE PREMIUM 3D FLOTTANTE (Apple Card Premium) ──
                         ZStack {
-                            // Ombre de fond dynamique
+                            // Ombre de fond dynamique sobre
                             RoundedRectangle(cornerRadius: 24, style: .continuous)
-                                .fill(Color.appPurple.opacity(0.2))
+                                .fill(Color.black.opacity(colorScheme == .dark ? 0.65 : 0.18))
                                 .frame(width: 290, height: 160)
-                                .blur(radius: 15)
-                                .offset(y: 12)
+                                .blur(radius: 12)
+                                .offset(y: 10)
                             
-                            // Corps de la carte
+                            // Corps de la carte (Matte Space Grey / Titanium Apple Pay Style)
                             RoundedRectangle(cornerRadius: 24, style: .continuous)
                                 .fill(
                                     LinearGradient(
-                                        colors: [Color(hex: "6366F1"), Color(hex: "8B5CF6"), Color(hex: "EC4899")],
+                                        colors: [
+                                            colorScheme == .dark ? Color(hex: "1F1F21") : Color(hex: "3A3A3C"),
+                                            colorScheme == .dark ? Color(hex: "2D2D30") : Color(hex: "2C2C2E"),
+                                            colorScheme == .dark ? Color(hex: "111112") : Color(hex: "1C1C1E")
+                                        ],
                                         startPoint: .topLeading,
                                         endPoint: .bottomTrailing
                                     )
                                 )
                                 .overlay(
-                                    // Bords en verre
+                                    // Bords fins en métal brossé argenté
                                     RoundedRectangle(cornerRadius: 24, style: .continuous)
-                                        .stroke(Color.white.opacity(0.35), lineWidth: 1.5)
+                                        .stroke(
+                                            LinearGradient(
+                                                colors: [
+                                                    .white.opacity(colorScheme == .dark ? 0.25 : 0.15),
+                                                    .white.opacity(0.05),
+                                                    .white.opacity(colorScheme == .dark ? 0.15 : 0.05)
+                                                ],
+                                                startPoint: .topLeading,
+                                                endPoint: .bottomTrailing
+                                            ),
+                                            lineWidth: 1
+                                        )
                                 )
                                 .overlay(
-                                    // Reflet métallique liquide
+                                    // Reflet métallique discret
                                     LinearGradient(
-                                        colors: [.white.opacity(0.2), .clear, .white.opacity(0.05)],
+                                        colors: [.white.opacity(0.12), .clear, .white.opacity(0.03)],
                                         startPoint: .topLeading,
                                         endPoint: .bottomTrailing
                                     )
                                     .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
                                 )
-                                .shadow(color: Color.black.opacity(0.25), radius: 10, y: 5)
                             
                             // Infos textuelles & Éléments graphiques sur la carte
                             VStack(alignment: .leading) {
@@ -190,7 +184,7 @@ struct PaywallView: View {
                                             .font(.system(size: 18, weight: .semibold))
                                             .foregroundStyle(
                                                 LinearGradient(
-                                                    colors: [Color.appYellow, Color.appOrange],
+                                                    colors: [Color(hex: "FFE396"), Color(hex: "C59F43")],
                                                     startPoint: .top,
                                                     endPoint: .bottom
                                                 )
@@ -234,15 +228,9 @@ struct PaywallView: View {
                         // ── 2. TITRES ET CONTENU HERO ──
                         VStack(spacing: 8) {
                             Text("SamaXaalis Premium")
-                                .font(.system(size: 30, weight: .black, design: .rounded))
-                                .foregroundStyle(
-                                    LinearGradient(
-                                        colors: [Color.appBlue, Color.appPurple, Color.appPink],
-                                        startPoint: .leading,
-                                        endPoint: .trailing
-                                    )
-                                )
-                                .tracking(-0.8)
+                                .font(.system(size: 30, weight: .bold, design: .rounded))
+                                .foregroundColor(.primary)
+                                .tracking(-0.5)
                             
                             Text("Débloquez tout le potentiel de vos finances")
                                 .font(.system(size: 15, weight: .semibold))
@@ -255,11 +243,11 @@ struct PaywallView: View {
                         
                         // ── 3. LISTE DES BÉNÉFICES (Apple Style Rows) ──
                         VStack(alignment: .leading, spacing: 14) {
-                            AppleFeatureRow(icon: "infinity", color: Color.appBlue, title: "Transactions illimitées", desc: "Suivez chaque dépense, sans restriction de nombre.")
-                            AppleFeatureRow(icon: "chart.bar.fill", color: Color.appGreen, title: "Analyses & Tendances avancées", desc: "Visualisez l'évolution mensuelle et votre taux d'épargne précis.")
-                            AppleFeatureRow(icon: "icloud.fill", color: Color.appPurple, title: "Synchronisation multi-appareils", desc: "Vos données sécurisées et accessibles partout sur SamaXaalis Cloud.")
-                            AppleFeatureRow(icon: "nosign", color: Color.appOrange, title: "Expérience épurée sans publicité", desc: "Concentrez-vous sur vos finances, sans aucune distraction.")
-                            AppleFeatureRow(icon: "square.and.arrow.up.fill", color: Color.appRed, title: "Export CSV / PDF premium", desc: "Exportez et partagez vos rapports en quelques secondes.")
+                            AppleFeatureRow(icon: "infinity", title: "Transactions illimitées", desc: "Suivez chaque dépense, sans restriction de nombre.")
+                            AppleFeatureRow(icon: "chart.bar.fill", title: "Analyses & Tendances avancées", desc: "Visualisez l'évolution mensuelle et votre taux d'épargne précis.")
+                            AppleFeatureRow(icon: "icloud.fill", title: "Synchronisation multi-appareils", desc: "Vos données sécurisées et accessibles partout sur SamaXaalis Cloud.")
+                            AppleFeatureRow(icon: "nosign", title: "Expérience épurée sans publicité", desc: "Concentrez-vous sur vos finances, sans aucune distraction.")
+                            AppleFeatureRow(icon: "square.and.arrow.up.fill", title: "Export CSV / PDF premium", desc: "Exportez et partagez vos rapports en quelques secondes.")
                         }
                         .padding(.horizontal, 28)
                         .opacity(animateItems ? 1.0 : 0.0)
@@ -334,24 +322,18 @@ struct PaywallView: View {
                                 HStack {
                                     if isPurchasing {
                                         ProgressView()
-                                            .tint(.white)
+                                            .tint(colorScheme == .dark ? .black : .white)
                                             .padding(.trailing, 8)
                                     }
                                     Text(selectedProductID.contains("yearly") ? "Commencer les 7 jours gratuits" : "S'abonner maintenant")
                                         .font(.system(size: 16, weight: .bold))
                                 }
-                                .foregroundStyle(.white)
+                                .foregroundStyle(colorScheme == .dark ? .black : .white)
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 16)
-                                .background(
-                                    LinearGradient(
-                                        colors: [Color.appBlue, Color.appPurple],
-                                        startPoint: .leading,
-                                        endPoint: .trailing
-                                    )
-                                )
+                                .background(colorScheme == .dark ? Color.white : Color.black)
                                 .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-                                .shadow(color: Color.appBlue.opacity(0.3), radius: 10, y: 5)
+                                .shadow(color: Color.black.opacity(0.12), radius: 10, y: 5)
                             }
                             .disabled(isPurchasing)
                             .padding(.horizontal, 20)
@@ -490,20 +472,21 @@ struct PaywallView: View {
 
 struct AppleFeatureRow: View {
     let icon: String
-    let color: Color
     let title: String
     let desc: String
+    
+    @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         HStack(alignment: .top, spacing: 14) {
             ZStack {
                 Circle()
-                    .fill(color.opacity(0.12))
+                    .fill(colorScheme == .dark ? Color.white.opacity(0.08) : Color.black.opacity(0.05))
                     .frame(width: 36, height: 36)
                 
                 Image(systemName: icon)
-                    .font(.system(size: 16, weight: .bold))
-                    .foregroundStyle(color)
+                    .font(.system(size: 15, weight: .bold))
+                    .foregroundColor(colorScheme == .dark ? .white : .black)
             }
             .padding(.top, 2)
             
@@ -546,11 +529,11 @@ struct PricingRow: View {
                 // Selecteur radio premium
                 ZStack {
                     Circle()
-                        .stroke(isSelected ? Color.appBlue : Color.secondary.opacity(0.2), lineWidth: 2)
+                        .stroke(isSelected ? Color.primary : Color.secondary.opacity(0.2), lineWidth: 2)
                         .frame(width: 22, height: 22)
                     if isSelected {
                         Circle()
-                            .fill(Color.appBlue)
+                            .fill(Color.primary)
                             .frame(width: 12, height: 12)
                     }
                 }
@@ -564,16 +547,10 @@ struct PricingRow: View {
                         if let badgeText = badge {
                             Text(badgeText)
                                 .font(.system(size: 8, weight: .bold))
-                                .foregroundColor(.white)
-                                .padding(.horizontal, 6)
-                                .padding(.vertical, 2.5)
-                                .background(
-                                    LinearGradient(
-                                        colors: [Color.appPurple, Color.appPink],
-                                        startPoint: .leading,
-                                        endPoint: .trailing
-                                    )
-                                )
+                                .foregroundColor(colorScheme == .dark ? .black : .white)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 3)
+                                .background(colorScheme == .dark ? Color.white : Color.black)
                                 .clipShape(Capsule())
                         }
                     }
@@ -609,14 +586,12 @@ struct PricingRow: View {
             .overlay(
                 RoundedRectangle(cornerRadius: 20, style: .continuous)
                     .stroke(
-                        isSelected
-                        ? LinearGradient(colors: [Color.appBlue, Color.appPurple], startPoint: .leading, endPoint: .trailing)
-                        : LinearGradient(colors: [Color.clear], startPoint: .leading, endPoint: .trailing),
-                        lineWidth: isSelected ? 2 : 1
+                        isSelected ? Color.primary.opacity(0.4) : Color.secondary.opacity(0.12),
+                        lineWidth: isSelected ? 1.5 : 1
                     )
             )
             .scaleEffect(isSelected ? 1.015 : 0.985)
-            .shadow(color: isSelected ? Color.appBlue.opacity(0.08) : Color.clear, radius: 8, y: 4)
+            .shadow(color: isSelected ? Color.black.opacity(colorScheme == .dark ? 0.15 : 0.02) : Color.clear, radius: 8, y: 4)
         }
         .buttonStyle(.plain)
     }
