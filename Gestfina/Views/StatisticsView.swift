@@ -67,6 +67,7 @@ struct StatisticsView: View {
                         }
                     }
                 }
+            }
             .listStyle(.insetGrouped)
             .background(Color(UIColor.systemGroupedBackground))
             .scrollContentBackground(.hidden)
