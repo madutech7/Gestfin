@@ -143,13 +143,13 @@ struct StatisticsView: View {
                             .font(.system(size: 26))
                             .foregroundStyle(
                                 LinearGradient(
-                                    colors: [Color.appBlue, Color.appPurple],
+                                    colors: [Color.appBlue, Color.appCyan],
                                     startPoint: .topLeading,
                                     endPoint: .bottomTrailing
                                 )
                             )
                         
-                        Text("Analyse de Tendance Premium")
+                        Text("Analyse de Tendance Pro")
                             .font(.system(size: 15, weight: .bold))
                             .foregroundColor(.primary)
                         
@@ -163,14 +163,14 @@ struct StatisticsView: View {
                             UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                             showPaywall = true
                         } label: {
-                            Text("Débloquer SamaXaalis Premium")
+                            Text("Débloquer SamaXaalis Pro")
                                 .font(.system(size: 12, weight: .bold))
                                 .foregroundColor(.white)
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 8)
                                 .background(
                                     LinearGradient(
-                                        colors: [Color.appBlue, Color.appPurple],
+                                        colors: [Color.appBlue, Color.appCyan],
                                         startPoint: .leading,
                                         endPoint: .trailing
                                     )

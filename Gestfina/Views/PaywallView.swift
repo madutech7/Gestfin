@@ -178,13 +178,13 @@ struct PaywallView: View {
                                             .font(.system(size: 22, weight: .bold, design: .rounded))
                                             .foregroundColor(.white)
                                             .tracking(-0.5)
-                                        Text("Premium Card")
+                                        Text("Pro Card")
                                             .font(.system(size: 11, weight: .bold))
                                             .foregroundColor(.white.opacity(0.7))
                                             .tracking(1)
                                     }
                                     Spacer()
-                                    // Logo couronne dorée brillante
+                                    // Logo couronne bleue brillante
                                     ZStack {
                                         Circle()
                                             .fill(.white.opacity(0.25))
@@ -193,9 +193,9 @@ struct PaywallView: View {
                                             .font(.system(size: 18, weight: .semibold))
                                             .foregroundStyle(
                                                 LinearGradient(
-                                                    colors: [Color(hex: "FFE396"), Color(hex: "C59F43")],
-                                                    startPoint: .top,
-                                                    endPoint: .bottom
+                                                    colors: [Color.appBlue, Color.appCyan],
+                                                    startPoint: .topLeading,
+                                                    endPoint: .bottomTrailing
                                                 )
                                             )
                                     }
@@ -236,7 +236,7 @@ struct PaywallView: View {
                         
                         // ── 2. TITRES ET CONTENU HERO ──
                         VStack(spacing: 8) {
-                            Text("SamaXaalis Premium")
+                            Text("SamaXaalis Pro")
                                 .font(.system(size: 30, weight: .black, design: .rounded))
                                 .foregroundStyle(
                                     LinearGradient(
@@ -262,7 +262,7 @@ struct PaywallView: View {
                             AppleFeatureRow(icon: "chart.bar.fill", title: "Analyses & Tendances avancées", desc: "Visualisez l'évolution mensuelle et votre taux d'épargne précis.")
                             AppleFeatureRow(icon: "icloud.fill", title: "Synchronisation multi-appareils", desc: "Vos données sécurisées et accessibles partout sur SamaXaalis Cloud.")
                             AppleFeatureRow(icon: "nosign", title: "Expérience épurée sans publicité", desc: "Concentrez-vous sur vos finances, sans aucune distraction.")
-                            AppleFeatureRow(icon: "square.and.arrow.up.fill", title: "Export CSV / PDF premium", desc: "Exportez et partagez vos rapports en quelques secondes.")
+                            AppleFeatureRow(icon: "square.and.arrow.up.fill", title: "Export CSV / PDF pro", desc: "Exportez et partagez vos rapports en quelques secondes.")
                         }
                         .padding(.horizontal, 28)
                         .opacity(animateItems ? 1.0 : 0.0)
@@ -278,7 +278,7 @@ struct PaywallView: View {
                                 
                                 PricingRow(
                                     id: "com.samaxaalis.gestfina.premium.yearly",
-                                    title: "Premium Annuel",
+                                    title: "Pro Annuel",
                                     price: yearlyInfo.price,
                                     period: "/ an",
                                     description: yearlyInfo.description,
@@ -288,7 +288,7 @@ struct PaywallView: View {
                                 
                                 PricingRow(
                                     id: "com.samaxaalis.gestfina.premium.monthly",
-                                    title: "Premium Mensuel",
+                                    title: "Pro Mensuel",
                                     price: monthlyInfo.price,
                                     period: "/ mois",
                                     description: monthlyInfo.description,
@@ -297,7 +297,7 @@ struct PaywallView: View {
                                 
                                 PricingRow(
                                     id: "com.samaxaalis.gestfina.premium.lifetime",
-                                    title: "Premium à vie",
+                                    title: "Pro à vie",
                                     price: lifetimeInfo.price,
                                     period: "Unique",
                                     description: lifetimeInfo.description,
@@ -315,7 +315,7 @@ struct PaywallView: View {
                                     
                                     PricingRow(
                                         id: product.id,
-                                        title: product.displayName,
+                                        title: product.displayName.replacingOccurrences(of: "Premium", with: "Pro"),
                                         price: product.displayPrice,
                                         period: periodText,
                                         description: descText,
@@ -413,7 +413,7 @@ struct PaywallView: View {
                 animateItems = true
             }
         }
-        .alert("SamaXaalis Premium", isPresented: $showAlert) {
+        .alert("SamaXaalis Pro", isPresented: $showAlert) {
             Button("OK", role: .cancel) { }
         } message: {
             Text(alertMessage)
@@ -434,7 +434,7 @@ struct PaywallView: View {
                     let success = try await subManager.purchase(product)
                     isPurchasing = false
                     if success {
-                        alertMessage = "Bienvenue dans SamaXaalis Premium ! Votre abonnement est actif."
+                        alertMessage = "Bienvenue dans SamaXaalis Pro ! Votre abonnement est actif."
                         showAlert = true
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                             dismiss()
@@ -448,7 +448,7 @@ struct PaywallView: View {
                     UserDefaults.standard.set(true, forKey: "gestfina_is_premium")
                     subManager.updatePurchasedProductsMock(selectedProductID)
                     isPurchasing = false
-                    alertMessage = "Félicitations ! SamaXaalis Premium a été débloqué (Simulation)."
+                    alertMessage = "Félicitations ! SamaXaalis Pro a été débloqué (Simulation)."
                     showAlert = true
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                         dismiss()

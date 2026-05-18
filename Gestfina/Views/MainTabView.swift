@@ -224,7 +224,7 @@ struct SettingsView: View {
                     Circle()
                         .fill(
                             LinearGradient(
-                                colors: [Color.appBlue, Color.appPurple],
+                                colors: [Color.appBlue, Color.appCyan],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
@@ -236,7 +236,7 @@ struct SettingsView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 3) {
-                    Text("SamaXaalis Premium")
+                    Text("SamaXaalis Pro")
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundColor(.primary)
                     Text(subManager.isPremium ? "Abonnement actif — Merci pour votre soutien !" : "Débloquez les transactions illimitées & stats")

@@ -171,6 +171,14 @@ class SubscriptionManager: ObservableObject {
         NotificationCenter.default.post(name: NSNotification.Name("GestfinaPremiumStatusChanged"), object: nil)
     }
     
+    #if DEBUG
+    func updatePurchasedProductsMock(_ productID: String) {
+        self.purchasedProductIDs.insert(productID)
+        UserDefaults.standard.set(true, forKey: "gestfina_is_premium")
+        NotificationCenter.default.post(name: NSNotification.Name("GestfinaPremiumStatusChanged"), object: nil)
+    }
+    #endif
+    
     // MARK: - Gestionnaire de mise à jour des transactions
     
     private func handleTransaction(result: VerificationResult<StoreKit.Transaction>) async {
