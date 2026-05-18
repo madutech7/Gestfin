@@ -54,7 +54,7 @@ class SubscriptionManager: ObservableObject {
         
         // Démarrer l'écouteur de transactions Apple (achats effectués en dehors de l'app, remboursements, etc.)
         transactionListener = Task { [weak self] in
-            for await result in Transaction.updates {
+            for await result in StoreKit.Transaction.updates {
                 await self?.handleTransaction(result: result)
             }
         }
@@ -140,7 +140,7 @@ class SubscriptionManager: ObservableObject {
         var activePurchasedIDs = Set<String>()
         
         // Parcourir toutes les transactions en cours d'autorisation / abonnements actifs
-        for await result in Transaction.currentEntitlements {
+        for await result in StoreKit.Transaction.currentEntitlements {
             switch result {
             case .verified(let transaction):
                 // Vérifier si la transaction est révoquée
@@ -173,7 +173,7 @@ class SubscriptionManager: ObservableObject {
     
     // MARK: - Gestionnaire de mise à jour des transactions
     
-    private func handleTransaction(result: VerificationResult<Transaction>) async {
+    private func handleTransaction(result: VerificationResult<StoreKit.Transaction>) async {
         switch result {
         case .verified(let transaction):
             await updatePurchasedProducts()
