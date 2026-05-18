@@ -25,6 +25,8 @@
 		AA00000000000000000010 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000010; };
 		AA00000000000000000011 /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000011; };
 		AA00000000000000000012 /* SyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000012; };
+		AA00000000000000000013 /* SubscriptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000013; };
+		AA00000000000000000014 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000014; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +48,9 @@
 		FA00000000000000000010 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FA00000000000000000011 /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
 		FA00000000000000000012 /* SyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils/SyncManager.swift; sourceTree = "<group>"; };
+		FA00000000000000000013 /* SubscriptionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils/SubscriptionManager.swift; sourceTree = "<group>"; };
+		FA00000000000000000014 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/PaywallView.swift; sourceTree = "<group>"; };
+		FA00000000000000000015 /* GestfinaPremium.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = GestfinaPremium.storekit; sourceTree = "<group>"; };
 		FA00000000000000000020 /* Gestfina.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gestfina.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -65,6 +70,7 @@
 			children = (
 				CA00000000000000000002 /* Gestfina */,
 				CA00000000000000000008 /* Products */,
+				FA00000000000000000015 /* GestfinaPremium.storekit */,
 			);
 			sourceTree = "<group>";
 		};
@@ -79,6 +85,7 @@
 				CA00000000000000000007 /* Extensions */,
 				FA00000000000000000010 /* Assets.xcassets */,
 				FA00000000000000000012 /* SyncManager.swift */,
+				FA00000000000000000013 /* SubscriptionManager.swift */,
 			);
 			path = Gestfina;
 			sourceTree = "<group>";
@@ -111,6 +118,7 @@
 				FA0000000000000000000A /* BudgetView.swift */,
 				FA0000000000000000000B /* StatisticsView.swift */,
 				FA00000000000000000011 /* AuthView.swift */,
+				FA00000000000000000014 /* PaywallView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -228,6 +236,8 @@
 				AA0000000000000000000F /* Date+Extensions.swift in Sources */,
 				AA00000000000000000011 /* AuthView.swift in Sources */,
 				AA00000000000000000012 /* SyncManager.swift in Sources */,
+				AA00000000000000000013 /* SubscriptionManager.swift in Sources */,
+				AA00000000000000000014 /* PaywallView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
