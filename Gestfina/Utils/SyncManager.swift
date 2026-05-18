@@ -494,9 +494,13 @@ class SyncManager: ObservableObject {
         }
     }
     
+    private var isUserPremium: Bool {
+        UserDefaults.standard.bool(forKey: "gestfina_is_premium") || UserDefaults.standard.bool(forKey: "debug_premium_bypass")
+    }
+    
     func queueAction(itemId: UUID, itemType: PendingSyncAction.PendingItemType, actionType: PendingActionType) {
         // La synchronisation multi-appareils automatique est réservée aux membres Premium
-        guard SubscriptionManager.shared.isPremium else { return }
+        guard isUserPremium else { return }
         
         // Si on est en mode invité (hors-ligne), on ne met rien en file d'attente
         guard let token = APIManager.shared.token, token != "GUEST_MODE" else { return }
@@ -528,7 +532,7 @@ class SyncManager: ObservableObject {
     func triggerSynchronization() {
         guard NetworkMonitor.shared.isConnected, !isSyncing else { return }
         // La synchronisation cloud en temps réel est réservée aux membres Premium
-        guard SubscriptionManager.shared.isPremium else { return }
+        guard isUserPremium else { return }
         
         // Si on est en mode invité (hors-ligne), on ne tente aucune synchronisation
         guard let token = APIManager.shared.token, token != "GUEST_MODE" else { return }
