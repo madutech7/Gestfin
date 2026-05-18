@@ -12,6 +12,11 @@ struct TransactionsView: View {
     @State private var showDeleteAlert = false
     @State private var transactionToDelete: Transaction?
     @Environment(\.colorScheme) var colorScheme
+    
+    // Nouveaux états Premium
+    @State private var showPaywall = false
+    @State private var exportURL: IdentifiableURL? = nil
+    @ObservedObject private var subManager = SubscriptionManager.shared
 
     private var netBalance: Double {
         viewModel.filteredTransactions.reduce(0) { $0 + $1.signedAmount }
@@ -141,6 +146,26 @@ struct TransactionsView: View {
             .searchable(text: $viewModel.searchText, prompt: "Rechercher une transaction")
             .navigationTitle("Transactions")
             .navigationBarTitleDisplayMode(.large)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                        if subManager.isPremium {
+                            exportToCSV()
+                        } else {
+                            showPaywall = true
+                        }
+                    } label: {
+                        HStack(spacing: 4) {
+                            Image(systemName: "square.and.arrow.up")
+                                .font(.system(size: 15, weight: .bold))
+                            Text("Exporter")
+                                .font(.system(size: 13, weight: .semibold))
+                        }
+                        .foregroundStyle(Color.appBlue)
+                    }
+                }
+            }
         }
         .alert("Supprimer cette transaction ?", isPresented: $showDeleteAlert) {
             Button("Annuler", role: .cancel) { }
@@ -155,6 +180,46 @@ struct TransactionsView: View {
             if let t = transactionToDelete {
                 Text("« \(t.title) » sera définitivement supprimée.")
             }
+        }
+        .sheet(isPresented: $showPaywall) {
+            PaywallView()
+        }
+        .sheet(item: $exportURL) { item in
+            ShareSheet(activityItems: [item.url])
+        }
+    }
+    
+    // MARK: - Générateur d'Exportation CSV Premium
+    
+    private func exportToCSV() {
+        var csvString = "Date;Titre;Type;Categorie;Montant;Note\n"
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        
+        for tx in viewModel.filteredTransactions {
+            let dateStr = formatter.string(from: tx.date)
+            let typeStr = tx.type == .income ? "Revenu" : "Dépense"
+            let amountStr = String(format: "%.2f", tx.amount)
+            
+            // Nettoyer les caractères spéciaux et les séparateurs point-virgule
+            let titleCleaned = tx.title.replacingOccurrences(of: ";", with: ",").replacingOccurrences(of: "\"", with: "'")
+            let noteCleaned = tx.note.replacingOccurrences(of: ";", with: ",").replacingOccurrences(of: "\"", with: "'")
+            
+            csvString += "\(dateStr);\"\(titleCleaned)\";\(typeStr);\(tx.category.rawValue);\(amountStr);\"\(noteCleaned)\"\n"
+        }
+        
+        let tempDirectory = FileManager.default.temporaryDirectory
+        let filename = "SamaXaalis_Export_\(Int(Date().timeIntervalSince1970)).csv"
+        let fileURL = tempDirectory.appendingPathComponent(filename)
+        
+        do {
+            try csvString.write(to: fileURL, atomically: true, encoding: .utf8)
+            DispatchQueue.main.async {
+                self.exportURL = IdentifiableURL(url: fileURL)
+            }
+        } catch {
+            print("Erreur d'écriture du fichier CSV : \(error)")
         }
     }
 }
@@ -196,6 +261,24 @@ struct FilterChip: View {
     var body: some View {
         PremiumFilterChip(title: title, isSelected: isSelected, color: color, action: action)
     }
+}
+
+// MARK: - Premium Export Models & UI Activity View Controller
+
+struct IdentifiableURL: Identifiable {
+    let id = UUID()
+    let url: URL
+}
+
+struct ShareSheet: UIViewControllerRepresentable {
+    var activityItems: [Any]
+    var applicationActivities: [UIActivity]? = nil
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: activityItems, applicationActivities: applicationActivities)
+    }
+
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
 
 #Preview {

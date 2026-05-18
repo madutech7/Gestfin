@@ -495,6 +495,9 @@ class SyncManager: ObservableObject {
     }
     
     func queueAction(itemId: UUID, itemType: PendingSyncAction.PendingItemType, actionType: PendingActionType) {
+        // La synchronisation multi-appareils automatique est réservée aux membres Premium
+        guard SubscriptionManager.shared.isPremium else { return }
+        
         // Si on est en mode invité (hors-ligne), on ne met rien en file d'attente
         guard let token = APIManager.shared.token, token != "GUEST_MODE" else { return }
         
@@ -524,6 +527,9 @@ class SyncManager: ObservableObject {
     
     func triggerSynchronization() {
         guard NetworkMonitor.shared.isConnected, !isSyncing else { return }
+        // La synchronisation cloud en temps réel est réservée aux membres Premium
+        guard SubscriptionManager.shared.isPremium else { return }
+        
         // Si on est en mode invité (hors-ligne), on ne tente aucune synchronisation
         guard let token = APIManager.shared.token, token != "GUEST_MODE" else { return }
         
