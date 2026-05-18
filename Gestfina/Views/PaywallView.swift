@@ -70,25 +70,25 @@ struct PaywallView: View {
     
     var body: some View {
         ZStack {
-            // Background sobre ultra-premium Apple
+            // Background sobre avec lueur bleue signature profil
             if colorScheme == .dark {
                 Color.black.ignoresSafeArea()
                 
                 RadialGradient(
-                    colors: [Color.white.opacity(0.035), Color.clear],
+                    colors: [Color.appBlue.opacity(0.08), Color.appCyan.opacity(0.04), Color.clear],
                     center: .top,
                     startRadius: 0,
-                    endRadius: 500
+                    endRadius: 550
                 )
                 .ignoresSafeArea()
             } else {
                 Color(UIColor.systemBackground).ignoresSafeArea()
                 
                 RadialGradient(
-                    colors: [Color.black.opacity(0.015), Color.clear],
+                    colors: [Color.appBlue.opacity(0.05), Color.appCyan.opacity(0.02), Color.clear],
                     center: .top,
                     startRadius: 0,
-                    endRadius: 500
+                    endRadius: 550
                 )
                 .ignoresSafeArea()
             }
@@ -122,18 +122,27 @@ struct PaywallView: View {
                                 .blur(radius: 12)
                                 .offset(y: 10)
                             
-                            // Corps de la carte (Matte Space Grey / Titanium Apple Pay Style)
+                            // Corps de la carte (Deep Sapphire Liquid Glass)
                             RoundedRectangle(cornerRadius: 24, style: .continuous)
                                 .fill(
                                     LinearGradient(
                                         colors: [
-                                            colorScheme == .dark ? Color(hex: "1F1F21") : Color(hex: "3A3A3C"),
-                                            colorScheme == .dark ? Color(hex: "2D2D30") : Color(hex: "2C2C2E"),
-                                            colorScheme == .dark ? Color(hex: "111112") : Color(hex: "1C1C1E")
+                                            Color(hex: "0F172A"),
+                                            Color(hex: "1E293B"),
+                                            Color(hex: "0F172A")
                                         ],
                                         startPoint: .topLeading,
                                         endPoint: .bottomTrailing
                                     )
+                                )
+                                .overlay(
+                                    // Touch de bleu liquide
+                                    LinearGradient(
+                                        colors: [Color.appBlue.opacity(0.15), Color.appCyan.opacity(0.08), .clear],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
+                                    .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
                                 )
                                 .overlay(
                                     // Bords fins en métal brossé argenté
@@ -228,9 +237,15 @@ struct PaywallView: View {
                         // ── 2. TITRES ET CONTENU HERO ──
                         VStack(spacing: 8) {
                             Text("SamaXaalis Premium")
-                                .font(.system(size: 30, weight: .bold, design: .rounded))
-                                .foregroundColor(.primary)
-                                .tracking(-0.5)
+                                .font(.system(size: 30, weight: .black, design: .rounded))
+                                .foregroundStyle(
+                                    LinearGradient(
+                                        colors: [Color.appBlue, Color.appCyan],
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
+                                )
+                                .tracking(-0.8)
                             
                             Text("Débloquez tout le potentiel de vos finances")
                                 .font(.system(size: 15, weight: .semibold))
@@ -322,18 +337,24 @@ struct PaywallView: View {
                                 HStack {
                                     if isPurchasing {
                                         ProgressView()
-                                            .tint(colorScheme == .dark ? .black : .white)
+                                            .tint(.white)
                                             .padding(.trailing, 8)
                                     }
                                     Text(selectedProductID.contains("yearly") ? "Commencer les 7 jours gratuits" : "S'abonner maintenant")
                                         .font(.system(size: 16, weight: .bold))
                                 }
-                                .foregroundStyle(colorScheme == .dark ? .black : .white)
+                                .foregroundStyle(.white)
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 16)
-                                .background(colorScheme == .dark ? Color.white : Color.black)
+                                .background(
+                                    LinearGradient(
+                                        colors: [Color.appBlue, Color.appCyan],
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
+                                )
                                 .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-                                .shadow(color: Color.black.opacity(0.12), radius: 10, y: 5)
+                                .shadow(color: Color.appBlue.opacity(0.35), radius: 12, y: 6)
                             }
                             .disabled(isPurchasing)
                             .padding(.horizontal, 20)
@@ -481,12 +502,12 @@ struct AppleFeatureRow: View {
         HStack(alignment: .top, spacing: 14) {
             ZStack {
                 Circle()
-                    .fill(colorScheme == .dark ? Color.white.opacity(0.08) : Color.black.opacity(0.05))
+                    .fill(Color.appBlue.opacity(colorScheme == .dark ? 0.15 : 0.08))
                     .frame(width: 36, height: 36)
                 
                 Image(systemName: icon)
                     .font(.system(size: 15, weight: .bold))
-                    .foregroundColor(colorScheme == .dark ? .white : .black)
+                    .foregroundColor(Color.appBlue)
             }
             .padding(.top, 2)
             
@@ -529,11 +550,11 @@ struct PricingRow: View {
                 // Selecteur radio premium
                 ZStack {
                     Circle()
-                        .stroke(isSelected ? Color.primary : Color.secondary.opacity(0.2), lineWidth: 2)
+                        .stroke(isSelected ? Color.appBlue : Color.secondary.opacity(0.2), lineWidth: 2)
                         .frame(width: 22, height: 22)
                     if isSelected {
                         Circle()
-                            .fill(Color.primary)
+                            .fill(Color.appBlue)
                             .frame(width: 12, height: 12)
                     }
                 }
@@ -547,10 +568,16 @@ struct PricingRow: View {
                         if let badgeText = badge {
                             Text(badgeText)
                                 .font(.system(size: 8, weight: .bold))
-                                .foregroundColor(colorScheme == .dark ? .black : .white)
+                                .foregroundColor(.white)
                                 .padding(.horizontal, 8)
                                 .padding(.vertical, 3)
-                                .background(colorScheme == .dark ? Color.white : Color.black)
+                                .background(
+                                    LinearGradient(
+                                        colors: [Color.appBlue, Color.appCyan],
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
+                                )
                                 .clipShape(Capsule())
                         }
                     }
@@ -579,19 +606,19 @@ struct PricingRow: View {
                 RoundedRectangle(cornerRadius: 20, style: .continuous)
                     .fill(
                         isSelected
-                        ? (colorScheme == .dark ? Color.white.opacity(0.08) : Color.white)
+                        ? (colorScheme == .dark ? Color.appBlue.opacity(0.08) : Color.appBlue.opacity(0.03))
                         : (colorScheme == .dark ? Color.white.opacity(0.03) : Color.black.opacity(0.015))
                     )
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 20, style: .continuous)
                     .stroke(
-                        isSelected ? Color.primary.opacity(0.4) : Color.secondary.opacity(0.12),
+                        isSelected ? Color.appBlue.opacity(0.8) : Color.secondary.opacity(0.12),
                         lineWidth: isSelected ? 1.5 : 1
                     )
             )
             .scaleEffect(isSelected ? 1.015 : 0.985)
-            .shadow(color: isSelected ? Color.black.opacity(colorScheme == .dark ? 0.15 : 0.02) : Color.clear, radius: 8, y: 4)
+            .shadow(color: isSelected ? Color.appBlue.opacity(colorScheme == .dark ? 0.12 : 0.06) : Color.clear, radius: 8, y: 4)
         }
         .buttonStyle(.plain)
     }
