@@ -49,7 +49,7 @@
 		FA00000000000000000011 /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
 		FA00000000000000000012 /* SyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils/SyncManager.swift; sourceTree = "<group>"; };
 		FA00000000000000000013 /* SubscriptionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils/SubscriptionManager.swift; sourceTree = "<group>"; };
-		FA00000000000000000014 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/PaywallView.swift; sourceTree = "<group>"; };
+		FA00000000000000000014 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
 		FA00000000000000000015 /* GestfinaPremium.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = GestfinaPremium.storekit; sourceTree = "<group>"; };
 		FA00000000000000000020 /* Gestfina.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gestfina.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
