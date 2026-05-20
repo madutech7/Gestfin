@@ -75,10 +75,18 @@ class FinanceViewModel: ObservableObject {
         // Synchroniser automatiquement au lancement si connecté
         SyncManager.shared.triggerSynchronization()
         
-        // Charger les dernières données cloud au lancement si l'utilisateur est connecté
-        if BackendAuthManager.shared.isLoggedIn && APIManager.shared.token != "GUEST_MODE" {
-            fetchCloudData()
-        }
+        // S'abonner aux changements de SyncManager pour rafraîchir les données après synchro
+        SyncManager.shared.$isSyncing
+            .receive(on: RunLoop.main)
+            .sink { [weak self] isSyncing in
+                guard let self = self else { return }
+                if !isSyncing && SyncManager.shared.pendingCount == 0 {
+                    if BackendAuthManager.shared.isLoggedIn && APIManager.shared.token != "GUEST_MODE" {
+                        self.fetchCloudData()
+                    }
+                }
+            }
+            .store(in: &cancellables)
     }
     
     // MARK: - Période de temps
@@ -316,7 +324,7 @@ class FinanceViewModel: ObservableObject {
         if let index = transactions.firstIndex(where: { $0.id == transaction.id }) {
             transactions[index] = transaction
             // Mettre à jour sur le backend
-            SyncManager.shared.queueAction(itemId: transaction.id, itemType: .transaction, actionType: .create)
+            SyncManager.shared.queueAction(itemId: transaction.id, itemType: .transaction, actionType: .update)
         }
     }
     
@@ -343,7 +351,7 @@ class FinanceViewModel: ObservableObject {
         if let index = budgets.firstIndex(where: { $0.id == budget.id }) {
             budgets[index] = budget
             // Mettre à jour sur le backend
-            SyncManager.shared.queueAction(itemId: budget.id, itemType: .budget, actionType: .create)
+            SyncManager.shared.queueAction(itemId: budget.id, itemType: .budget, actionType: .update)
         }
     }
     

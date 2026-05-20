@@ -12,6 +12,7 @@ import Combine
 /// Représente une action de synchronisation en attente d'envoi au serveur
 enum PendingActionType: String, Codable {
     case create
+    case update
     case delete
 }
 
@@ -295,6 +296,7 @@ class APIManager {
             
             let formatter = ISO8601DateFormatter()
             let body: [String: Any] = [
+                "id": transaction.id.uuidString.lowercased(),
                 "title": transaction.title,
                 "amount": transaction.amount,
                 "type": transaction.type == .income ? "income" : "expense",
@@ -307,6 +309,37 @@ class APIManager {
             
             URLSession.shared.dataTask(with: request) { data, response, error in
                 let success = (response as? HTTPURLResponse)?.statusCode == 201
+                completion(success)
+            }.resume()
+        }
+    }
+    
+    func updateTransaction(_ transaction: Transaction, completion: @escaping (Bool) -> Void) {
+        ensureAuthenticated { [weak self] authSuccess in
+            guard authSuccess, let self = self, let url = URL(string: "\(self.baseURL)/transactions/\(transaction.id.uuidString.lowercased())") else {
+                completion(false)
+                return
+            }
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "PATCH"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue("Bearer \(self.token ?? "")", forHTTPHeaderField: "Authorization")
+            
+            let formatter = ISO8601DateFormatter()
+            let body: [String: Any] = [
+                "title": transaction.title,
+                "amount": transaction.amount,
+                "type": transaction.type == .income ? "income" : "expense",
+                "category": transaction.category.backendKey,
+                "note": transaction.note,
+                "date": formatter.string(from: transaction.date)
+            ]
+            
+            request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+            
+            URLSession.shared.dataTask(with: request) { data, response, error in
+                let success = (response as? HTTPURLResponse)?.statusCode == 200
                 completion(success)
             }.resume()
         }
@@ -345,6 +378,7 @@ class APIManager {
             request.setValue("Bearer \(self.token ?? "")", forHTTPHeaderField: "Authorization")
             
             let body: [String: Any] = [
+                "id": budget.id.uuidString.lowercased(),
                 "category": budget.category.backendKey,
                 "limitAmount": budget.limit,
                 "period": budget.period == .weekly ? "weekly" : (budget.period == .yearly ? "yearly" : "monthly"),
@@ -355,6 +389,34 @@ class APIManager {
             
             URLSession.shared.dataTask(with: request) { data, response, error in
                 let success = (response as? HTTPURLResponse)?.statusCode == 201
+                completion(success)
+            }.resume()
+        }
+    }
+    
+    func updateBudget(_ budget: Budget, completion: @escaping (Bool) -> Void) {
+        ensureAuthenticated { [weak self] authSuccess in
+            guard authSuccess, let self = self, let url = URL(string: "\(self.baseURL)/budgets/\(budget.id.uuidString.lowercased())") else {
+                completion(false)
+                return
+            }
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "PATCH"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue("Bearer \(self.token ?? "")", forHTTPHeaderField: "Authorization")
+            
+            let body: [String: Any] = [
+                "category": budget.category.backendKey,
+                "limitAmount": budget.limit,
+                "period": budget.period == .weekly ? "weekly" : (budget.period == .yearly ? "yearly" : "monthly"),
+                "isActive": budget.isActive
+            ]
+            
+            request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+            
+            URLSession.shared.dataTask(with: request) { data, response, error in
+                let success = (response as? HTTPURLResponse)?.statusCode == 200
                 completion(success)
             }.resume()
         }
@@ -457,6 +519,79 @@ class APIManager {
                     return Budget(id: id, category: category, limit: limit, period: period, isActive: isActive)
                 }
                 completion(parsed)
+            }.resume()
+        }
+    }
+    
+    // MARK: - AI SamaCoach APIs
+    
+    func fetchAIAnalysis(completion: @escaping (Result<AIAnalysis, Error>) -> Void) {
+        ensureAuthenticated { [weak self] authSuccess in
+            guard authSuccess, let self = self, let url = URL(string: "\(self.baseURL)/ai/analyze") else {
+                completion(.failure(NSError(domain: "AuthFailed", code: 401)))
+                return
+            }
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            request.setValue("Bearer \(self.token ?? "")", forHTTPHeaderField: "Authorization")
+            
+            URLSession.shared.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+                
+                guard let data = data else {
+                    completion(.failure(NSError(domain: "NoData", code: -1)))
+                    return
+                }
+                
+                do {
+                    let analysis = try JSONDecoder().decode(AIAnalysis.self, from: data)
+                    completion(.success(analysis))
+                } catch {
+                    completion(.failure(error))
+                }
+            }.resume()
+        }
+    }
+    
+    func sendAIChatMessage(message: String, history: [AIChatMessage], completion: @escaping (Result<String, Error>) -> Void) {
+        ensureAuthenticated { [weak self] authSuccess in
+            guard authSuccess, let self = self, let url = URL(string: "\(self.baseURL)/ai/chat") else {
+                completion(.failure(NSError(domain: "AuthFailed", code: 401)))
+                return
+            }
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue("Bearer \(self.token ?? "")", forHTTPHeaderField: "Authorization")
+            
+            // Mapper l'historique pour ne garder que role et content comme attendu par le DTO
+            let historyList = history.map { ["role": $0.role, "content": $0.content] }
+            let body: [String: Any] = [
+                "message": message,
+                "history": historyList
+            ]
+            
+            request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+            
+            URLSession.shared.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+                
+                guard let data = data,
+                      let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                      let reply = json["reply"] as? String else {
+                    completion(.failure(NSError(domain: "InvalidResponse", code: -2)))
+                    return
+                }
+                
+                completion(.success(reply))
             }.resume()
         }
     }
@@ -581,6 +716,15 @@ class SyncManager: ObservableObject {
                     removeFromQueue(id: action.itemId)
                     processNextAction(actions: actions, index: index + 1, localTransactions: localTransactions, localBudgets: localBudgets)
                 }
+            } else if action.actionType == .update {
+                if let tx = localTransactions.first(where: { $0.id == action.itemId }) {
+                    APIManager.shared.updateTransaction(tx) { [weak self] success in
+                        self?.handleActionResult(action: action, success: success, actions: actions, index: index, localTransactions: localTransactions, localBudgets: localBudgets)
+                    }
+                } else {
+                    removeFromQueue(id: action.itemId)
+                    processNextAction(actions: actions, index: index + 1, localTransactions: localTransactions, localBudgets: localBudgets)
+                }
             } else if action.actionType == .delete {
                 APIManager.shared.deleteTransaction(id: action.itemId) { [weak self] success in
                     self?.handleActionResult(action: action, success: success, actions: actions, index: index, localTransactions: localTransactions, localBudgets: localBudgets)
@@ -591,6 +735,15 @@ class SyncManager: ObservableObject {
             if action.actionType == .create {
                 if let budget = localBudgets.first(where: { $0.id == action.itemId }) {
                     APIManager.shared.createBudget(budget) { [weak self] success in
+                        self?.handleActionResult(action: action, success: success, actions: actions, index: index, localTransactions: localTransactions, localBudgets: localBudgets)
+                    }
+                } else {
+                    removeFromQueue(id: action.itemId)
+                    processNextAction(actions: actions, index: index + 1, localTransactions: localTransactions, localBudgets: localBudgets)
+                }
+            } else if action.actionType == .update {
+                if let budget = localBudgets.first(where: { $0.id == action.itemId }) {
+                    APIManager.shared.updateBudget(budget) { [weak self] success in
                         self?.handleActionResult(action: action, success: success, actions: actions, index: index, localTransactions: localTransactions, localBudgets: localBudgets)
                     }
                 } else {

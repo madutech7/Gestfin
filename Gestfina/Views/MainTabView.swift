@@ -20,6 +20,7 @@ struct MainTabView: View {
     enum AppTab: String, CaseIterable {
         case dashboard    = "Accueil"
         case transactions = "Transactions"
+        case coach        = "Coach IA"
         case budget       = "Budget"
         case add          = "Ajouter"
     }
@@ -65,6 +66,12 @@ struct MainTabView: View {
                     Label("Transactions", systemImage: "arrow.left.arrow.right")
                 }
                 .tag(AppTab.transactions)
+
+            CoachView()
+                .tabItem {
+                    Label("SamaCoach", systemImage: "sparkles")
+                }
+                .tag(AppTab.coach)
 
             BudgetView()
                 .tabItem {
