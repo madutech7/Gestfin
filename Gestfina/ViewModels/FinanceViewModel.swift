@@ -433,17 +433,38 @@ class FinanceViewModel: ObservableObject {
     
     /// Charger les données depuis le backend NestJS/Firebase
     func fetchCloudData() {
+        print("☁️ [FinanceVM] fetchCloudData() lancé...")
+        
         APIManager.shared.fetchTransactions { [weak self] txs in
-            guard let self = self, let txs = txs else { return }
-            DispatchQueue.main.async {
-                self.transactions = txs
+            guard let self = self else { return }
+            
+            if let txs = txs {
+                print("☁️ [FinanceVM] \(txs.count) transaction(s) reçues du cloud")
+                DispatchQueue.main.async {
+                    // Ne remplacer que si le cloud a des données, ou si le local est déjà vide
+                    if !txs.isEmpty || self.transactions.isEmpty {
+                        self.transactions = txs
+                    } else {
+                        print("⚠️ [FinanceVM] Cloud a retourné 0 transactions mais local en a \(self.transactions.count). Données locales conservées.")
+                    }
+                }
+            } else {
+                print("❌ [FinanceVM] fetchTransactions a retourné nil (erreur réseau/auth/parsing). Données locales conservées.")
             }
         }
         
         APIManager.shared.fetchBudgets { [weak self] bgts in
-            guard let self = self, let bgts = bgts else { return }
-            DispatchQueue.main.async {
-                self.budgets = bgts
+            guard let self = self else { return }
+            
+            if let bgts = bgts {
+                print("☁️ [FinanceVM] \(bgts.count) budget(s) reçu(s) du cloud")
+                DispatchQueue.main.async {
+                    if !bgts.isEmpty || self.budgets.isEmpty {
+                        self.budgets = bgts
+                    }
+                }
+            } else {
+                print("❌ [FinanceVM] fetchBudgets a retourné nil. Données locales conservées.")
             }
         }
     }

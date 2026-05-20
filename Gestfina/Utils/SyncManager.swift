@@ -440,11 +440,54 @@ class APIManager {
         }
     }
     
+    // MARK: - Date Parsing Helpers
+    
+    /// Parse une date ISO8601 de manière robuste (avec ou sans fractions de secondes)
+    private func parseISO8601Date(_ dateStr: String) -> Date? {
+        // 1. Essayer avec fractions de secondes (format backend NestJS: "2026-05-20T15:30:00.000Z")
+        let formatterWithFractional = ISO8601DateFormatter()
+        formatterWithFractional.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        if let date = formatterWithFractional.date(from: dateStr) {
+            return date
+        }
+        
+        // 2. Essayer sans fractions de secondes ("2026-05-20T15:30:00Z")
+        let formatterStandard = ISO8601DateFormatter()
+        formatterStandard.formatOptions = [.withInternetDateTime]
+        if let date = formatterStandard.date(from: dateStr) {
+            return date
+        }
+        
+        // 3. Fallback avec DateFormatter générique
+        let fallback = DateFormatter()
+        fallback.locale = Locale(identifier: "en_US_POSIX")
+        fallback.timeZone = TimeZone(secondsFromGMT: 0)
+        for format in ["yyyy-MM-dd'T'HH:mm:ss.SSSZ", "yyyy-MM-dd'T'HH:mm:ssZ", "yyyy-MM-dd"] {
+            fallback.dateFormat = format
+            if let date = fallback.date(from: dateStr) {
+                return date
+            }
+        }
+        
+        print("⚠️ [APIManager] Impossible de parser la date: '\(dateStr)'")
+        return nil
+    }
+    
+    /// Extrait un Double de manière robuste (gère Int, Double, String, NSNumber)
+    private func parseAmount(_ value: Any?) -> Double? {
+        if let d = value as? Double { return d }
+        if let n = value as? NSNumber { return n.doubleValue }
+        if let i = value as? Int { return Double(i) }
+        if let s = value as? String, let d = Double(s) { return d }
+        return nil
+    }
+    
     // MARK: - Fetch APIs
     
     func fetchTransactions(completion: @escaping ([Transaction]?) -> Void) {
         ensureAuthenticated { [weak self] authSuccess in
             guard authSuccess, let self = self, let url = URL(string: "\(self.baseURL)/transactions?limit=1000") else {
+                print("❌ [APIManager] fetchTransactions: authentification échouée ou URL invalide")
                 completion(nil)
                 return
             }
@@ -453,25 +496,91 @@ class APIManager {
             request.httpMethod = "GET"
             request.setValue("Bearer \(self.token ?? "")", forHTTPHeaderField: "Authorization")
             
-            URLSession.shared.dataTask(with: request) { data, response, error in
-                guard let data = data,
-                      let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-                      let items = json["data"] as? [[String: Any]] else {
+            URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+                guard let self = self else { completion(nil); return }
+                
+                // Vérifier l'erreur réseau
+                if let error = error {
+                    print("❌ [APIManager] fetchTransactions erreur réseau: \(error.localizedDescription)")
                     completion(nil)
                     return
                 }
                 
-                let formatter = ISO8601DateFormatter()
+                // Vérifier le code HTTP
+                let httpStatus = (response as? HTTPURLResponse)?.statusCode ?? 0
+                if httpStatus == 401 {
+                    print("❌ [APIManager] fetchTransactions: Token expiré (401). Déconnexion.")
+                    DispatchQueue.main.async { BackendAuthManager.shared.logout() }
+                    completion(nil)
+                    return
+                }
+                
+                guard (200...299).contains(httpStatus) else {
+                    let body = data.flatMap { String(data: $0, encoding: .utf8) } ?? "vide"
+                    print("❌ [APIManager] fetchTransactions: HTTP \(httpStatus) — \(body)")
+                    completion(nil)
+                    return
+                }
+                
+                // Parser le JSON
+                guard let data = data else {
+                    print("❌ [APIManager] fetchTransactions: data nil")
+                    completion(nil)
+                    return
+                }
+                
+                guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+                    let raw = String(data: data, encoding: .utf8) ?? "illisible"
+                    print("❌ [APIManager] fetchTransactions: JSON invalide — \(raw.prefix(500))")
+                    completion(nil)
+                    return
+                }
+                
+                guard let items = json["data"] as? [[String: Any]] else {
+                    print("❌ [APIManager] fetchTransactions: clé 'data' absente ou format incorrect. JSON keys: \(json.keys)")
+                    completion(nil)
+                    return
+                }
+                
+                print("📥 [APIManager] fetchTransactions: \(items.count) transactions reçues du serveur")
+                
+                var skippedCount = 0
                 let parsed: [Transaction] = items.compactMap { dict in
                     guard let idStr = dict["id"] as? String,
-                          let id = UUID(uuidString: idStr),
-                          let title = dict["title"] as? String,
-                          let amount = dict["amount"] as? Double,
-                          let typeStr = dict["type"] as? String,
-                          let catStr = dict["category"] as? String,
-                          let dateStr = dict["date"] as? String,
-                          let date = formatter.date(from: dateStr) else {
+                          let id = UUID(uuidString: idStr) else {
+                        print("⚠️ [APIManager] Transaction ignorée: id manquant ou invalide — \(dict["id"] ?? "nil")")
+                        skippedCount += 1
                         return nil
+                    }
+                    
+                    guard let title = dict["title"] as? String else {
+                        print("⚠️ [APIManager] Transaction \(idStr) ignorée: title manquant")
+                        skippedCount += 1
+                        return nil
+                    }
+                    
+                    guard let amount = self.parseAmount(dict["amount"]) else {
+                        print("⚠️ [APIManager] Transaction \(idStr) ignorée: amount invalide — \(String(describing: dict["amount"]))")
+                        skippedCount += 1
+                        return nil
+                    }
+                    
+                    guard let typeStr = dict["type"] as? String else {
+                        print("⚠️ [APIManager] Transaction \(idStr) ignorée: type manquant")
+                        skippedCount += 1
+                        return nil
+                    }
+                    
+                    let catStr = dict["category"] as? String ?? "other"
+                    
+                    // Parser la date de manière robuste
+                    let date: Date
+                    if let dateStr = dict["date"] as? String, let parsed = self.parseISO8601Date(dateStr) {
+                        date = parsed
+                    } else {
+                        // Utiliser la date actuelle comme fallback plutôt que d'ignorer la transaction
+                        print("⚠️ [APIManager] Transaction \(idStr): date invalide '\(dict["date"] ?? "nil")', utilisation de la date actuelle")
+                        date = Date()
                     }
                     
                     let type: TransactionType = typeStr == "income" ? .income : .expense
@@ -480,6 +589,12 @@ class APIManager {
                     
                     return Transaction(id: id, title: title, amount: amount, date: date, category: category, type: type, note: note)
                 }
+                
+                if skippedCount > 0 {
+                    print("⚠️ [APIManager] \(skippedCount) transaction(s) ignorée(s) lors du parsing")
+                }
+                print("✅ [APIManager] \(parsed.count) transaction(s) parsée(s) avec succès")
+                
                 completion(parsed)
             }.resume()
         }
@@ -488,6 +603,7 @@ class APIManager {
     func fetchBudgets(completion: @escaping ([Budget]?) -> Void) {
         ensureAuthenticated { [weak self] authSuccess in
             guard authSuccess, let self = self, let url = URL(string: "\(self.baseURL)/budgets") else {
+                print("❌ [APIManager] fetchBudgets: authentification échouée ou URL invalide")
                 completion(nil)
                 return
             }
@@ -496,28 +612,64 @@ class APIManager {
             request.httpMethod = "GET"
             request.setValue("Bearer \(self.token ?? "")", forHTTPHeaderField: "Authorization")
             
-            URLSession.shared.dataTask(with: request) { data, response, error in
-                guard let data = data,
-                      let items = try? JSONSerialization.jsonObject(with: data) as? [[String: Any]] else {
+            URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+                guard let self = self else { completion(nil); return }
+                
+                if let error = error {
+                    print("❌ [APIManager] fetchBudgets erreur réseau: \(error.localizedDescription)")
                     completion(nil)
                     return
                 }
+                
+                let httpStatus = (response as? HTTPURLResponse)?.statusCode ?? 0
+                if httpStatus == 401 {
+                    print("❌ [APIManager] fetchBudgets: Token expiré (401)")
+                    DispatchQueue.main.async { BackendAuthManager.shared.logout() }
+                    completion(nil)
+                    return
+                }
+                
+                guard (200...299).contains(httpStatus) else {
+                    let body = data.flatMap { String(data: $0, encoding: .utf8) } ?? "vide"
+                    print("❌ [APIManager] fetchBudgets: HTTP \(httpStatus) — \(body)")
+                    completion(nil)
+                    return
+                }
+                
+                guard let data = data else {
+                    print("❌ [APIManager] fetchBudgets: data nil")
+                    completion(nil)
+                    return
+                }
+                
+                guard let items = try? JSONSerialization.jsonObject(with: data) as? [[String: Any]] else {
+                    let raw = String(data: data, encoding: .utf8) ?? "illisible"
+                    print("❌ [APIManager] fetchBudgets: JSON invalide — \(raw.prefix(500))")
+                    completion(nil)
+                    return
+                }
+                
+                print("📥 [APIManager] fetchBudgets: \(items.count) budget(s) reçu(s) du serveur")
                 
                 let parsed: [Budget] = items.compactMap { dict in
                     guard let idStr = dict["id"] as? String,
                           let id = UUID(uuidString: idStr),
                           let catStr = dict["category"] as? String,
-                          let limit = dict["limitAmount"] as? Double,
-                          let periodStr = dict["period"] as? String,
-                          let isActive = dict["isActive"] as? Bool else {
+                          let periodStr = dict["period"] as? String else {
+                        print("⚠️ [APIManager] Budget ignoré: champs requis manquants")
                         return nil
                     }
+                    
+                    let limit = self.parseAmount(dict["limitAmount"]) ?? 0
+                    let isActive = dict["isActive"] as? Bool ?? true
                     
                     let category = TransactionCategory.allCases.first(where: { $0.backendKey == catStr.lowercased() }) ?? .other
                     let period: BudgetPeriod = periodStr == "weekly" ? .weekly : (periodStr == "yearly" ? .yearly : .monthly)
                     
                     return Budget(id: id, category: category, limit: limit, period: period, isActive: isActive)
                 }
+                
+                print("✅ [APIManager] \(parsed.count) budget(s) parsé(s) avec succès")
                 completion(parsed)
             }.resume()
         }
