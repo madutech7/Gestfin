@@ -27,6 +27,9 @@
 		AA00000000000000000012 /* SyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000012; };
 		AA00000000000000000013 /* SubscriptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000013; };
 		AA00000000000000000014 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000014; };
+		AA00000000000000000015 /* AICoachModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000016; };
+		AA00000000000000000016 /* CoachViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000017; };
+		AA00000000000000000017 /* CoachView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000018; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +54,9 @@
 		FA00000000000000000013 /* SubscriptionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils/SubscriptionManager.swift; sourceTree = "<group>"; };
 		FA00000000000000000014 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
 		FA00000000000000000015 /* GestfinaPremium.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = GestfinaPremium.storekit; sourceTree = "<group>"; };
+		FA00000000000000000016 /* AICoachModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models/AICoachModels.swift; sourceTree = "<group>"; };
+		FA00000000000000000017 /* CoachViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModels/CoachViewModel.swift; sourceTree = "<group>"; };
+		FA00000000000000000018 /* CoachView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/CoachView.swift; sourceTree = "<group>"; };
 		FA00000000000000000020 /* Gestfina.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gestfina.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -96,6 +102,7 @@
 				FA00000000000000000002 /* Transaction.swift */,
 				FA00000000000000000003 /* Category.swift */,
 				FA00000000000000000004 /* Budget.swift */,
+				FA00000000000000000016 /* AICoachModels.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -104,6 +111,7 @@
 			isa = PBXGroup;
 			children = (
 				FA00000000000000000005 /* FinanceViewModel.swift */,
+				FA00000000000000000017 /* CoachViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -119,6 +127,7 @@
 				FA0000000000000000000B /* StatisticsView.swift */,
 				FA00000000000000000011 /* AuthView.swift */,
 				FA00000000000000000014 /* PaywallView.swift */,
+				FA00000000000000000018 /* CoachView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -238,6 +247,9 @@
 				AA00000000000000000012 /* SyncManager.swift in Sources */,
 				AA00000000000000000013 /* SubscriptionManager.swift in Sources */,
 				AA00000000000000000014 /* PaywallView.swift in Sources */,
+				AA00000000000000000015 /* AICoachModels.swift in Sources */,
+				AA00000000000000000016 /* CoachViewModel.swift in Sources */,
+				AA00000000000000000017 /* CoachView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
