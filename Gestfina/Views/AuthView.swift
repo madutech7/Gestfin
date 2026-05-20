@@ -379,13 +379,11 @@ struct AuthView: View {
                 startNativeGoogleLogin()
             } label: {
                 HStack(spacing: 12) {
-                    // Icône Google Multicolore
-                    HStack(spacing: 2) {
-                        Circle().fill(Color.appRed).frame(width: 6, height: 6)
-                        Circle().fill(Color.appBlue).frame(width: 6, height: 6)
-                        Circle().fill(Color.appYellow).frame(width: 6, height: 6)
-                        Circle().fill(Color.appGreen).frame(width: 6, height: 6)
-                    }
+                    // Icône Google Réelle depuis les Assets
+                    Image("google_logo")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 20, height: 20)
                     
                     Text("Continuer avec Google")
                         .font(.system(size: 16, weight: .semibold))
@@ -481,17 +479,16 @@ struct AuthView: View {
         
         isLoading = true
         
-        // Le flux OAuth2 natif iOS demande un 'code' ou 'id_token' (selon la configuration). 
-        // L'utilisation du reversed_client_id permet à iOS d'intercepter la redirection proprement !
+        // Le flux OAuth2 natif pour iOS requiert le flux d'autorisation par code ('response_type=code')
+        // pour des raisons de sécurité imposées par Google.
         let redirectUri = "\(reversedClientId):/oauth2redirect"
-        let authUrlString = "https://accounts.google.com/o/oauth2/v2/auth?client_id=\(clientId)&redirect_uri=\(redirectUri)&response_type=id_token&scope=email%20profile&nonce=random_nonce_gestfina"
+        let authUrlString = "https://accounts.google.com/o/oauth2/v2/auth?client_id=\(clientId)&redirect_uri=\(redirectUri)&response_type=code&scope=email%20profile"
         
         guard let authUrl = URL(string: authUrlString) else {
             setError("Erreur de configuration URL Google")
             return
         }
         
-        // Le callbackURLScheme est la première partie du REVERSED_CLIENT_ID (ex: com.googleusercontent.apps.12345)
         let scheme = reversedClientId
         
         let session = ASWebAuthenticationSession(url: authUrl, callbackURLScheme: scheme) { callbackURL, error in
@@ -504,40 +501,93 @@ struct AuthView: View {
                     return
                 }
                 
-                // Google renvoie les données soit dans la query, soit dans le fragment
                 guard let url = callbackURL else {
                     self.isLoading = false
                     self.setError("Impossible de récupérer la réponse de Google")
                     return
                 }
                 
-                // Extraire le id_token du fragment (ex: com.google...:/oauth2redirect#id_token=XXXX&...)
-                let fragmentString = url.fragment ?? url.query ?? ""
-                let parameters = fragmentString.components(separatedBy: "&")
-                var idToken: String? = nil
+                // Extraire le code d'autorisation depuis la query ou le fragment
+                let queryString = url.query ?? url.fragment ?? ""
+                let parameters = queryString.components(separatedBy: "&")
+                var authCode: String? = nil
                 
                 for param in parameters {
                     let pairs = param.components(separatedBy: "=")
-                    if pairs.count == 2 && pairs[0] == "id_token" {
-                        idToken = pairs[1]
+                    let key = pairs[0].replacingOccurrences(of: "?", with: "")
+                    if pairs.count == 2 && key == "code" {
+                        authCode = pairs[1]
                         break
                     }
                 }
                 
-                if let token = idToken {
-                    // Envoyer le VRAI jeton Google Firebase au backend NestJS
-                    APIManager.shared.googleLogin(idToken: token) { result in
-                        self.handleAuthResult(result)
+                if let code = authCode {
+                    // Échanger le code contre un id_token Google en toute sécurité
+                    self.exchangeCodeForToken(code: code, clientId: clientId, redirectUri: redirectUri) { idToken in
+                        DispatchQueue.main.async {
+                            if let token = idToken {
+                                // Envoyer le VRAI jeton Google au backend NestJS
+                                APIManager.shared.googleLogin(idToken: token) { result in
+                                    self.handleAuthResult(result)
+                                }
+                            } else {
+                                self.isLoading = false
+                                self.setError("Échec de l'échange du code d'autorisation Google")
+                            }
+                        }
                     }
                 } else {
                     self.isLoading = false
-                    self.setError("Impossible d'extraire le jeton d'authentification Google")
+                    self.setError("Impossible d'extraire le code de connexion Google")
                 }
             }
         }
         
         session.presentationContextProvider = WindowContextProvider.shared
         session.start()
+    }
+    
+    /// Échange le code d'autorisation Google contre des jetons d'accès et d'identité (id_token)
+    private func exchangeCodeForToken(code: String, clientId: String, redirectUri: String, completion: @escaping (String?) -> Void) {
+        guard let url = URL(string: "https://oauth2.googleapis.com/token") else {
+            completion(nil)
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        
+        let bodyComponents = [
+            "code": code,
+            "client_id": clientId,
+            "redirect_uri": redirectUri,
+            "grant_type": "authorization_code"
+        ]
+        
+        let bodyString = bodyComponents.map { "\($0.key)=\($0.value)" }.joined(separator: "&")
+        request.httpBody = bodyString.data(using: .utf8)
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data, error == nil else {
+                print("❌ [GoogleAuth] Erreur lors de l'échange de code : \(error?.localizedDescription ?? "inconnue")")
+                completion(nil)
+                return
+            }
+            
+            if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
+                if let idToken = json["id_token"] as? String {
+                    completion(idToken)
+                } else {
+                    let errorDesc = json["error_description"] as? String ?? "Pas de description"
+                    print("❌ [GoogleAuth] Token absent du JSON. Erreur: \(json["error"] ?? "inconnue") — \(errorDesc)")
+                    completion(nil)
+                }
+            } else {
+                print("❌ [GoogleAuth] Réponse Google illisible")
+                completion(nil)
+            }
+        }.resume()
     }
     
     private func setError(_ message: String) {
