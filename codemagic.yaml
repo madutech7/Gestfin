@@ -59,6 +59,16 @@ workflows:
             end
           end
           
+          # 4. Add Google Auth URL Schemes for Google Sign-In
+          target.build_configurations.each do |config|
+            config.build_settings['INFOPLIST_KEY_CFBundleURLTypes'] = [
+              {
+                'CFBundleURLName' => 'Google Auth',
+                'CFBundleURLSchemes' => ['com.googleusercontent.apps.659116637496-pvv58d9882vmmgtgm4b3ld6lkrlssu7q']
+              }
+            ]
+          end
+          
           project.save
           EOF
           ruby add_lottie.rb

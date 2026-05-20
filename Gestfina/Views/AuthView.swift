@@ -78,6 +78,8 @@ struct AuthView: View {
                             
                             actionButton
                                 .padding(.top, 12)
+                            
+                            googleSignInSection
                                 
                             skipButton
                         }
