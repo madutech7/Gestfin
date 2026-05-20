@@ -54,9 +54,9 @@
 		FA00000000000000000013 /* SubscriptionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils/SubscriptionManager.swift; sourceTree = "<group>"; };
 		FA00000000000000000014 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
 		FA00000000000000000015 /* GestfinaPremium.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = GestfinaPremium.storekit; sourceTree = "<group>"; };
-		FA00000000000000000016 /* AICoachModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models/AICoachModels.swift; sourceTree = "<group>"; };
-		FA00000000000000000017 /* CoachViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModels/CoachViewModel.swift; sourceTree = "<group>"; };
-		FA00000000000000000018 /* CoachView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/CoachView.swift; sourceTree = "<group>"; };
+		FA00000000000000000016 /* AICoachModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AICoachModels.swift; sourceTree = "<group>"; };
+		FA00000000000000000017 /* CoachViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachViewModel.swift; sourceTree = "<group>"; };
+		FA00000000000000000018 /* CoachView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachView.swift; sourceTree = "<group>"; };
 		FA00000000000000000020 /* Gestfina.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gestfina.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
