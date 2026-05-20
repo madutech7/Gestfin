@@ -526,8 +526,9 @@ class APIManager {
     // MARK: - AI SamaCoach APIs
     
     func fetchAIAnalysis(completion: @escaping (Result<AIAnalysis, Error>) -> Void) {
+        let currency = UserDefaults.standard.string(forKey: "gestfina_currency") ?? "EUR"
         ensureAuthenticated { [weak self] authSuccess in
-            guard authSuccess, let self = self, let url = URL(string: "\(self.baseURL)/ai/analyze") else {
+            guard authSuccess, let self = self, let url = URL(string: "\(self.baseURL)/ai/analyze?currency=\(currency)") else {
                 completion(.failure(NSError(domain: "AuthFailed", code: 401)))
                 return
             }
@@ -571,9 +572,11 @@ class APIManager {
             
             // Mapper l'historique pour ne garder que role et content comme attendu par le DTO
             let historyList = history.map { ["role": $0.role, "content": $0.content] }
+            let currency = UserDefaults.standard.string(forKey: "gestfina_currency") ?? "EUR"
             let body: [String: Any] = [
                 "message": message,
-                "history": historyList
+                "history": historyList,
+                "currency": currency
             ]
             
             request.httpBody = try? JSONSerialization.data(withJSONObject: body)
@@ -634,9 +637,6 @@ class SyncManager: ObservableObject {
     }
     
     func queueAction(itemId: UUID, itemType: PendingSyncAction.PendingItemType, actionType: PendingActionType) {
-        // La synchronisation multi-appareils automatique est réservée aux membres Premium
-        guard isUserPremium else { return }
-        
         // Si on est en mode invité (hors-ligne), on ne met rien en file d'attente
         guard let token = APIManager.shared.token, token != "GUEST_MODE" else { return }
         
@@ -666,8 +666,6 @@ class SyncManager: ObservableObject {
     
     func triggerSynchronization() {
         guard NetworkMonitor.shared.isConnected, !isSyncing else { return }
-        // La synchronisation cloud en temps réel est réservée aux membres Premium
-        guard isUserPremium else { return }
         
         // Si on est en mode invité (hors-ligne), on ne tente aucune synchronisation
         guard let token = APIManager.shared.token, token != "GUEST_MODE" else { return }
