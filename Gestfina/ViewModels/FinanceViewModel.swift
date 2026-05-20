@@ -72,15 +72,23 @@ class FinanceViewModel: ObservableObject {
             }
             .store(in: &cancellables)
         
-        // Synchroniser automatiquement au lancement si connecté
+        // Charger les données cloud directement au démarrage si l'utilisateur est connecté
+        if BackendAuthManager.shared.isLoggedIn,
+           let token = APIManager.shared.token, token != "GUEST_MODE" {
+            fetchCloudData()
+        }
+        
+        // Synchroniser les actions hors-ligne en attente
         SyncManager.shared.triggerSynchronization()
         
-        // S'abonner aux changements de SyncManager pour rafraîchir les données après synchro
+        // Rafraîchir depuis le cloud après chaque fin de synchronisation
         SyncManager.shared.$isSyncing
             .receive(on: RunLoop.main)
+            .dropFirst() // ignorer la valeur initiale
             .sink { [weak self] isSyncing in
                 guard let self = self else { return }
-                if !isSyncing && SyncManager.shared.pendingCount == 0 {
+                // Quand la synchro vient de se terminer, on recharge depuis le serveur
+                if !isSyncing {
                     if BackendAuthManager.shared.isLoggedIn && APIManager.shared.token != "GUEST_MODE" {
                         self.fetchCloudData()
                     }
