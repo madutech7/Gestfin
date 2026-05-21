@@ -535,7 +535,6 @@ struct TypingIndicator: View {
         .onAppear { pulse = true }
     }
 }
-}
 
 struct TabButton: View {
     let title: String
