@@ -48,7 +48,7 @@ enum RecurringFrequency: String, Codable, CaseIterable, Identifiable {
 }
 
 /// Modèle principal de transaction
-struct Transaction: Identifiable, Codable, Equatable {
+struct AppTransaction: Identifiable, Codable, Equatable {
     let id: UUID
     var title: String
     var amount: Double
@@ -105,17 +105,17 @@ struct Transaction: Identifiable, Codable, Equatable {
 }
 
 // MARK: - Données d'exemple
-extension Transaction {
-    static let sampleData: [Transaction] = [
-        Transaction(title: "Salaire", amount: 2800.00, date: Date(), category: .salary, type: .income),
-        Transaction(title: "Loyer", amount: 750.00, date: Date().addingTimeInterval(-86400), category: .housing, type: .expense),
-        Transaction(title: "Courses Carrefour", amount: 85.40, date: Date().addingTimeInterval(-172800), category: .food, type: .expense),
-        Transaction(title: "Netflix", amount: 13.49, date: Date().addingTimeInterval(-259200), category: .entertainment, type: .expense),
-        Transaction(title: "Freelance Design", amount: 450.00, date: Date().addingTimeInterval(-345600), category: .freelance, type: .income),
-        Transaction(title: "Électricité", amount: 65.00, date: Date().addingTimeInterval(-432000), category: .utilities, type: .expense),
-        Transaction(title: "Restaurant", amount: 42.50, date: Date().addingTimeInterval(-518400), category: .food, type: .expense),
-        Transaction(title: "Transport", amount: 75.00, date: Date().addingTimeInterval(-604800), category: .transport, type: .expense),
-        Transaction(title: "Vêtements", amount: 120.00, date: Date().addingTimeInterval(-691200), category: .shopping, type: .expense),
-        Transaction(title: "Prime", amount: 500.00, date: Date().addingTimeInterval(-777600), category: .salary, type: .income),
+extension AppTransaction {
+    static let sampleData: [AppTransaction] = [
+        AppTransaction(title: "Salaire", amount: 2800.00, date: Date(), category: .salary, type: .income),
+        AppTransaction(title: "Loyer", amount: 750.00, date: Date().addingTimeInterval(-86400), category: .housing, type: .expense),
+        AppTransaction(title: "Courses Carrefour", amount: 85.40, date: Date().addingTimeInterval(-172800), category: .food, type: .expense),
+        AppTransaction(title: "Netflix", amount: 13.49, date: Date().addingTimeInterval(-259200), category: .entertainment, type: .expense),
+        AppTransaction(title: "Freelance Design", amount: 450.00, date: Date().addingTimeInterval(-345600), category: .freelance, type: .income),
+        AppTransaction(title: "Électricité", amount: 65.00, date: Date().addingTimeInterval(-432000), category: .utilities, type: .expense),
+        AppTransaction(title: "Restaurant", amount: 42.50, date: Date().addingTimeInterval(-518400), category: .food, type: .expense),
+        AppTransaction(title: "Transport", amount: 75.00, date: Date().addingTimeInterval(-604800), category: .transport, type: .expense),
+        AppTransaction(title: "Vêtements", amount: 120.00, date: Date().addingTimeInterval(-691200), category: .shopping, type: .expense),
+        AppTransaction(title: "Prime", amount: 500.00, date: Date().addingTimeInterval(-777600), category: .salary, type: .income),
     ]
 }

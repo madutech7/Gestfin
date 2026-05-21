@@ -222,7 +222,7 @@ struct AddTransactionView: View {
 
     private func saveTransaction() {
         let amount = Double(amountText.replacingOccurrences(of: ",", with: ".")) ?? 0
-        let transaction = Transaction(
+        let transaction = AppTransaction(
             title: title.trimmingCharacters(in: .whitespaces),
             amount: amount,
             date: date,

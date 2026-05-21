@@ -15,8 +15,8 @@ struct DashboardView: View {
     @State private var greetingOpacity: Double = 0
     @State private var cardAppeared = false
     @State private var showDeleteAlert = false
-    @State private var transactionToDelete: Transaction?
-    @State private var transactionToEdit: Transaction?
+    @State private var transactionToDelete: AppTransaction?
+    @State private var transactionToEdit: AppTransaction?
     @Environment(\.colorScheme) var colorScheme
 
     let authManager:  AuthenticationManager

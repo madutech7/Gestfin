@@ -13,7 +13,7 @@ class FinanceViewModel: ObservableObject {
     
     // MARK: - Published Properties
     
-    @Published var transactions: [Transaction] = [] {
+    @Published var transactions: [AppTransaction] = [] {
         didSet { saveTransactions() }
     }
     
@@ -144,7 +144,7 @@ class FinanceViewModel: ObservableObject {
     // MARK: - Computed Properties
     
     // Variables précédemment synchrones, dorénavant calculées en arrière-plan
-    @Published var filteredTransactions: [Transaction] = []
+    @Published var filteredTransactions: [AppTransaction] = []
     @Published var totalBalance: Double = 0
     @Published var totalIncome: Double = 0
     @Published var totalExpenses: Double = 0
@@ -176,7 +176,7 @@ class FinanceViewModel: ObservableObject {
         return budgetProgress(for: budget).percentage
     }
     
-    @Published var recentTransactions: [Transaction] = []
+    @Published var recentTransactions: [AppTransaction] = []
     
     // MARK: - Pipeline Analytique Asynchrone
     
@@ -189,7 +189,7 @@ class FinanceViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    private func calculateAnalytics(transactions: [Transaction], period: TimePeriod, text: String, filter: TransactionType?) {
+    private func calculateAnalytics(transactions: [AppTransaction], period: TimePeriod, text: String, filter: TransactionType?) {
         Task.detached(priority: .userInitiated) {
             let range = period.dateRange
             var filtered = transactions.filter { $0.date >= range.start && $0.date <= range.end }
@@ -268,7 +268,7 @@ class FinanceViewModel: ObservableObject {
     // MARK: - Actions
     
     /// Ajouter une transaction
-    func addTransaction(_ transaction: Transaction) {
+    func addTransaction(_ transaction: AppTransaction) {
         withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
             transactions.append(transaction)
         }
@@ -288,7 +288,7 @@ class FinanceViewModel: ObservableObject {
     }
     
     /// Vérifie si un budget est dépassé après une transaction
-    private func checkBudgetAlerts(for transaction: Transaction) {
+    private func checkBudgetAlerts(for transaction: AppTransaction) {
         guard transaction.type == .expense else { return }
         
         let affectedBudgets = budgets.filter { $0.category == transaction.category && $0.isActive }
@@ -306,7 +306,7 @@ class FinanceViewModel: ObservableObject {
     }
     
     /// Supprimer une transaction
-    func deleteTransaction(_ transaction: Transaction) {
+    func deleteTransaction(_ transaction: AppTransaction) {
         withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
             transactions.removeAll { $0.id == transaction.id }
         }
@@ -315,7 +315,7 @@ class FinanceViewModel: ObservableObject {
     }
     
     /// Modifier une transaction
-    func updateTransaction(_ transaction: Transaction) {
+    func updateTransaction(_ transaction: AppTransaction) {
         if let index = transactions.firstIndex(where: { $0.id == transaction.id }) {
             transactions[index] = transaction
             // Mettre à jour sur le backend
@@ -376,7 +376,7 @@ class FinanceViewModel: ObservableObject {
     
     private func loadTransactions() {
         if let data = UserDefaults.standard.data(forKey: transactionsKey),
-           let decoded = try? JSONDecoder().decode([Transaction].self, from: data) {
+           let decoded = try? JSONDecoder().decode([AppTransaction].self, from: data) {
             transactions = decoded
         }
     }
@@ -456,10 +456,10 @@ class FinanceViewModel: ObservableObject {
         }
     }
 
-    /// G\u{00E9}n\u{00E9}re automatiquement les nouvelles occurrences des transactions r\u{00E9}currentes
+    /// Génère automatiquement les nouvelles occurrences des transactions récurrentes
     private func generateRecurringTransactions() {
         let now = Date()
-        var newTransactions: [Transaction] = []
+        var newTransactions: [AppTransaction] = []
         
         for (index, tx) in transactions.enumerated() {
             guard tx.isRecurring, let freq = tx.recurringFrequency else { continue }
@@ -470,7 +470,7 @@ class FinanceViewModel: ObservableObject {
             while let nextDate = Calendar.current.date(byAdding: freq.calendarComponent, value: 1, to: currentRefDate),
                   nextDate <= now {
                 
-                let newTx = Transaction(
+                let newTx = AppTransaction(
                     title: tx.title,
                     amount: tx.amount,
                     date: nextDate,

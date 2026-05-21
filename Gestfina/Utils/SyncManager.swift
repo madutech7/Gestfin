@@ -169,7 +169,7 @@ class SyncManager: ObservableObject {
     private func processNextAction(
         actions: [PendingSyncAction],
         index: Int,
-        localTransactions: [Transaction],
+        localTransactions: [AppTransaction],
         localBudgets: [Budget]
     ) {
         guard index < actions.count else {
@@ -242,7 +242,7 @@ class SyncManager: ObservableObject {
         success: Bool,
         actions: [PendingSyncAction],
         index: Int,
-        localTransactions: [Transaction],
+        localTransactions: [AppTransaction],
         localBudgets: [Budget]
     ) {
         if success {
@@ -266,9 +266,9 @@ class SyncManager: ObservableObject {
     
     // MARK: - Helpers de lecture locale
     
-    private func loadLocalTransactions() -> [Transaction] {
+    private func loadLocalTransactions() -> [AppTransaction] {
         if let data = UserDefaults.standard.data(forKey: "gestfina_transactions"),
-           let decoded = try? JSONDecoder().decode([Transaction].self, from: data) {
+           let decoded = try? JSONDecoder().decode([AppTransaction].self, from: data) {
             return decoded
         }
         return []

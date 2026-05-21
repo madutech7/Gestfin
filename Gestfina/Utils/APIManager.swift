@@ -156,7 +156,7 @@ class APIManager {
     
     // MARK: - Synchronisation Transactions
     
-    func createTransaction(_ transaction: Transaction, completion: @escaping (Bool) -> Void) {
+    func createTransaction(_ transaction: AppTransaction, completion: @escaping (Bool) -> Void) {
         ensureAuthenticated { [weak self] authSuccess in
             guard authSuccess, let self = self, let url = URL(string: "\(self.baseURL)/transactions") else {
                 completion(false)
@@ -188,7 +188,7 @@ class APIManager {
         }
     }
     
-    func updateTransaction(_ transaction: Transaction, completion: @escaping (Bool) -> Void) {
+    func updateTransaction(_ transaction: AppTransaction, completion: @escaping (Bool) -> Void) {
         ensureAuthenticated { [weak self] authSuccess in
             guard authSuccess, let self = self, let url = URL(string: "\(self.baseURL)/transactions/\(transaction.id.uuidString.lowercased())") else {
                 completion(false)
@@ -358,7 +358,7 @@ class APIManager {
     
     // MARK: - Fetch APIs
     
-    func fetchTransactions(completion: @escaping ([Transaction]?) -> Void) {
+    func fetchTransactions(completion: @escaping ([AppTransaction]?) -> Void) {
         ensureAuthenticated { [weak self] authSuccess in
             guard authSuccess, let self = self, let url = URL(string: "\(self.baseURL)/transactions?limit=1000") else {
                 print("\u{274C} [APIManager] fetchTransactions: authentification \u{00E9}chou\u{00E9}e ou URL invalide")
@@ -419,7 +419,7 @@ class APIManager {
                 print("\u{1F4E5} [APIManager] fetchTransactions: \(items.count) transactions re\u{00E7}ues du serveur")
                 
                 var skippedCount = 0
-                let parsed: [Transaction] = items.compactMap { dict in
+                let parsed: [AppTransaction] = items.compactMap { dict in
                     guard let idStr = dict["id"] as? String,
                           let id = UUID(uuidString: idStr) else {
                         print("\u{26A0}\u{FE0F} [APIManager] Transaction ignor\u{00E9}e: id manquant ou invalide \u{2014} \(dict["id"] ?? "nil")")
@@ -461,7 +461,7 @@ class APIManager {
                     let category = TransactionCategory.allCases.first(where: { $0.backendKey == catStr.lowercased() }) ?? .other
                     let note = dict["note"] as? String ?? ""
                     
-                    return Transaction(id: id, title: title, amount: amount, date: date, category: category, type: type, note: note)
+                    return AppTransaction(id: id, title: title, amount: amount, date: date, category: category, type: type, note: note)
                 }
                 
                 if skippedCount > 0 {

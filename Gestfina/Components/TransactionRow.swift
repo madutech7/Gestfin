@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TransactionRow: View {
-    let transaction: Transaction
+    let transaction: AppTransaction
     @EnvironmentObject var viewModel: FinanceViewModel
     @State private var appeared = false
 
@@ -98,9 +98,9 @@ struct TransactionRow: View {
 
 #Preview {
     VStack(spacing: 8) {
-        TransactionRow(transaction: Transaction.sampleData[0])
-        TransactionRow(transaction: Transaction.sampleData[1])
-        TransactionRow(transaction: Transaction.sampleData[2])
+        TransactionRow(transaction: AppTransaction.sampleData[0])
+        TransactionRow(transaction: AppTransaction.sampleData[1])
+        TransactionRow(transaction: AppTransaction.sampleData[2])
     }
     .padding()
     .background(Color(UIColor.systemGroupedBackground))

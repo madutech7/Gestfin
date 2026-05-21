@@ -10,8 +10,8 @@ import SwiftUI
 struct TransactionsView: View {
     @EnvironmentObject var viewModel: FinanceViewModel
     @State private var showDeleteAlert = false
-    @State private var transactionToDelete: Transaction?
-    @State private var transactionToEdit: Transaction?
+    @State private var transactionToDelete: AppTransaction?
+    @State private var transactionToEdit: AppTransaction?
     @Environment(\.colorScheme) var colorScheme
     
     // Nouveaux états Premium

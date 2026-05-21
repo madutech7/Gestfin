@@ -11,7 +11,7 @@ struct EditTransactionView: View {
     @EnvironmentObject var viewModel: FinanceViewModel
     @Environment(\.dismiss) var dismiss
 
-    let transaction: Transaction
+    let transaction: AppTransaction
 
     @State private var title: String = ""
     @State private var amountText: String = ""
@@ -25,7 +25,7 @@ struct EditTransactionView: View {
 
     var body: some View {
         NavigationView {
-            Form {
+            SwiftUI.Form {
                 // MARK: - Type Revenu / Dépense
                 Section {
                     Picker("Type", selection: $selectedType) {
