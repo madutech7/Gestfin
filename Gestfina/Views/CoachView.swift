@@ -2,6 +2,7 @@ import SwiftUI
 
 struct CoachView: View {
     @StateObject private var viewModel = CoachViewModel()
+    @StateObject private var speechRecognizer = SpeechRecognizer()
     @Environment(\.colorScheme) var colorScheme
     
     let suggestions = [
@@ -136,17 +137,27 @@ struct CoachView: View {
                     
                     if viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                         Button {
-                            // Focus le champ pour permettre la dictée native du clavier
-                            UIApplication.shared.sendAction(#selector(UIResponder.becomeFirstResponder), to: nil, from: nil, for: nil)
-                            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                            if speechRecognizer.isRecording {
+                                speechRecognizer.stopTranscribing()
+                                viewModel.inputText = speechRecognizer.transcript
+                            } else {
+                                speechRecognizer.transcript = ""
+                                speechRecognizer.startTranscribing()
+                            }
                         } label: {
-                            Image(systemName: "mic.fill")
-                                .font(.system(size: 20))
-                                .foregroundColor(.primary)
+                            Image(systemName: speechRecognizer.isRecording ? "stop.circle.fill" : "mic.fill")
+                                .font(.system(size: 22))
+                                .foregroundColor(speechRecognizer.isRecording ? .red : .primary)
                                 .padding(.trailing, 16)
                                 .padding(.bottom, 12)
+                                .scaleEffect(speechRecognizer.isRecording ? 1.2 : 1.0)
                         }
-                        .transition(.opacity)
+                        .onChange(of: speechRecognizer.transcript) { _, newValue in
+                            if speechRecognizer.isRecording {
+                                viewModel.inputText = newValue
+                            }
+                        }
                     } else {
                         Button {
                             UIImpactFeedbackGenerator(style: .medium).impactOccurred()
