@@ -39,14 +39,21 @@ struct CoachView: View {
                 }
                 
                 VStack(spacing: 0) {
-                    // Segmented Control
-                    Picker("Mode", selection: $selectedMode) {
-                        Text("SamaCoach IA").tag(CoachMode.analysis)
-                        Text("Discussion").tag(CoachMode.chat)
+                    // Segmented Control Apple Style
+                    HStack(spacing: 0) {
+                        TabButton(title: "Prévisions", icon: "chart.pie.fill", isSelected: selectedMode == .analysis) {
+                            withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) { selectedMode = .analysis }
+                        }
+                        TabButton(title: "SamaCoach", icon: "waveform", isSelected: selectedMode == .chat) {
+                            withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) { selectedMode = .chat }
+                        }
                     }
-                    .pickerStyle(.segmented)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 12)
+                    .padding(4)
+                    .background(Color(UIColor.tertiarySystemGroupedBackground).opacity(0.8))
+                    .clipShape(Capsule())
+                    .padding(.horizontal, 24)
+                    .padding(.top, 10)
+                    .padding(.bottom, 16)
                     
                     Divider()
                     
@@ -284,39 +291,55 @@ struct CoachView: View {
             
             Divider()
             
-            // Input Row
+            // Input Row Premium
             HStack(spacing: 12) {
-                TextField("Parlez avec SamaCoach...", text: $viewModel.inputText, axis: .vertical)
+                TextField("Demandez à Sama...", text: $viewModel.inputText, axis: .vertical)
                     .lineLimit(1...5)
+                    .font(.system(size: 16))
                     .submitLabel(.send)
                     .onSubmit {
                         if !viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                             viewModel.sendMessage()
                         }
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 12)
-                    .background(Color(UIColor.secondarySystemGroupedBackground))
-                    .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 14)
+                    .background(.regularMaterial)
+                    .clipShape(Capsule())
+                    .overlay(
+                        Capsule()
+                            .stroke(
+                                LinearGradient(colors: [.appCyan.opacity(0.5), .appBlue.opacity(0.5)], startPoint: .topLeading, endPoint: .bottomTrailing),
+                                lineWidth: 1.5
+                            )
+                    )
+                    .shadow(color: Color.appBlue.opacity(0.15), radius: 10, y: 5)
                 
                 Button {
                     UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                    viewModel.sendMessage()
+                    if !viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                        viewModel.sendMessage()
+                    }
                 } label: {
                     ZStack {
                         Circle()
-                            .fill(viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? Color.secondary.opacity(0.2) : Color.appBlue)
-                            .frame(width: 44, height: 44)
-                        Image(systemName: "arrow.up")
-                            .font(.system(size: 17, weight: .bold))
+                            .fill(
+                                LinearGradient(colors: [Color.appBlue, Color.appCyan], startPoint: .topLeading, endPoint: .bottomTrailing)
+                            )
+                            .frame(width: 48, height: 48)
+                            .shadow(color: Color.appBlue.opacity(0.3), radius: 8, y: 4)
+                        
+                        Image(systemName: viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "mic.fill" : "arrow.up")
+                            .font(.system(size: 18, weight: .bold))
                             .foregroundColor(.white)
+                            .contentTransition(.symbolEffect(.replace))
                     }
                 }
-                .disabled(viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || viewModel.isSendingMessage)
+                .disabled(viewModel.isSendingMessage)
             }
             .padding(.horizontal, 20)
-            .padding(.vertical, 12)
-            .background(.ultraThinMaterial)
+            .padding(.vertical, 16)
+            .background(.clear)
         }
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("EditChatMessage"))) { notification in
             if let msg = notification.object as? AIChatMessage {
@@ -428,12 +451,15 @@ struct ChatBubble: View {
             if message.role == "user" {
                 Spacer(minLength: 40)
                 Text(message.content)
-                    .font(.system(size: 15, weight: .medium))
+                    .font(.system(size: 16, weight: .medium, design: .rounded))
                     .foregroundColor(.white)
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 12)
-                    .background(Color.appBlue)
+                    .padding(.horizontal, 18)
+                    .padding(.vertical, 14)
+                    .background(
+                        LinearGradient(colors: [Color.appCyan, Color.appBlue], startPoint: .topLeading, endPoint: .bottomTrailing)
+                    )
                     .clipShape(BubbleShape(isUser: true))
+                    .shadow(color: Color.appBlue.opacity(0.25), radius: 8, y: 4)
                     .contextMenu {
                         Button {
                             // Appel pour relancer / modifier cette question
@@ -444,12 +470,14 @@ struct ChatBubble: View {
                     }
             } else {
                 Text(message.content)
-                    .font(.system(size: 15, weight: .medium))
+                    .font(.system(size: 16, weight: .medium, design: .rounded))
                     .foregroundColor(.primary)
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 12)
-                    .background(Color(UIColor.secondarySystemGroupedBackground))
+                    .padding(.horizontal, 18)
+                    .padding(.vertical, 14)
+                    .background(Color(UIColor.secondarySystemGroupedBackground).opacity(0.9))
+                    .background(.ultraThinMaterial)
                     .clipShape(BubbleShape(isUser: false))
+                    .shadow(color: Color.black.opacity(0.04), radius: 10, y: 5)
                 Spacer(minLength: 40)
             }
         }
@@ -507,4 +535,35 @@ struct TypingIndicator: View {
         .onAppear { pulse = true }
     }
 }
+}
 
+struct TabButton: View {
+    let title: String
+    let icon: String
+    let isSelected: Bool
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 6) {
+                Image(systemName: icon)
+                    .font(.system(size: 14, weight: .semibold))
+                Text(title)
+                    .font(.system(size: 15, weight: .semibold, design: .rounded))
+            }
+            .foregroundColor(isSelected ? .white : .secondary)
+            .padding(.vertical, 10)
+            .padding(.horizontal, 16)
+            .frame(maxWidth: .infinity)
+            .background(
+                ZStack {
+                    if isSelected {
+                        Capsule()
+                            .fill(LinearGradient(colors: [Color.appBlue, Color.appCyan], startPoint: .topLeading, endPoint: .bottomTrailing))
+                            .shadow(color: Color.appBlue.opacity(0.3), radius: 8, y: 4)
+                    }
+                }
+            )
+        }
+    }
+}
