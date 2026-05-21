@@ -14,6 +14,9 @@ struct DashboardView: View {
     @State private var greetingScale: CGFloat = 0.95
     @State private var greetingOpacity: Double = 0
     @State private var cardAppeared = false
+    @State private var showDeleteAlert = false
+    @State private var transactionToDelete: Transaction?
+    @State private var transactionToEdit: Transaction?
     @Environment(\.colorScheme) var colorScheme
 
     let authManager:  AuthenticationManager
@@ -154,11 +157,19 @@ struct DashboardView: View {
                                     TransactionRow(transaction: t)
                                         .padding(.horizontal, 16)
                                         .padding(.vertical, 12)
+                                        .contentShape(Rectangle())
+                                        .onTapGesture {
+                                            transactionToEdit = t
+                                        }
                                         .contextMenu {
+                                            Button {
+                                                transactionToEdit = t
+                                            } label: {
+                                                Label("Modifier", systemImage: "pencil")
+                                            }
                                             Button(role: .destructive) {
-                                                withAnimation(.spring(response: 0.35)) {
-                                                    viewModel.deleteTransaction(t)
-                                                }
+                                                transactionToDelete = t
+                                                showDeleteAlert = true
                                             } label: {
                                                 Label("Supprimer", systemImage: "trash")
                                             }
@@ -184,6 +195,28 @@ struct DashboardView: View {
                     SettingsView(authManager: authManager, notifManager: notifManager)
                         .environmentObject(viewModel)
                 }
+            }
+            .sheet(item: $transactionToEdit) { transaction in
+                EditTransactionView(transaction: transaction)
+                    .environmentObject(viewModel)
+            }
+            .alert("Supprimer cette transaction ?", isPresented: $showDeleteAlert) {
+                Button("Annuler", role: .cancel) { }
+                Button("Supprimer", role: .destructive) {
+                    if let t = transactionToDelete {
+                        withAnimation(.spring(response: 0.35)) {
+                            viewModel.deleteTransaction(t)
+                        }
+                    }
+                }
+            } message: {
+                if let t = transactionToDelete {
+                    Text("\u{00AB} \(t.title) \u{00BB} sera d\u{00E9}finitivement supprim\u{00E9}e.")
+                }
+            }
+            .refreshable {
+                SyncManager.shared.triggerSynchronization()
+                try? await Task.sleep(nanoseconds: 1_000_000_000)
             }
             .onAppear {
                 SyncManager.shared.triggerSynchronization()
@@ -531,64 +564,7 @@ struct EmptyStateCard: View {
     }
 }
 
-// ─────────────────────────────────────────────────────────────────────
-// MARK: – Legacy components kept for StatisticsView / BudgetView
-// ─────────────────────────────────────────────────────────────────────
 
-struct GlassBarChart: View {
-    let data: [(day: String, amount: Double)]
-    private var maxAmount: Double { data.map(\.amount).max() ?? 1 }
-
-    var body: some View {
-        HStack(alignment: .bottom, spacing: 6) {
-            ForEach(Array(data.enumerated()), id: \.offset) { index, item in
-                let isLast = index == data.count - 1
-                let ratio  = maxAmount > 0 ? CGFloat(item.amount / maxAmount) : 0.05
-                VStack(spacing: 5) {
-                    GeometryReader { geo in
-                        VStack { Spacer()
-                            RoundedRectangle(cornerRadius: 5, style: .continuous)
-                                .fill(isLast ? Color(UIColor.systemBlue) : Color(UIColor.systemBlue).opacity(0.18))
-                                .frame(height: max(geo.size.height * ratio, 5))
-                        }
-                    }
-                    Text(item.day)
-                        .font(.system(size: 10, weight: isLast ? .bold : .regular))
-                        .foregroundStyle(isLast ? Color(UIColor.systemBlue) : Color.secondary)
-                }
-                .frame(maxWidth: .infinity)
-            }
-        }
-    }
-}
-
-struct GlassCategoryRow: View {
-    let category: TransactionCategory; let amount: String; let percentage: Double
-    var body: some View {
-        HStack(spacing: 12) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 8, style: .continuous)
-                    .fill(category.color).frame(width: 30, height: 30)
-                Image(systemName: category.icon)
-                    .font(.system(size: 14, weight: .semibold)).foregroundStyle(.white)
-            }
-            VStack(alignment: .leading, spacing: 4) {
-                HStack {
-                    Text(category.rawValue).font(.subheadline.weight(.medium))
-                    Spacer()
-                    Text(amount).font(.subheadline.weight(.semibold)).fontDesign(.rounded)
-                }
-                GeometryReader { geo in
-                    ZStack(alignment: .leading) {
-                        Capsule().fill(Color(UIColor.systemFill)).frame(height: 3)
-                        Capsule().fill(category.color)
-                            .frame(width: geo.size.width * CGFloat(min(percentage / 100, 1)), height: 3)
-                    }
-                }.frame(height: 3)
-            }
-        }.padding(.vertical, 3)
-    }
-}
 
 struct ConnectionStatusView: View {
     @ObservedObject var networkMonitor = NetworkMonitor.shared

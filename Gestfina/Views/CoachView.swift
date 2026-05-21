@@ -188,6 +188,11 @@ struct CoachView: View {
                 viewModel.editMessage(msg)
             }
         }
+        .onDisappear {
+            if speechRecognizer.isRecording {
+                speechRecognizer.stopTranscribing()
+            }
+        }
     }
     
     private func hideKeyboard() {

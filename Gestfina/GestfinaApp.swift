@@ -16,7 +16,16 @@ struct GestfinaApp: App {
     @Environment(\.scenePhase) private var scenePhase
     
     @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding: Bool = false
+    @AppStorage("gestfina_appearance") private var appearanceMode: Int = 0
     @ObservedObject private var backendAuth = BackendAuthManager.shared
+    
+    private var colorSchemeOverride: ColorScheme? {
+        switch appearanceMode {
+        case 1: return .light
+        case 2: return .dark
+        default: return nil
+        }
+    }
     
     var body: some Scene {
         WindowGroup {
@@ -43,6 +52,7 @@ struct GestfinaApp: App {
                         .zIndex(2000)
                 }
             }
+            .preferredColorScheme(colorSchemeOverride)
             .animation(.easeInOut(duration: 0.25), value: authManager.isUnlocked)
             .animation(.spring(response: 0.45, dampingFraction: 0.8), value: backendAuth.isLoggedIn)
         }

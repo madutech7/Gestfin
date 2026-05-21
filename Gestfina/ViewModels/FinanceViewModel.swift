@@ -47,6 +47,15 @@ class FinanceViewModel: ObservableObject {
     
     private var cancellables = Set<AnyCancellable>()
     
+    /// Formatter partagé pour éviter de recréer un NumberFormatter à chaque appel
+    private var cachedFormatter: NumberFormatter = {
+        let f = NumberFormatter()
+        f.numberStyle = .currency
+        f.locale = Locale(identifier: "fr_FR")
+        return f
+    }()
+    private var cachedCurrencyCode: String = ""
+    
     // MARK: - Init
     
     init() {
@@ -339,13 +348,13 @@ class FinanceViewModel: ObservableObject {
     
     // MARK: - Formatage
     
-    /// Formater un montant en devise
+    /// Formater un montant en devise (utilise un formatter partagé pour la performance)
     func formatAmount(_ amount: Double) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.currencyCode = currency
-        formatter.locale = Locale(identifier: "fr_FR")
-        return formatter.string(from: NSNumber(value: amount)) ?? "0,00 €"
+        if cachedCurrencyCode != currency {
+            cachedFormatter.currencyCode = currency
+            cachedCurrencyCode = currency
+        }
+        return cachedFormatter.string(from: NSNumber(value: amount)) ?? "0,00 €"
     }
     
     /// Formater un pourcentage

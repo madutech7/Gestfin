@@ -127,6 +127,7 @@ struct SettingsView: View {
     @State private var showPaywall        = false
     @State private var tempName          = ""
     @ObservedObject private var subManager = SubscriptionManager.shared
+    @AppStorage("gestfina_appearance") private var appearanceMode: Int = 0 // 0=system, 1=light, 2=dark
 
     var body: some View {
         NavigationView {
@@ -152,6 +153,21 @@ struct SettingsView: View {
                     Text("Devise")
                 } footer: {
                     Text("La devise sélectionnée sera utilisée pour toutes les transactions et les budgets.")
+                }
+
+                // MARK: - Apparence
+                Section {
+                    Picker(selection: $appearanceMode) {
+                        Text("Système").tag(0)
+                        Text("Clair").tag(1)
+                        Text("Sombre").tag(2)
+                    } label: {
+                        Label("Apparence", systemImage: "moon.circle.fill")
+                    }
+                    .pickerStyle(.menu)
+                    .tint(.appBlue)
+                } header: {
+                    Text("Affichage")
                 }
 
                 // MARK: - Sécurité
@@ -520,6 +536,16 @@ struct SettingsView: View {
             Spacer()
             Image(systemName: "checkmark.shield.fill")
                 .foregroundColor(.appGreen)
+        }
+        
+        Link(destination: URL(string: "https://samaxaalis.com/privacy")!) {
+            Label("Politique de confidentialité", systemImage: "hand.raised.fill")
+                .foregroundColor(.appBlue)
+        }
+        
+        Link(destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!) {
+            Label("Conditions d'utilisation (EULA)", systemImage: "doc.text.fill")
+                .foregroundColor(.appBlue)
         }
     }
 

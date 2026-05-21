@@ -11,6 +11,7 @@ struct TransactionsView: View {
     @EnvironmentObject var viewModel: FinanceViewModel
     @State private var showDeleteAlert = false
     @State private var transactionToDelete: Transaction?
+    @State private var transactionToEdit: Transaction?
     @Environment(\.colorScheme) var colorScheme
     
     // Nouveaux états Premium
@@ -127,6 +128,18 @@ struct TransactionsView: View {
                         Section(header: Text(date.relativeFormatted).textCase(nil)) {
                             ForEach(grouped[date]!) { transaction in
                                 TransactionRow(transaction: transaction)
+                                    .contentShape(Rectangle())
+                                    .onTapGesture {
+                                        transactionToEdit = transaction
+                                    }
+                                    .swipeActions(edge: .leading, allowsFullSwipe: false) {
+                                        Button {
+                                            transactionToEdit = transaction
+                                        } label: {
+                                            Label("Modifier", systemImage: "pencil")
+                                        }
+                                        .tint(.appBlue)
+                                    }
                                     .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                                         Button(role: .destructive) {
                                             transactionToDelete = transaction
@@ -144,16 +157,35 @@ struct TransactionsView: View {
             .background(Color(UIColor.systemGroupedBackground))
             .scrollContentBackground(.hidden)
             .searchable(text: $viewModel.searchText, prompt: "Rechercher une transaction")
+            .refreshable {
+                SyncManager.shared.triggerSynchronization()
+                try? await Task.sleep(nanoseconds: 1_000_000_000)
+            }
             .navigationTitle("Transactions")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                        if subManager.isPremium {
-                            exportToCSV()
-                        } else {
-                            showPaywall = true
+                    Menu {
+                        Button {
+                            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                            if subManager.isPremium {
+                                exportToCSV()
+                            } else {
+                                showPaywall = true
+                            }
+                        } label: {
+                            Label("Exporter en CSV", systemImage: "tablecells")
+                        }
+                        
+                        Button {
+                            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                            if subManager.isPremium {
+                                exportToPDF()
+                            } else {
+                                showPaywall = true
+                            }
+                        } label: {
+                            Label("Exporter en PDF", systemImage: "doc.richtext")
                         }
                     } label: {
                         HStack(spacing: 4) {
@@ -186,6 +218,10 @@ struct TransactionsView: View {
         }
         .sheet(item: $exportURL) { item in
             ShareSheet(activityItems: [item.url])
+        }
+        .sheet(item: $transactionToEdit) { transaction in
+            EditTransactionView(transaction: transaction)
+                .environmentObject(viewModel)
         }
     }
     
@@ -220,6 +256,123 @@ struct TransactionsView: View {
             }
         } catch {
             print("Erreur d'écriture du fichier CSV : \(error)")
+        }
+    }
+    
+    // MARK: - Générateur d'Exportation PDF Premium
+    
+    private func exportToPDF() {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd/MM/yyyy"
+        formatter.locale = Locale(identifier: "fr_FR")
+        
+        let pdfMetaData = [
+            kCGPDFContextCreator: "SamaXaalis",
+            kCGPDFContextAuthor: viewModel.userName,
+            kCGPDFContextTitle: "Rapport Financier SamaXaalis"
+        ]
+        let format = UIGraphicsPDFRendererFormat()
+        format.documentInfo = pdfMetaData as [String: Any]
+        
+        let pageWidth: CGFloat = 595.2   // A4
+        let pageHeight: CGFloat = 841.8
+        let margin: CGFloat = 40
+        let contentWidth = pageWidth - margin * 2
+        
+        let renderer = UIGraphicsPDFRenderer(bounds: CGRect(x: 0, y: 0, width: pageWidth, height: pageHeight), format: format)
+        
+        let data = renderer.pdfData { context in
+            context.beginPage()
+            var yPos: CGFloat = margin
+            
+            // Title
+            let titleFont = UIFont.systemFont(ofSize: 24, weight: .bold)
+            let titleAttr: [NSAttributedString.Key: Any] = [.font: titleFont, .foregroundColor: UIColor.label]
+            let title = "Rapport Financier" as NSString
+            title.draw(at: CGPoint(x: margin, y: yPos), withAttributes: titleAttr)
+            yPos += 36
+            
+            // Subtitle
+            let subFont = UIFont.systemFont(ofSize: 12, weight: .medium)
+            let subAttr: [NSAttributedString.Key: Any] = [.font: subFont, .foregroundColor: UIColor.secondaryLabel]
+            let dateStr = formatter.string(from: Date())
+            let subtitle = "Généré le \(dateStr) — \(viewModel.filteredTransactions.count) opérations" as NSString
+            subtitle.draw(at: CGPoint(x: margin, y: yPos), withAttributes: subAttr)
+            yPos += 30
+            
+            // Summary
+            let totalInc = viewModel.filteredTransactions.filter { $0.type == .income }.reduce(0) { $0 + $1.amount }
+            let totalExp = viewModel.filteredTransactions.filter { $0.type == .expense }.reduce(0) { $0 + $1.amount }
+            let summaryFont = UIFont.systemFont(ofSize: 13, weight: .semibold)
+            let summaryAttr: [NSAttributedString.Key: Any] = [.font: summaryFont, .foregroundColor: UIColor.label]
+            let summary = "Revenus: \(viewModel.formatAmount(totalInc))  |  Dépenses: \(viewModel.formatAmount(totalExp))  |  Solde: \(viewModel.formatAmount(totalInc - totalExp))" as NSString
+            summary.draw(at: CGPoint(x: margin, y: yPos), withAttributes: summaryAttr)
+            yPos += 34
+            
+            // Separator
+            let separatorPath = UIBezierPath()
+            separatorPath.move(to: CGPoint(x: margin, y: yPos))
+            separatorPath.addLine(to: CGPoint(x: pageWidth - margin, y: yPos))
+            UIColor.separator.setStroke()
+            separatorPath.lineWidth = 0.5
+            separatorPath.stroke()
+            yPos += 16
+            
+            // Table header
+            let headerFont = UIFont.systemFont(ofSize: 10, weight: .bold)
+            let headerAttr: [NSAttributedString.Key: Any] = [.font: headerFont, .foregroundColor: UIColor.secondaryLabel]
+            let columns: [(String, CGFloat)] = [("Date", margin), ("Titre", margin + 70), ("Catégorie", margin + 230), ("Montant", margin + 360)]
+            for (text, x) in columns {
+                (text as NSString).draw(at: CGPoint(x: x, y: yPos), withAttributes: headerAttr)
+            }
+            yPos += 22
+            
+            // Rows
+            let rowFont = UIFont.systemFont(ofSize: 10, weight: .regular)
+            let rowAmountFont = UIFont.monospacedDigitSystemFont(ofSize: 10, weight: .semibold)
+            
+            for tx in viewModel.filteredTransactions {
+                if yPos > pageHeight - 60 {
+                    context.beginPage()
+                    yPos = margin
+                }
+                
+                let rowAttr: [NSAttributedString.Key: Any] = [.font: rowFont, .foregroundColor: UIColor.label]
+                let amountColor: UIColor = tx.type == .income ? .systemGreen : .label
+                let amountAttr: [NSAttributedString.Key: Any] = [.font: rowAmountFont, .foregroundColor: amountColor]
+                
+                (formatter.string(from: tx.date) as NSString).draw(at: CGPoint(x: margin, y: yPos), withAttributes: rowAttr)
+                
+                let titleRect = CGRect(x: margin + 70, y: yPos, width: 155, height: 14)
+                (tx.title as NSString).draw(in: titleRect, withAttributes: rowAttr)
+                
+                (tx.category.rawValue as NSString).draw(at: CGPoint(x: margin + 230, y: yPos), withAttributes: rowAttr)
+                
+                let prefix = tx.type == .income ? "+" : "-"
+                let amountStr = "\(prefix)\(viewModel.formatAmount(tx.amount))" as NSString
+                amountStr.draw(at: CGPoint(x: margin + 360, y: yPos), withAttributes: amountAttr)
+                
+                yPos += 20
+            }
+            
+            // Footer
+            let footerFont = UIFont.systemFont(ofSize: 8, weight: .medium)
+            let footerAttr: [NSAttributedString.Key: Any] = [.font: footerFont, .foregroundColor: UIColor.tertiaryLabel]
+            let footer = "SamaXaalis — Rapport généré automatiquement" as NSString
+            footer.draw(at: CGPoint(x: margin, y: pageHeight - 30), withAttributes: footerAttr)
+        }
+        
+        let tempDir = FileManager.default.temporaryDirectory
+        let filename = "SamaXaalis_Rapport_\(Int(Date().timeIntervalSince1970)).pdf"
+        let fileURL = tempDir.appendingPathComponent(filename)
+        
+        do {
+            try data.write(to: fileURL)
+            DispatchQueue.main.async {
+                self.exportURL = IdentifiableURL(url: fileURL)
+            }
+        } catch {
+            print("Erreur PDF: \(error)")
         }
     }
 }

@@ -44,6 +44,12 @@ workflows:
             target.source_build_phase.add_file_reference(file_ref)
           end
           
+          unless views_group.files.any? { |f| f.path =~ /EditTransactionView.swift/ }
+            file_ref = project.main_group.new_reference('Gestfina/Views/EditTransactionView.swift')
+            views_group << file_ref
+            target.source_build_phase.add_file_reference(file_ref)
+          end
+          
           comp_group = project.main_group.find_subpath('Gestfina/Components', true)
           unless comp_group.files.any? { |f| f.path =~ /LottieView.swift/ }
             file_ref = project.main_group.new_reference('Gestfina/Components/LottieView.swift')

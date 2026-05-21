@@ -1,22 +1,24 @@
 //
-//  AddTransactionView.swift
+//  EditTransactionView.swift
 //  Gestfina
 //
-//  Formulaire d'ajout — Design premium Apple-native
+//  Formulaire de modification de transaction — Design Apple-native
 //
 
 import SwiftUI
 
-struct AddTransactionView: View {
+struct EditTransactionView: View {
     @EnvironmentObject var viewModel: FinanceViewModel
     @Environment(\.dismiss) var dismiss
 
-    @State private var title = ""
-    @State private var amountText = ""
+    let transaction: Transaction
+
+    @State private var title: String = ""
+    @State private var amountText: String = ""
     @State private var selectedType: TransactionType = .expense
     @State private var selectedCategory: TransactionCategory = .food
-    @State private var date = Date()
-    @State private var note = ""
+    @State private var date: Date = Date()
+    @State private var note: String = ""
     @FocusState private var amountFocused: Bool
 
     var body: some View {
@@ -31,12 +33,16 @@ struct AddTransactionView: View {
                     }
                     .pickerStyle(.segmented)
                     .onChange(of: selectedType) {
-                        selectedCategory = selectedType == .income ? .salary : .food
+                        if selectedType == .income && TransactionCategory.expenseCategories.contains(where: { $0 == selectedCategory }) {
+                            selectedCategory = .salary
+                        } else if selectedType == .expense && TransactionCategory.incomeCategories.contains(where: { $0 == selectedCategory }) {
+                            selectedCategory = .food
+                        }
                         UIImpactFeedbackGenerator(style: .light).impactOccurred()
                     }
                 }
 
-                // MARK: - Montant (Hero)
+                // MARK: - Montant
                 Section {
                     VStack(spacing: 8) {
                         HStack(alignment: .firstTextBaseline, spacing: 4) {
@@ -53,11 +59,9 @@ struct AddTransactionView: View {
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 12)
 
-                        // Type badge
                         HStack(spacing: 5) {
                             Image(systemName: selectedType == .income ? "arrow.down.left" : "arrow.up.right")
                                 .font(.system(.caption2, weight: .bold))
-                                .accessibilityHidden(true)
                             Text(selectedType.rawValue)
                                 .font(.system(.caption, weight: .semibold))
                         }
@@ -161,7 +165,7 @@ struct AddTransactionView: View {
             }
             .background(Color(UIColor.systemGroupedBackground))
             .scrollContentBackground(.hidden)
-            .navigationTitle("Nouvelle transaction")
+            .navigationTitle("Modifier")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -170,9 +174,9 @@ struct AddTransactionView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
-                        saveTransaction()
+                        saveChanges()
                     } label: {
-                        Text("Ajouter")
+                        Text("Enregistrer")
                             .font(.headline)
                     }
                     .disabled(!canSave)
@@ -184,9 +188,12 @@ struct AddTransactionView: View {
                 }
             }
             .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    amountFocused = true
-                }
+                title = transaction.title
+                amountText = String(format: "%.2f", transaction.amount).replacingOccurrences(of: ".", with: ",")
+                selectedType = transaction.type
+                selectedCategory = transaction.category
+                date = transaction.date
+                note = transaction.note
             }
         }
     }
@@ -195,26 +202,20 @@ struct AddTransactionView: View {
         !title.trimmingCharacters(in: .whitespaces).isEmpty
         && !amountText.isEmpty
         && (Double(amountText.replacingOccurrences(of: ",", with: ".")) ?? 0) > 0
-        && (Double(amountText.replacingOccurrences(of: ",", with: ".")) ?? 0) <= 999_999_999
     }
 
-    private func saveTransaction() {
+    private func saveChanges() {
         let amount = Double(amountText.replacingOccurrences(of: ",", with: ".")) ?? 0
-        let transaction = Transaction(
-            title: title.trimmingCharacters(in: .whitespaces),
-            amount: amount,
-            date: date,
-            category: selectedCategory,
-            type: selectedType,
-            note: note
-        )
-        viewModel.addTransaction(transaction)
+        var updated = transaction
+        updated.title = title.trimmingCharacters(in: .whitespaces)
+        updated.amount = amount
+        updated.date = date
+        updated.category = selectedCategory
+        updated.type = selectedType
+        updated.note = note
+        
+        viewModel.updateTransaction(updated)
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         dismiss()
     }
-}
-
-#Preview {
-    AddTransactionView()
-        .environmentObject(FinanceViewModel())
 }
