@@ -49,7 +49,6 @@ struct AddTransactionView: View {
                                 .keyboardType(.decimalPad)
                                 .focused($amountFocused)
                                 .multilineTextAlignment(.center)
-                                .contentTransition(.numericText())
                         }
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 12)
@@ -152,7 +151,7 @@ struct AddTransactionView: View {
                                         .lineLimit(1)
                                 }
                             }
-                            .buttonStyle(SquishyPremiumButtonStyle())
+                            .buttonStyle(.plain)
                         }
                     }
                     .padding(.vertical, 8)

@@ -269,15 +269,7 @@ struct SettingsView: View {
             }
             .padding(.vertical, 4)
         }
-        .buttonStyle(SquishyPremiumButtonStyle())
-        .listRowBackground(
-            ZStack {
-                Color(UIColor.secondarySystemGroupedBackground)
-                if !subManager.isPremium {
-                    Color.clear.animatedGlassBorder(cornerRadius: 12)
-                }
-            }
-        )
+        .buttonStyle(.plain)
     }
 
     // MARK: - Profil Row

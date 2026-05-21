@@ -127,11 +127,6 @@ struct TransactionsView: View {
                         Section(header: Text(date.relativeFormatted).textCase(nil)) {
                             ForEach(grouped[date]!) { transaction in
                                 TransactionRow(transaction: transaction)
-                                    .scrollTransition { content, phase in
-                                        content
-                                            .opacity(phase.isIdentity ? 1 : 0.6)
-                                            .scaleEffect(phase.isIdentity ? 1 : 0.96)
-                                    }
                                     .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                                         Button(role: .destructive) {
                                             transactionToDelete = transaction
@@ -252,7 +247,7 @@ struct PremiumFilterChip: View {
                         .fill(isSelected ? color : Color(UIColor.tertiarySystemGroupedBackground))
                 )
         }
-        .buttonStyle(SquishyPremiumButtonStyle())
+        .buttonStyle(.plain)
     }
 }
 

@@ -130,7 +130,6 @@ struct OnboardingView: View {
                         .clipShape(Capsule())
                         .shadow(color: Color.appBlue.opacity(0.4), radius: 15, x: 0, y: 8)
                 }
-                .buttonStyle(SquishyPremiumButtonStyle())
                 .padding(.horizontal, 32)
                 .padding(.bottom, 50)
             }

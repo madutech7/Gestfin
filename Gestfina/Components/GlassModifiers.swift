@@ -70,42 +70,27 @@ struct LiquidGlassButton: ViewModifier {
     }
 }
 
-// MARK: - Squishy Premium Button Style
-
-struct SquishyPremiumButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .scaleEffect(configuration.isPressed ? 0.95 : 1.0)
-            .animation(.spring(response: 0.3, dampingFraction: 0.6), value: configuration.isPressed)
-            .opacity(configuration.isPressed ? 0.9 : 1.0)
-    }
-}
-
-// MARK: - Holographic Angular Gradient Border
+// MARK: - Subtle Gradient Border
 
 struct AnimatedGlassBorder: ViewModifier {
     @State private var rotation: Double = 0
     var cornerRadius: CGFloat = 24
-    var colors: [Color] = [.appBlue, .appCyan, .appPurple, .appBlue]
+    var colors: [Color] = [.appBlue, .appBlue, .appGreen, .appBlue]
     
     func body(content: Content) -> some View {
         content
+            // Effet plus professionnel: bordure simple ou gradient très fin
             .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius)
-                    .strokeBorder(
-                        AngularGradient(
-                            colors: colors,
-                            center: .center,
-                            angle: .degrees(rotation)
+                    .stroke(
+                        LinearGradient(
+                            colors: [Color.appBlue.opacity(0.5), Color.appBlue.opacity(0.5)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
                         ),
-                        lineWidth: 1.5
+                        lineWidth: 1
                     )
             )
-            .onAppear {
-                withAnimation(.linear(duration: 4).repeatForever(autoreverses: false)) {
-                    rotation = 360
-                }
-            }
     }
 }
 
