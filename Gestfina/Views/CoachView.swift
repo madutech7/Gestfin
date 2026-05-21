@@ -2,13 +2,7 @@ import SwiftUI
 
 struct CoachView: View {
     @StateObject private var viewModel = CoachViewModel()
-    @State private var selectedMode: CoachMode = .analysis
     @Environment(\.colorScheme) var colorScheme
-    
-    enum CoachMode {
-        case analysis
-        case chat
-    }
     
     let suggestions = [
         "Comment optimiser mes économies ?",
@@ -19,211 +13,43 @@ struct CoachView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                // Background
-                Color(UIColor.systemGroupedBackground)
+                // Background Gemini Style (Clean)
+                Color(UIColor.systemBackground)
                     .ignoresSafeArea()
                 
-                // Ambient Blurs
+                // Ambient Blurs simulating Gemini glow
                 GeometryReader { geo in
                     Circle()
-                        .fill(Color.appBlue.opacity(0.15))
-                        .frame(width: geo.size.width * 0.8, height: geo.size.width * 0.8)
-                        .offset(x: -geo.size.width * 0.3, y: -geo.size.width * 0.2)
-                        .blur(radius: 60)
+                        .fill(Color.appBlue.opacity(0.06))
+                        .frame(width: geo.size.width, height: geo.size.width)
+                        .offset(x: -geo.size.width * 0.2, y: -geo.size.width * 0.4)
+                        .blur(radius: 80)
                     
                     Circle()
-                        .fill(Color.appCyan.opacity(0.12))
-                        .frame(width: geo.size.width * 0.6, height: geo.size.width * 0.6)
-                        .offset(x: geo.size.width * 0.6, y: -geo.size.width * 0.1)
-                        .blur(radius: 50)
+                        .fill(Color.appCyan.opacity(0.06))
+                        .frame(width: geo.size.width * 0.8, height: geo.size.width * 0.8)
+                        .offset(x: geo.size.width * 0.4, y: geo.size.height * 0.6)
+                        .blur(radius: 80)
                 }
+                .ignoresSafeArea()
                 
                 VStack(spacing: 0) {
-                    // Segmented Control
-                    Picker("Mode", selection: $selectedMode) {
-                        Text("SamaCoach IA").tag(CoachMode.analysis)
-                        Text("Discussion").tag(CoachMode.chat)
-                    }
-                    .pickerStyle(.segmented)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 12)
-                    
-                    Divider()
-                    
-                    if selectedMode == .analysis {
-                        analysisTab
-                    } else {
-                        chatTab
-                    }
+                    chatTab
                 }
             }
             .navigationTitle("SamaCoach")
-            .navigationBarTitleDisplayMode(.large)
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                if selectedMode == .chat {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button {
-                            UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                            viewModel.clearChat()
-                        } label: {
-                            Image(systemName: "trash")
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                }
-            }
-            .onAppear {
-                if viewModel.analysis == nil {
-                    viewModel.fetchAnalysis()
-                }
-            }
-        }
-    }
-    
-    // MARK: - Analysis Tab
-    
-    private var analysisTab: some View {
-        ScrollView(.vertical, showsIndicators: false) {
-            VStack(spacing: 24) {
-                if viewModel.isFetchingAnalysis && viewModel.analysis == nil {
-                    ProgressView("Analyse en cours...")
-                        .frame(maxWidth: .infinity, minHeight: 250)
-                } else if let analysis = viewModel.analysis {
-                    // Score Card
-                    VStack(spacing: 16) {
-                        ScoreView(score: analysis.financialScore)
-                            .padding(.top, 10)
-                        
-                        Text(analysis.summary)
-                            .font(.system(size: 15, weight: .medium))
-                            .multilineTextAlignment(.center)
-                            .foregroundColor(.primary)
-                            .padding(.horizontal, 16)
-                    }
-                    .padding(.vertical, 20)
-                    .frame(maxWidth: .infinity)
-                    .background(Color(UIColor.secondarySystemGroupedBackground))
-                    .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
-                    .padding(.horizontal, 20)
-                    
-                    // Savings Rate Comment
-                    VStack(alignment: .leading, spacing: 12) {
-                        Label("Épargne & Revenus", systemImage: "percent")
-                            .font(.system(size: 16, weight: .bold))
-                            .foregroundColor(.appBlue)
-                        
-                        Text(analysis.savingsRateComment)
-                            .font(.system(size: 14))
-                            .foregroundColor(.secondary)
-                            .lineSpacing(4)
-                    }
-                    .padding(20)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color(UIColor.secondarySystemGroupedBackground))
-                    .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
-                    .padding(.horizontal, 20)
-                    
-                    // Insights List
-                    VStack(alignment: .leading, spacing: 14) {
-                        Text("Observations Clés")
-                            .font(.system(size: 18, weight: .bold))
-                            .padding(.horizontal, 24)
-                        
-                        ForEach(analysis.insights) { insight in
-                            InsightCard(insight: insight)
-                        }
-                    }
-                    
-                    // Recommendations List
-                    VStack(alignment: .leading, spacing: 14) {
-                        Text("Actions Recommandées")
-                            .font(.system(size: 18, weight: .bold))
-                            .padding(.horizontal, 24)
-                        
-                        ForEach(Array(analysis.recommendations.enumerated()), id: \.offset) { index, rec in
-                            HStack(alignment: .top, spacing: 16) {
-                                ZStack {
-                                    Circle()
-                                        .fill(Color.appBlue.opacity(0.12))
-                                        .frame(width: 32, height: 32)
-                                    Text("\(index + 1)")
-                                        .font(.system(size: 14, weight: .bold, design: .rounded))
-                                        .foregroundColor(.appBlue)
-                                }
-                                
-                                Text(rec)
-                                    .font(.system(size: 14, weight: .medium))
-                                    .foregroundColor(.primary)
-                                    .lineSpacing(3)
-                                    .padding(.top, 6)
-                            }
-                            .padding(16)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(Color(UIColor.secondarySystemGroupedBackground))
-                            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                            .padding(.horizontal, 20)
-                        }
-                    }
-                    
-                    // Refresh Button
+                ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
-                        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                        viewModel.fetchAnalysis()
+                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                        viewModel.clearChat()
                     } label: {
-                        HStack {
-                            if viewModel.isFetchingAnalysis {
-                                ProgressView()
-                                    .tint(.white)
-                                    .padding(.trailing, 8)
-                            } else {
-                                Image(systemName: "sparkles")
-                            }
-                            Text("Recalculer les conseils")
-                                .font(.system(size: 16, weight: .bold))
-                        }
-                        .foregroundColor(.white)
-                        .padding(.vertical, 16)
-                        .frame(maxWidth: .infinity)
-                        .background(
-                            LinearGradient(
-                                colors: [Color.appBlue, Color.appCyan],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                        .shadow(color: Color.appBlue.opacity(0.3), radius: 10, y: 5)
+                        Image(systemName: "trash")
+                            .foregroundColor(.primary)
                     }
-                    .padding(.horizontal, 20)
-                    .padding(.bottom, 30)
-                    .disabled(viewModel.isFetchingAnalysis)
-                    
-                } else {
-                    // Empty state/error
-                    VStack(spacing: 16) {
-                        Image(systemName: "exclamationmark.triangle")
-                            .font(.system(size: 44))
-                            .foregroundColor(.orange)
-                        Text(viewModel.errorMessage ?? "Impossible de charger l'analyse.")
-                            .font(.system(size: 14))
-                            .foregroundColor(.secondary)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal, 40)
-                        
-                        Button("Réessayer") {
-                            viewModel.fetchAnalysis()
-                        }
-                        .font(.system(size: 15, weight: .bold))
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 24)
-                        .padding(.vertical, 12)
-                        .background(Color.appBlue)
-                        .clipShape(Capsule())
-                    }
-                    .frame(maxWidth: .infinity, minHeight: 300)
                 }
             }
-            .padding(.top, 16)
         }
     }
     
@@ -234,7 +60,7 @@ struct CoachView: View {
             // Message List
             ScrollViewReader { scrollProxy in
                 ScrollView(.vertical, showsIndicators: true) {
-                    VStack(spacing: 16) {
+                    VStack(spacing: 28) {
                         ForEach(viewModel.chatMessages) { msg in
                             ChatBubble(message: msg)
                         }
@@ -243,7 +69,7 @@ struct CoachView: View {
                             TypingIndicator()
                         }
                     }
-                    .padding(.vertical, 20)
+                    .padding(.vertical, 24)
                 }
                 .onChange(of: viewModel.chatMessages.count) { _, _ in
                     if let last = viewModel.chatMessages.last {
@@ -264,47 +90,42 @@ struct CoachView: View {
                                 viewModel.sendMessage(sug)
                             } label: {
                                 Text(sug)
-                                    .font(.system(size: 13, weight: .semibold))
-                                    .padding(.horizontal, 14)
-                                    .padding(.vertical, 8)
-                                    .background(Color(UIColor.secondarySystemGroupedBackground))
-                                    .foregroundColor(.appBlue)
+                                    .font(.system(size: 14, weight: .medium))
+                                    .padding(.horizontal, 16)
+                                    .padding(.vertical, 10)
+                                    .background(Color(UIColor.secondarySystemBackground))
+                                    .foregroundColor(.primary)
                                     .clipShape(Capsule())
                                     .overlay(
                                         Capsule()
-                                            .stroke(Color.appBlue.opacity(0.1), lineWidth: 1)
+                                            .stroke(Color.secondary.opacity(0.15), lineWidth: 1)
                                     )
                             }
                         }
                     }
                     .padding(.horizontal, 20)
-                    .padding(.bottom, 8)
+                    .padding(.bottom, 12)
                 }
             }
             
-            Divider()
-            
-            // Input Row
-            HStack(spacing: 8) {
+            // Input Row (Gemini Style)
+            HStack(alignment: .bottom, spacing: 8) {
                 Button {
-                    // Action add attachment
                     UIImpactFeedbackGenerator(style: .light).impactOccurred()
                 } label: {
                     Image(systemName: "plus")
-                        .font(.system(size: 20, weight: .regular))
-                        .foregroundColor(.secondary)
-                        .frame(width: 36, height: 36)
-                        .background(Color(UIColor.tertiarySystemFill))
-                        .clipShape(Circle())
+                        .font(.system(size: 22, weight: .regular))
+                        .foregroundColor(.primary)
+                        .frame(width: 44, height: 44)
                 }
                 
-                HStack(spacing: 0) {
-                    TextField("Message SamaCoach...", text: $viewModel.inputText, axis: .vertical)
-                        .lineLimit(1...5)
+                HStack(alignment: .bottom, spacing: 0) {
+                    TextField("Demandez à SamaCoach...", text: $viewModel.inputText, axis: .vertical)
+                        .lineLimit(1...8)
                         .submitLabel(.send)
-                        .font(.body)
-                        .padding(.horizontal, 14)
-                        .padding(.vertical, 10)
+                        .font(.system(size: 16))
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12)
                         .onSubmit {
                             if !viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                                 viewModel.sendMessage()
@@ -313,46 +134,39 @@ struct CoachView: View {
                     
                     if viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                         Button {
-                            // Voice Dictation
+                            // Voice Dictation Native Target
                             UIImpactFeedbackGenerator(style: .light).impactOccurred()
                         } label: {
                             Image(systemName: "mic.fill")
-                                .font(.system(size: 18))
-                                .foregroundColor(.secondary)
-                                .padding(.trailing, 14)
+                                .font(.system(size: 20))
+                                .foregroundColor(.primary)
+                                .padding(.trailing, 16)
+                                .padding(.bottom, 12)
                         }
                         .transition(.opacity)
+                    } else {
+                        Button {
+                            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                            viewModel.sendMessage()
+                        } label: {
+                            Image(systemName: "arrow.up.circle.fill")
+                                .font(.system(size: 32))
+                                .foregroundColor(.primary)
+                                .padding(.trailing, 6)
+                                .padding(.bottom, 6)
+                        }
+                        .transition(.scale.combined(with: .opacity))
                     }
                 }
                 .background(
-                    Capsule()
-                        .fill(Color(UIColor.secondarySystemGroupedBackground))
-                        .overlay(
-                            Capsule().stroke(Color(UIColor.separator).opacity(0.5), lineWidth: 0.5)
-                        )
+                    RoundedRectangle(cornerRadius: 24, style: .continuous)
+                        .fill(Color(UIColor.secondarySystemBackground))
                 )
-                
-                if !viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                    Button {
-                        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                        viewModel.sendMessage()
-                    } label: {
-                        ZStack {
-                            Circle()
-                                .fill(LinearGradient(colors: [Color.appBlue, Color.appCyan], startPoint: .topLeading, endPoint: .bottomTrailing))
-                                .frame(width: 36, height: 36)
-                            Image(systemName: "arrow.up")
-                                .font(.system(size: 16, weight: .bold))
-                                .foregroundColor(.white)
-                        }
-                    }
-                    .transition(.scale.combined(with: .opacity))
-                }
             }
             .animation(.spring(response: 0.3, dampingFraction: 0.7), value: viewModel.inputText)
             .padding(.horizontal, 12)
             .padding(.vertical, 10)
-            .background(.regularMaterial)
+            .background(Color(UIColor.systemBackground))
         }
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("EditChatMessage"))) { notification in
             if let msg = notification.object as? AIChatMessage {
@@ -364,155 +178,48 @@ struct CoachView: View {
 
 // MARK: - Subviews
 
-struct ScoreView: View {
-    let score: Int
-    
-    var body: some View {
-        ZStack {
-            Circle()
-                .stroke(Color(.quaternaryLabel), lineWidth: 14)
-            
-            Circle()
-                .trim(from: 0.0, to: CGFloat(min(Double(score) / 100.0, 1.0)))
-                .stroke(
-                    LinearGradient(
-                        colors: scoreColors(score),
-                        startPoint: .top,
-                        endPoint: .bottom
-                    ),
-                    style: StrokeStyle(lineWidth: 14, lineCap: .round)
-                )
-                .rotationEffect(Angle(degrees: -90))
-            
-            VStack(spacing: 2) {
-                Text("\(score)")
-                    .font(.system(size: 42, weight: .bold, design: .rounded))
-                Text("Santé financière")
-                    .font(.system(size: 10, weight: .semibold))
-                    .foregroundColor(.secondary)
-            }
-        }
-        .frame(width: 140, height: 140)
-    }
-    
-    private func scoreColors(_ score: Int) -> [Color] {
-        if score >= 75 {
-            return [.appGreen, Color(hex: "#34C759")]
-        } else if score >= 50 {
-            return [.appOrange, Color(hex: "#FF9500")]
-        } else {
-            return [.appRed, Color(hex: "#FF3B30")]
-        }
-    }
-}
-
-struct InsightCard: View {
-    let insight: AIInsight
-    
-    var body: some View {
-        HStack(alignment: .top, spacing: 14) {
-            ZStack {
-                Circle()
-                    .fill(accentColor.opacity(0.12))
-                    .frame(width: 40, height: 40)
-                Image(systemName: iconName)
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(accentColor)
-            }
-            
-            VStack(alignment: .leading, spacing: 4) {
-                Text(insight.title)
-                    .font(.system(size: 15, weight: .bold))
-                    .foregroundColor(.primary)
-                Text(insight.description)
-                    .font(.system(size: 13))
-                    .foregroundColor(.secondary)
-                    .lineSpacing(3)
-            }
-        }
-        .padding(16)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(UIColor.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .padding(.horizontal, 20)
-    }
-    
-    private var accentColor: Color {
-        switch insight.type {
-        case "positive": return .appGreen
-        case "warning": return .appOrange
-        case "negative": return .appRed
-        default: return .appBlue
-        }
-    }
-    
-    private var iconName: String {
-        switch insight.type {
-        case "positive": return "checkmark.circle.fill"
-        case "warning": return "exclamationmark.triangle.fill"
-        case "negative": return "xmark.circle.fill"
-        default: return "info.circle.fill"
-        }
-    }
-}
-
 struct ChatBubble: View {
     let message: AIChatMessage
     
     var body: some View {
-        HStack {
+        VStack(alignment: .leading, spacing: 4) {
             if message.role == "user" {
-                Spacer(minLength: 50)
-                Text(message.content)
-                    .font(.system(.body, design: .rounded))
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 12)
-                    .background(
-                        LinearGradient(colors: [Color.appBlue, Color.appCyan], startPoint: .topLeading, endPoint: .bottomTrailing)
-                    )
-                    .clipShape(BubbleShape(isUser: true))
-                    .shadow(color: Color.appBlue.opacity(0.15), radius: 5, y: 3)
-                    .contextMenu {
-                        Button {
-                            NotificationCenter.default.post(name: NSNotification.Name("EditChatMessage"), object: message)
-                        } label: {
-                            Label("Modifier la question", systemImage: "pencil")
+                HStack {
+                    Spacer(minLength: 40)
+                    Text(message.content)
+                        .font(.system(.body))
+                        .foregroundColor(.primary)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12)
+                        .background(Color(UIColor.secondarySystemBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+                        .contextMenu {
+                            Button {
+                                NotificationCenter.default.post(name: NSNotification.Name("EditChatMessage"), object: message)
+                            } label: {
+                                Label("Modifier la question", systemImage: "pencil")
+                            }
                         }
-                    }
+                }
+                .padding(.horizontal, 20)
             } else {
-                Text(message.content)
-                    .font(.system(.body, design: .rounded))
-                    .foregroundColor(.primary)
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 12)
-                    .background(Color(UIColor.secondarySystemGroupedBackground))
-                    .clipShape(BubbleShape(isUser: false))
-                    .shadow(color: Color.black.opacity(0.04), radius: 5, y: 3)
-                Spacer(minLength: 50)
+                HStack(alignment: .top, spacing: 12) {
+                    Image(systemName: "sparkles")
+                        .font(.system(size: 20))
+                        .foregroundColor(.appBlue)
+                        .padding(.top, 2)
+                        
+                    Text(message.content)
+                        .font(.system(.body))
+                        .foregroundColor(.primary)
+                        .lineSpacing(6)
+                    
+                    Spacer(minLength: 20)
+                }
+                .padding(.horizontal, 20)
             }
         }
-        .padding(.horizontal, 16)
         .id(message.id)
-    }
-}
-
-struct BubbleShape: Shape {
-    let isUser: Bool
-    
-    func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath(
-            automaticallyLoadedRoundedRect: rect,
-            byRoundingCorners: isUser ? [.topLeft, .topRight, .bottomLeft] : [.topLeft, .topRight, .bottomRight],
-            cornerRadii: CGSize(width: 18, height: 18)
-        )
-        return Path(path.cgPath)
-    }
-}
-
-extension UIBezierPath {
-    convenience init(automaticallyLoadedRoundedRect rect: CGRect, byRoundingCorners corners: UIRectCorner, cornerRadii: CGSize) {
-        self.init(roundedRect: rect, byRoundingCorners: corners, cornerRadii: cornerRadii)
     }
 }
 
@@ -520,12 +227,18 @@ struct TypingIndicator: View {
     @State private var pulse = false
     
     var body: some View {
-        HStack {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: "sparkles")
+                .font(.system(size: 20))
+                .foregroundColor(.appBlue)
+                .rotationEffect(Angle(degrees: pulse ? 15 : -15))
+                .animation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true), value: pulse)
+                
             HStack(spacing: 6) {
                 ForEach(0..<3) { index in
                     Circle()
-                        .fill(Color.secondary.opacity(0.6))
-                        .frame(width: 8, height: 8)
+                        .fill(Color.appBlue.opacity(0.6))
+                        .frame(width: 6, height: 6)
                         .scaleEffect(pulse ? 1.0 : 0.6)
                         .animation(
                             .easeInOut(duration: 0.6)
@@ -535,10 +248,7 @@ struct TypingIndicator: View {
                         )
                 }
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 14)
-            .background(Color(UIColor.secondarySystemGroupedBackground))
-            .clipShape(BubbleShape(isUser: false))
+            .padding(.top, 10)
             
             Spacer()
         }
@@ -546,4 +256,3 @@ struct TypingIndicator: View {
         .onAppear { pulse = true }
     }
 }
-
