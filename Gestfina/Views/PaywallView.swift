@@ -434,7 +434,7 @@ struct PaywallView: View {
                     let success = try await subManager.purchase(product)
                     isPurchasing = false
                     if success {
-                        alertMessage = "Bienvenue dans SamaXaalis Pro ! Votre abonnement est actif."
+                        alertMessage = AppFeedback.Premium.purchaseSuccess
                         showAlert = true
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                             dismiss()
@@ -448,7 +448,7 @@ struct PaywallView: View {
                     UserDefaults.standard.set(true, forKey: "gestfina_is_premium")
                     subManager.updatePurchasedProductsMock(selectedProductID)
                     isPurchasing = false
-                    alertMessage = "Félicitations ! SamaXaalis Pro a été débloqué (Simulation)."
+                    alertMessage = AppFeedback.Premium.purchaseSuccess + " (Simulation)"
                     showAlert = true
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                         dismiss()
@@ -461,7 +461,7 @@ struct PaywallView: View {
                 }
             } catch {
                 isPurchasing = false
-                alertMessage = "Erreur lors du paiement : \(error.localizedDescription)"
+                alertMessage = "\(AppFeedback.Premium.purchaseFailed) : \(error.localizedDescription)"
                 showAlert = true
             }
         }

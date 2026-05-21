@@ -407,12 +407,12 @@ struct AuthView: View {
     
     private func handleAuthAction() {
         if email.isEmpty || password.isEmpty {
-            setError("Veuillez remplir tous les champs.")
+            setError(AppFeedback.Auth.loginFailed)
             return
         }
         
         if !isLoginMode && name.isEmpty {
-            setError("Veuillez entrer votre nom.")
+            setError("Veuillez entrer votre nom pour votre SamaXaalis.")
             return
         }
         
@@ -454,7 +454,15 @@ struct AuthView: View {
                     viewModel.fetchCloudData()
                 }
             case .failure(let error):
-                self.setError(error.localizedDescription)
+                // On essaie de mapper l'erreur technique à un message utilisateur SamaXaalis
+                let description = error.localizedDescription
+                if description.contains("401") || description.contains("403") {
+                    self.setError(AppFeedback.Auth.loginFailed)
+                } else if description.contains("email") && description.contains("already") {
+                    self.setError(AppFeedback.Auth.emailTaken)
+                } else {
+                    self.setError(description)
+                }
             }
         }
     }
@@ -526,13 +534,16 @@ struct AuthView: View {
                     self.exchangeCodeForToken(code: code, clientId: clientId, redirectUri: redirectUri) { idToken in
                         DispatchQueue.main.async {
                             if let token = idToken {
+                                // DEBUG: Affiche le jeton pour vérifier son contenu (jwt.io)
+                                print("🔑 [DEBUG] Google ID Token: \(token)")
+                                
                                 // Envoyer le VRAI jeton Google au backend NestJS
                                 APIManager.shared.googleLogin(idToken: token) { result in
                                     self.handleAuthResult(result)
                                 }
                             } else {
                                 self.isLoading = false
-                                self.setError("Échec de l'échange du code d'autorisation Google")
+                                self.setError(AppFeedback.Auth.googleAuthFailed)
                             }
                         }
                     }

@@ -69,7 +69,7 @@ class AuthenticationManager: ObservableObject {
         
         guard context.canEvaluatePolicy(policy, error: &error) else {
             DispatchQueue.main.async {
-                self.authError = "Biométrie non disponible sur cet appareil."
+                self.authError = AppFeedback.Security.setupRequired
                 self.isAuthenticating = false
                 // Déverrouiller quand même si aucune biométrie disponible
                 self.isUnlocked = true
@@ -77,7 +77,7 @@ class AuthenticationManager: ObservableObject {
             return
         }
         
-        let reason = "Déverrouillez SamaXaalis pour accéder à vos finances."
+        let reason = AppFeedback.Security.faceIDPrompt
         
         context.evaluatePolicy(policy, localizedReason: reason) { success, authError in
             DispatchQueue.main.async {
@@ -92,7 +92,7 @@ class AuthenticationManager: ObservableObject {
                     if let error = authError as? LAError, error.code == .userCancel {
                         self.authError = nil
                     } else {
-                        self.authError = "Authentification échouée. Réessayez."
+                        self.authError = AppFeedback.Security.faceIDFailed
                         let feedback = UINotificationFeedbackGenerator()
                         feedback.notificationOccurred(.error)
                     }

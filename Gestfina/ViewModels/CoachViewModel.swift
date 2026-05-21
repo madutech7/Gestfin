@@ -26,8 +26,8 @@ class CoachViewModel: ObservableObject {
                 case .success(let data):
                     self?.analysis = data
                     self?.saveLocalAnalysis(data)
-                case .failure(let error):
-                    self?.errorMessage = error.localizedDescription
+                case .failure:
+                    self?.errorMessage = AppFeedback.AI.analysisError
                 }
             }
         }
@@ -56,8 +56,8 @@ class CoachViewModel: ObservableObject {
                     let modelMessage = AIChatMessage(role: "model", content: reply)
                     self?.chatMessages.append(modelMessage)
                     self?.saveLocalChat()
-                case .failure(let error):
-                    self?.errorMessage = error.localizedDescription
+                case .failure:
+                    self?.errorMessage = AppFeedback.AI.analysisError
                 }
             }
         }

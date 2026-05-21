@@ -58,7 +58,7 @@ class APIManager {
             
             guard let data = data,
                   let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-                completion(.failure(NSError(domain: "InvalidJSON", code: -2)))
+                completion(.failure(NSError(domain: "InvalidJSON", code: -2, userInfo: [NSLocalizedDescriptionKey: AppFeedback.Sync.syncFailed])))
                 return
             }
             
@@ -70,7 +70,7 @@ class APIManager {
                 BackendAuthManager.shared.setLoginState(token: accessToken, email: email, name: name)
                 completion(.success(json))
             } else {
-                let message = json["message"] as? String ?? "Erreur de connexion"
+                let message = json["message"] as? String ?? AppFeedback.Auth.loginFailed
                 completion(.failure(NSError(domain: "AuthFailed", code: 401, userInfo: [NSLocalizedDescriptionKey: message])))
             }
         }.resume()
@@ -97,7 +97,7 @@ class APIManager {
             
             guard let data = data,
                   let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-                completion(.failure(NSError(domain: "InvalidJSON", code: -2)))
+                completion(.failure(NSError(domain: "InvalidJSON", code: -2, userInfo: [NSLocalizedDescriptionKey: AppFeedback.Sync.syncFailed])))
                 return
             }
             
@@ -109,7 +109,7 @@ class APIManager {
                 BackendAuthManager.shared.setLoginState(token: accessToken, email: email, name: name)
                 completion(.success(json))
             } else {
-                let message = json["message"] as? String ?? "Erreur d'inscription"
+                let message = json["message"] as? String ?? AppFeedback.Auth.registerFailed
                 completion(.failure(NSError(domain: "AuthFailed", code: 400, userInfo: [NSLocalizedDescriptionKey: message])))
             }
         }.resume()
@@ -136,7 +136,7 @@ class APIManager {
             
             guard let data = data,
                   let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-                completion(.failure(NSError(domain: "InvalidJSON", code: -2)))
+                completion(.failure(NSError(domain: "InvalidJSON", code: -2, userInfo: [NSLocalizedDescriptionKey: AppFeedback.Sync.syncFailed])))
                 return
             }
             
@@ -148,7 +148,7 @@ class APIManager {
                 BackendAuthManager.shared.setLoginState(token: accessToken, email: email, name: name)
                 completion(.success(json))
             } else {
-                let message = json["message"] as? String ?? "Erreur d'authentification Google"
+                let message = json["message"] as? String ?? AppFeedback.Auth.googleAuthFailed
                 completion(.failure(NSError(domain: "AuthFailed", code: 401, userInfo: [NSLocalizedDescriptionKey: message])))
             }
         }.resume()

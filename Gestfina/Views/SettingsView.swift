@@ -103,14 +103,14 @@ struct SettingsView: View {
             .listStyle(.insetGrouped)
             .navigationTitle("Réglages")
             .navigationBarTitleDisplayMode(.large)
-            .alert("Réinitialiser toutes les données ?", isPresented: $showResetAlert) {
+            .alert("Réinitialiser SamaXaalis ?", isPresented: $showResetAlert) {
                 Button("Annuler", role: .cancel) { }
-                Button("Réinitialiser", role: .destructive) {
+                Button("Tout effacer", role: .destructive) {
                     viewModel.resetAllData()
                     UINotificationFeedbackGenerator().notificationOccurred(.warning)
                 }
             } message: {
-                Text("Toutes vos transactions et budgets seront supprimés définitivement. Cette action est irréversible.")
+                Text("Toutes vos transactions et budgets locaux seront supprimés. Cette action est irréversible.")
             }
             .sheet(isPresented: $showNameEditor) {
                 nameEditorSheet
@@ -392,7 +392,9 @@ struct SettingsView: View {
         }
 
         Button {
-            viewModel.resetAllData()
+            // Un simple logout ne doit pas effacer les données locales s'il y a un SyncManager
+            // Mais ici on suit la logique de l'utilisateur qui veut "se déconnecter"
+            BackendAuthManager.shared.logout()
         } label: {
             Label("Se déconnecter", systemImage: "rectangle.portrait.and.arrow.right")
                 .foregroundColor(.orange)
@@ -401,7 +403,7 @@ struct SettingsView: View {
         Button {
             showResetAlert = true
         } label: {
-            Label("Réinitialiser l'appareil (Local)", systemImage: "trash")
+            Label("Réinitialiser l'appareil", systemImage: "trash")
                 .foregroundColor(.appRed)
         }
     }

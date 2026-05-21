@@ -120,16 +120,16 @@ struct EditTransactionView: View {
                             .lineLimit(3, reservesSpace: false)
                     }
 
-                    // MARK: - R\u{00E9}currence
+                    // MARK: - Récurrence
                     VStack(alignment: .leading, spacing: 12) {
                         Toggle(isOn: $isRecurring.animation(.spring())) {
-                            Label("Transaction r\u{00E9}currente", systemImage: "repeat")
+                            Label("Transaction récurrente", systemImage: "repeat")
                                 .foregroundStyle(isRecurring ? Color.appBlue : .primary)
                         }
                         .tint(.appBlue)
                         
                         if isRecurring {
-                            Picker("Fr\u{00E9}quence", selection: $selectedFrequency) {
+                            Picker("Fréquence", selection: $selectedFrequency) {
                                 ForEach(RecurringFrequency.allCases) { freq in
                                     Text(freq.rawValue).tag(freq)
                                 }
@@ -184,6 +184,20 @@ struct EditTransactionView: View {
                 } header: {
                     Text("Catégorie")
                 }
+
+                // MARK: - Supprimer
+                Section {
+                    Button(role: .destructive) {
+                        deleteTransaction()
+                    } label: {
+                        HStack {
+                            Spacer()
+                            Text("Supprimer cette transaction")
+                                .font(.system(.headline, design: .rounded))
+                            Spacer()
+                        }
+                    }
+                }
             }
             .background(Color(UIColor.systemGroupedBackground))
             .scrollContentBackground(.hidden)
@@ -203,11 +217,6 @@ struct EditTransactionView: View {
                     }
                     .disabled(!canSave)
                 }
-                ToolbarItemGroup(placement: .keyboard) {
-                    Spacer()
-                    Button("OK") { amountFocused = false }
-                        .font(.subheadline)
-                }
             }
             .onAppear {
                 title = transaction.title
@@ -226,6 +235,12 @@ struct EditTransactionView: View {
         !title.trimmingCharacters(in: .whitespaces).isEmpty
         && !amountText.isEmpty
         && (Double(amountText.replacingOccurrences(of: ",", with: ".")) ?? 0) > 0
+    }
+
+    private func deleteTransaction() {
+        viewModel.deleteTransaction(transaction)
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        dismiss()
     }
 
     private func saveChanges() {
