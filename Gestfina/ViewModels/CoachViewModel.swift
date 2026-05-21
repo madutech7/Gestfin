@@ -70,6 +70,18 @@ class CoachViewModel: ObservableObject {
         saveLocalChat()
     }
     
+    func editMessage(_ message: AIChatMessage) {
+        guard message.role == "user",
+              let index = chatMessages.firstIndex(where: { $0.id == message.id }) else { return }
+        
+        // Remettre le texte dans le TextField
+        inputText = message.content
+        
+        // Supprimer ce message et tout ce qui a suivi
+        chatMessages = Array(chatMessages.prefix(index))
+        saveLocalChat()
+    }
+    
     // MARK: - Cache local pour un accès instantané hors-ligne
     
     private func saveLocalAnalysis(_ data: AIAnalysis) {

@@ -286,7 +286,14 @@ struct CoachView: View {
             
             // Input Row
             HStack(spacing: 12) {
-                TextField("Parlez avec SamaCoach...", text: $viewModel.inputText)
+                TextField("Parlez avec SamaCoach...", text: $viewModel.inputText, axis: .vertical)
+                    .lineLimit(1...5)
+                    .submitLabel(.send)
+                    .onSubmit {
+                        if !viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                            viewModel.sendMessage()
+                        }
+                    }
                     .padding(.horizontal, 16)
                     .padding(.vertical, 12)
                     .background(Color(UIColor.secondarySystemGroupedBackground))
@@ -310,6 +317,11 @@ struct CoachView: View {
             .padding(.horizontal, 20)
             .padding(.vertical, 12)
             .background(.ultraThinMaterial)
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("EditChatMessage"))) { notification in
+            if let msg = notification.object as? AIChatMessage {
+                viewModel.editMessage(msg)
+            }
         }
     }
 }
@@ -422,6 +434,14 @@ struct ChatBubble: View {
                     .padding(.vertical, 12)
                     .background(Color.appBlue)
                     .clipShape(BubbleShape(isUser: true))
+                    .contextMenu {
+                        Button {
+                            // Appel pour relancer / modifier cette question
+                            NotificationCenter.default.post(name: NSNotification.Name("EditChatMessage"), object: message)
+                        } label: {
+                            Label("Modifier la question", systemImage: "pencil")
+                        }
+                    }
             } else {
                 Text(message.content)
                     .font(.system(size: 15, weight: .medium))
