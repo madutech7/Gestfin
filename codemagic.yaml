@@ -39,13 +39,15 @@ workflows:
           # 2. Add New Swift Files
           views_group = project.main_group.find_subpath('Gestfina/Views', true)
           unless views_group.files.any? { |f| f.path =~ /OnboardingView.swift/ }
-            file_ref = views_group.new_reference('Gestfina/Views/OnboardingView.swift')
+            file_ref = project.main_group.new_reference('Gestfina/Views/OnboardingView.swift')
+            views_group << file_ref
             target.source_build_phase.add_file_reference(file_ref)
           end
           
           comp_group = project.main_group.find_subpath('Gestfina/Components', true)
           unless comp_group.files.any? { |f| f.path =~ /LottieView.swift/ }
-            file_ref = comp_group.new_reference('Gestfina/Components/LottieView.swift')
+            file_ref = project.main_group.new_reference('Gestfina/Components/LottieView.swift')
+            comp_group << file_ref
             target.source_build_phase.add_file_reference(file_ref)
           end
           
@@ -77,7 +79,8 @@ workflows:
           # 6. Ensure new Utils files are added
           utils_group = project.main_group.find_subpath('Gestfina/Utils', true)
           unless utils_group.files.any? { |f| f.path =~ /SpeechRecognizer.swift/ }
-            file_ref = utils_group.new_reference('Gestfina/Utils/SpeechRecognizer.swift')
+            file_ref = project.main_group.new_reference('Gestfina/Utils/SpeechRecognizer.swift')
+            utils_group << file_ref
             target.source_build_phase.add_file_reference(file_ref)
           end
           
