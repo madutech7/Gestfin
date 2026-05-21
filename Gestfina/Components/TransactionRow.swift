@@ -35,10 +35,21 @@ struct TransactionRow: View {
             }
 
             VStack(alignment: .leading, spacing: 3) {
-                Text(transaction.title)
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(.primary)
-                    .lineLimit(1)
+                HStack(spacing: 5) {
+                    Text(transaction.title)
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(.primary)
+                        .lineLimit(1)
+                    
+                    if transaction.isRecurring {
+                        Image(systemName: "repeat")
+                            .font(.system(size: 10, weight: .bold))
+                            .foregroundStyle(Color.appBlue)
+                            .padding(3)
+                            .background(Color.appBlue.opacity(0.1))
+                            .clipShape(Circle())
+                    }
+                }
 
                 HStack(spacing: 5) {
                     Text(transaction.category.rawValue)

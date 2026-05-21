@@ -17,6 +17,8 @@ struct AddTransactionView: View {
     @State private var selectedCategory: TransactionCategory = .food
     @State private var date = Date()
     @State private var note = ""
+    @State private var isRecurring = false
+    @State private var selectedFrequency: RecurringFrequency = .monthly
     @FocusState private var amountFocused: Bool
 
     var body: some View {
@@ -113,6 +115,26 @@ struct AddTransactionView: View {
                         TextField("Note (optionnel)", text: $note, axis: .vertical)
                             .lineLimit(3, reservesSpace: false)
                     }
+
+                    // MARK: - R\u{00E9}currence
+                    VStack(alignment: .leading, spacing: 12) {
+                        Toggle(isOn: $isRecurring.animation(.spring())) {
+                            Label("Transaction r\u{00E9}currente", systemImage: "repeat")
+                                .foregroundStyle(isRecurring ? Color.appBlue : .primary)
+                        }
+                        .tint(.appBlue)
+                        
+                        if isRecurring {
+                            Picker("Fr\u{00E9}quence", selection: $selectedFrequency) {
+                                ForEach(RecurringFrequency.allCases) { freq in
+                                    Text(freq.rawValue).tag(freq)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                            .padding(.top, 4)
+                        }
+                    }
+                    .padding(.vertical, 4)
                 } header: {
                     Text("Informations")
                 }
@@ -206,7 +228,9 @@ struct AddTransactionView: View {
             date: date,
             category: selectedCategory,
             type: selectedType,
-            note: note
+            note: note,
+            isRecurring: isRecurring,
+            recurringFrequency: isRecurring ? selectedFrequency : nil
         )
         viewModel.addTransaction(transaction)
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()

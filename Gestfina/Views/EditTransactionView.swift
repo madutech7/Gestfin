@@ -19,6 +19,8 @@ struct EditTransactionView: View {
     @State private var selectedCategory: TransactionCategory = .food
     @State private var date: Date = Date()
     @State private var note: String = ""
+    @State private var isRecurring: Bool = false
+    @State private var selectedFrequency: RecurringFrequency = .monthly
     @FocusState private var amountFocused: Bool
 
     var body: some View {
@@ -117,6 +119,26 @@ struct EditTransactionView: View {
                         TextField("Note (optionnel)", text: $note, axis: .vertical)
                             .lineLimit(3, reservesSpace: false)
                     }
+
+                    // MARK: - R\u{00E9}currence
+                    VStack(alignment: .leading, spacing: 12) {
+                        Toggle(isOn: $isRecurring.animation(.spring())) {
+                            Label("Transaction r\u{00E9}currente", systemImage: "repeat")
+                                .foregroundStyle(isRecurring ? Color.appBlue : .primary)
+                        }
+                        .tint(.appBlue)
+                        
+                        if isRecurring {
+                            Picker("Fr\u{00E9}quence", selection: $selectedFrequency) {
+                                ForEach(RecurringFrequency.allCases) { freq in
+                                    Text(freq.rawValue).tag(freq)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                            .padding(.top, 4)
+                        }
+                    }
+                    .padding(.vertical, 4)
                 } header: {
                     Text("Informations")
                 }
@@ -194,6 +216,8 @@ struct EditTransactionView: View {
                 selectedCategory = transaction.category
                 date = transaction.date
                 note = transaction.note
+                isRecurring = transaction.isRecurring
+                selectedFrequency = transaction.recurringFrequency ?? .monthly
             }
         }
     }
@@ -213,6 +237,8 @@ struct EditTransactionView: View {
         updated.category = selectedCategory
         updated.type = selectedType
         updated.note = note
+        updated.isRecurring = isRecurring
+        updated.recurringFrequency = isRecurring ? selectedFrequency : nil
         
         viewModel.updateTransaction(updated)
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()

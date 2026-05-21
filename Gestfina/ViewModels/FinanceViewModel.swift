@@ -90,6 +90,9 @@ class FinanceViewModel: ObservableObject {
         // Synchroniser les actions hors-ligne en attente
         SyncManager.shared.triggerSynchronization()
         
+        // Générer les transactions récurrentes au démarrage
+        generateRecurringTransactions()
+        
         // Rafraîchir depuis le cloud après chaque fin de synchronisation
         SyncManager.shared.$isSyncing
             .receive(on: RunLoop.main)
@@ -101,6 +104,7 @@ class FinanceViewModel: ObservableObject {
                     if BackendAuthManager.shared.isLoggedIn && APIManager.shared.token != "GUEST_MODE" {
                         self.fetchCloudData()
                     }
+                    self.generateRecurringTransactions()
                 }
             }
             .store(in: &cancellables)
@@ -449,6 +453,44 @@ class FinanceViewModel: ObservableObject {
             } else {
                 print("❌ [FinanceVM] fetchBudgets a retourné nil. Données locales conservées.")
             }
+        }
+    }
+
+    /// G\u{00E9}n\u{00E9}re automatiquement les nouvelles occurrences des transactions r\u{00E9}currentes
+    private func generateRecurringTransactions() {
+        let now = Date()
+        var newTransactions: [Transaction] = []
+        
+        for (index, tx) in transactions.enumerated() {
+            guard tx.isRecurring, let freq = tx.recurringFrequency else { continue }
+            
+            var currentRefDate = tx.lastRecurrenceDate ?? tx.date
+            var hasGenerated = false
+            
+            while let nextDate = Calendar.current.date(byAdding: freq.calendarComponent, value: 1, to: currentRefDate),
+                  nextDate <= now {
+                
+                let newTx = Transaction(
+                    title: tx.title,
+                    amount: tx.amount,
+                    date: nextDate,
+                    category: tx.category,
+                    type: tx.type,
+                    note: tx.note,
+                    isRecurring: false
+                )
+                newTransactions.append(newTx)
+                currentRefDate = nextDate
+                hasGenerated = true
+            }
+            
+            if hasGenerated {
+                transactions[index].lastRecurrenceDate = currentRefDate
+            }
+        }
+        
+        if !newTransactions.isEmpty {
+            transactions.append(contentsOf: newTransactions)
         }
     }
 }

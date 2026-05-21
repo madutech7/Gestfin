@@ -28,6 +28,25 @@ enum TransactionType: String, Codable, CaseIterable {
     }
 }
 
+/// Type de fréquence pour les transactions récurrentes
+enum RecurringFrequency: String, Codable, CaseIterable, Identifiable {
+    case daily = "Quotidien"
+    case weekly = "Hebdomadaire"
+    case monthly = "Mensuel"
+    case yearly = "Annuel"
+    
+    var id: String { self.rawValue }
+    
+    var calendarComponent: Calendar.Component {
+        switch self {
+        case .daily: return .day
+        case .weekly: return .weekOfYear
+        case .monthly: return .month
+        case .yearly: return .year
+        }
+    }
+}
+
 /// Modèle principal de transaction
 struct Transaction: Identifiable, Codable, Equatable {
     let id: UUID
@@ -38,6 +57,11 @@ struct Transaction: Identifiable, Codable, Equatable {
     var type: TransactionType
     var note: String
     
+    // Récurrence
+    var isRecurring: Bool
+    var recurringFrequency: RecurringFrequency?
+    var lastRecurrenceDate: Date? // Date de la dernière fois qu'elle a été générée
+    
     init(
         id: UUID = UUID(),
         title: String,
@@ -45,7 +69,10 @@ struct Transaction: Identifiable, Codable, Equatable {
         date: Date = Date(),
         category: TransactionCategory,
         type: TransactionType,
-        note: String = ""
+        note: String = "",
+        isRecurring: Bool = false,
+        recurringFrequency: RecurringFrequency? = nil,
+        lastRecurrenceDate: Date? = nil
     ) {
         self.id = id
         self.title = title
@@ -54,6 +81,9 @@ struct Transaction: Identifiable, Codable, Equatable {
         self.category = category
         self.type = type
         self.note = note
+        self.isRecurring = isRecurring
+        self.recurringFrequency = recurringFrequency
+        self.lastRecurrenceDate = lastRecurrenceDate
     }
     
     /// Montant signé (négatif pour les dépenses)
