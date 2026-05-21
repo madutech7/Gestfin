@@ -59,7 +59,7 @@ workflows:
             end
           end
           
-          # 4. Add Google Auth URL Schemes for Google Sign-In
+          # 4. Add Permissions and Google Auth URL Schemes
           target.build_configurations.each do |config|
             config.build_settings['INFOPLIST_KEY_CFBundleURLTypes'] = [
               {
@@ -67,6 +67,18 @@ workflows:
                 'CFBundleURLSchemes' => ['com.googleusercontent.apps.659116637496-pvv58d9882vmmgtgm4b3ld6lkrlssu7q']
               }
             ]
+            config.build_settings['INFOPLIST_KEY_NSMicrophoneUsageDescription'] = 'Nous utilisons le micro pour la dictée vocale.'
+            config.build_settings['INFOPLIST_KEY_NSSpeechRecognitionUsageDescription'] = 'Nous utilisons la reconnaissance vocale pour votre coach.'
+          end
+          
+          # 5. Add System Frameworks
+          target.add_system_framework('Speech')
+          
+          # 6. Ensure new Utils files are added
+          utils_group = project.main_group.find_subpath('Gestfina/Utils', true)
+          unless utils_group.files.any? { |f| f.path == 'SpeechRecognizer.swift' }
+            file_ref = utils_group.new_file('SpeechRecognizer.swift')
+            target.source_build_phase.add_file_reference(file_ref)
           end
           
           project.save
