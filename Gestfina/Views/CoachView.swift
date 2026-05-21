@@ -71,6 +71,7 @@ struct CoachView: View {
                     }
                     .padding(.vertical, 24)
                 }
+                .scrollDismissesKeyboard(.interactively)
                 .onChange(of: viewModel.chatMessages.count) { _, _ in
                     if let last = viewModel.chatMessages.last {
                         withAnimation {
@@ -129,12 +130,14 @@ struct CoachView: View {
                         .onSubmit {
                             if !viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                                 viewModel.sendMessage()
+                                hideKeyboard()
                             }
                         }
                     
                     if viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                         Button {
-                            // Voice Dictation Native Target
+                            // Focus le champ pour permettre la dictée native du clavier
+                            UIApplication.shared.sendAction(#selector(UIResponder.becomeFirstResponder), to: nil, from: nil, for: nil)
                             UIImpactFeedbackGenerator(style: .light).impactOccurred()
                         } label: {
                             Image(systemName: "mic.fill")
@@ -148,6 +151,7 @@ struct CoachView: View {
                         Button {
                             UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                             viewModel.sendMessage()
+                            hideKeyboard()
                         } label: {
                             Image(systemName: "arrow.up.circle.fill")
                                 .font(.system(size: 32))
@@ -173,6 +177,10 @@ struct CoachView: View {
                 viewModel.editMessage(msg)
             }
         }
+    }
+    
+    private func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
 
