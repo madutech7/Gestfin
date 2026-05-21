@@ -99,12 +99,12 @@ class CoachViewModel: ObservableObject {
     
     private func saveLocalChat() {
         if let encoded = try? JSONEncoder().encode(chatMessages) {
-            UserDefaults.standard.set(encoded, forKey: "gestfina_ai_chat_history")
+            UserDefaults.standard.set(encoded, forKey: "gestfina_ai_chat_v2")
         }
     }
     
     private func loadLocalChat() {
-        if let data = UserDefaults.standard.data(forKey: "gestfina_ai_chat_history"),
+        if let data = UserDefaults.standard.data(forKey: "gestfina_ai_chat_v2"),
            let decoded = try? JSONDecoder().decode([AIChatMessage].self, from: data) {
             self.chatMessages = decoded
         } else {

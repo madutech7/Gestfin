@@ -39,21 +39,14 @@ struct CoachView: View {
                 }
                 
                 VStack(spacing: 0) {
-                    // Segmented Control Apple Style
-                    HStack(spacing: 0) {
-                        TabButton(title: "Prévisions", icon: "chart.pie.fill", isSelected: selectedMode == .analysis) {
-                            withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) { selectedMode = .analysis }
-                        }
-                        TabButton(title: "SamaCoach", icon: "waveform", isSelected: selectedMode == .chat) {
-                            withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) { selectedMode = .chat }
-                        }
+                    // Segmented Control
+                    Picker("Mode", selection: $selectedMode) {
+                        Text("SamaCoach IA").tag(CoachMode.analysis)
+                        Text("Discussion").tag(CoachMode.chat)
                     }
-                    .padding(4)
-                    .background(Color(UIColor.tertiarySystemGroupedBackground).opacity(0.8))
-                    .clipShape(Capsule())
-                    .padding(.horizontal, 24)
-                    .padding(.top, 10)
-                    .padding(.bottom, 16)
+                    .pickerStyle(.segmented)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 12)
                     
                     Divider()
                     
@@ -291,55 +284,75 @@ struct CoachView: View {
             
             Divider()
             
-            // Input Row Premium
-            HStack(spacing: 12) {
-                TextField("Demandez à Sama...", text: $viewModel.inputText, axis: .vertical)
-                    .lineLimit(1...5)
-                    .font(.system(size: 16))
-                    .submitLabel(.send)
-                    .onSubmit {
-                        if !viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                            viewModel.sendMessage()
-                        }
-                    }
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 14)
-                    .background(.regularMaterial)
-                    .clipShape(Capsule())
-                    .overlay(
-                        Capsule()
-                            .stroke(
-                                LinearGradient(colors: [.appCyan.opacity(0.5), .appBlue.opacity(0.5)], startPoint: .topLeading, endPoint: .bottomTrailing),
-                                lineWidth: 1.5
-                            )
-                    )
-                    .shadow(color: Color.appBlue.opacity(0.15), radius: 10, y: 5)
-                
+            // Input Row
+            HStack(spacing: 8) {
                 Button {
-                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                    if !viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                        viewModel.sendMessage()
-                    }
+                    // Action add attachment
+                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
                 } label: {
-                    ZStack {
-                        Circle()
-                            .fill(
-                                LinearGradient(colors: [Color.appBlue, Color.appCyan], startPoint: .topLeading, endPoint: .bottomTrailing)
-                            )
-                            .frame(width: 48, height: 48)
-                            .shadow(color: Color.appBlue.opacity(0.3), radius: 8, y: 4)
-                        
-                        Image(systemName: viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "mic.fill" : "arrow.up")
-                            .font(.system(size: 18, weight: .bold))
-                            .foregroundColor(.white)
-                            .contentTransition(.symbolEffect(.replace))
+                    Image(systemName: "plus")
+                        .font(.system(size: 20, weight: .regular))
+                        .foregroundColor(.secondary)
+                        .frame(width: 36, height: 36)
+                        .background(Color(UIColor.tertiarySystemFill))
+                        .clipShape(Circle())
+                }
+                
+                HStack(spacing: 0) {
+                    TextField("Message SamaCoach...", text: $viewModel.inputText, axis: .vertical)
+                        .lineLimit(1...5)
+                        .submitLabel(.send)
+                        .font(.body)
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 10)
+                        .onSubmit {
+                            if !viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                                viewModel.sendMessage()
+                            }
+                        }
+                    
+                    if viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                        Button {
+                            // Voice Dictation
+                            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                        } label: {
+                            Image(systemName: "mic.fill")
+                                .font(.system(size: 18))
+                                .foregroundColor(.secondary)
+                                .padding(.trailing, 14)
+                        }
+                        .transition(.opacity)
                     }
                 }
-                .disabled(viewModel.isSendingMessage)
+                .background(
+                    Capsule()
+                        .fill(Color(UIColor.secondarySystemGroupedBackground))
+                        .overlay(
+                            Capsule().stroke(Color(UIColor.separator).opacity(0.5), lineWidth: 0.5)
+                        )
+                )
+                
+                if !viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    Button {
+                        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                        viewModel.sendMessage()
+                    } label: {
+                        ZStack {
+                            Circle()
+                                .fill(LinearGradient(colors: [Color.appBlue, Color.appCyan], startPoint: .topLeading, endPoint: .bottomTrailing))
+                                .frame(width: 36, height: 36)
+                            Image(systemName: "arrow.up")
+                                .font(.system(size: 16, weight: .bold))
+                                .foregroundColor(.white)
+                        }
+                    }
+                    .transition(.scale.combined(with: .opacity))
+                }
             }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 16)
-            .background(.clear)
+            .animation(.spring(response: 0.3, dampingFraction: 0.7), value: viewModel.inputText)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 10)
+            .background(.regularMaterial)
         }
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("EditChatMessage"))) { notification in
             if let msg = notification.object as? AIChatMessage {
@@ -449,20 +462,19 @@ struct ChatBubble: View {
     var body: some View {
         HStack {
             if message.role == "user" {
-                Spacer(minLength: 40)
+                Spacer(minLength: 50)
                 Text(message.content)
-                    .font(.system(size: 16, weight: .medium, design: .rounded))
+                    .font(.system(.body, design: .rounded))
                     .foregroundColor(.white)
-                    .padding(.horizontal, 18)
-                    .padding(.vertical, 14)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
                     .background(
-                        LinearGradient(colors: [Color.appCyan, Color.appBlue], startPoint: .topLeading, endPoint: .bottomTrailing)
+                        LinearGradient(colors: [Color.appBlue, Color.appCyan], startPoint: .topLeading, endPoint: .bottomTrailing)
                     )
                     .clipShape(BubbleShape(isUser: true))
-                    .shadow(color: Color.appBlue.opacity(0.25), radius: 8, y: 4)
+                    .shadow(color: Color.appBlue.opacity(0.15), radius: 5, y: 3)
                     .contextMenu {
                         Button {
-                            // Appel pour relancer / modifier cette question
                             NotificationCenter.default.post(name: NSNotification.Name("EditChatMessage"), object: message)
                         } label: {
                             Label("Modifier la question", systemImage: "pencil")
@@ -470,18 +482,17 @@ struct ChatBubble: View {
                     }
             } else {
                 Text(message.content)
-                    .font(.system(size: 16, weight: .medium, design: .rounded))
+                    .font(.system(.body, design: .rounded))
                     .foregroundColor(.primary)
-                    .padding(.horizontal, 18)
-                    .padding(.vertical, 14)
-                    .background(Color(UIColor.secondarySystemGroupedBackground).opacity(0.9))
-                    .background(.ultraThinMaterial)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
+                    .background(Color(UIColor.secondarySystemGroupedBackground))
                     .clipShape(BubbleShape(isUser: false))
-                    .shadow(color: Color.black.opacity(0.04), radius: 10, y: 5)
-                Spacer(minLength: 40)
+                    .shadow(color: Color.black.opacity(0.04), radius: 5, y: 3)
+                Spacer(minLength: 50)
             }
         }
-        .padding(.horizontal, 20)
+        .padding(.horizontal, 16)
         .id(message.id)
     }
 }
@@ -536,33 +547,3 @@ struct TypingIndicator: View {
     }
 }
 
-struct TabButton: View {
-    let title: String
-    let icon: String
-    let isSelected: Bool
-    let action: () -> Void
-    
-    var body: some View {
-        Button(action: action) {
-            HStack(spacing: 6) {
-                Image(systemName: icon)
-                    .font(.system(size: 14, weight: .semibold))
-                Text(title)
-                    .font(.system(size: 15, weight: .semibold, design: .rounded))
-            }
-            .foregroundColor(isSelected ? .white : .secondary)
-            .padding(.vertical, 10)
-            .padding(.horizontal, 16)
-            .frame(maxWidth: .infinity)
-            .background(
-                ZStack {
-                    if isSelected {
-                        Capsule()
-                            .fill(LinearGradient(colors: [Color.appBlue, Color.appCyan], startPoint: .topLeading, endPoint: .bottomTrailing))
-                            .shadow(color: Color.appBlue.opacity(0.3), radius: 8, y: 4)
-                    }
-                }
-            )
-        }
-    }
-}
