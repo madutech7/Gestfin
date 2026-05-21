@@ -274,7 +274,7 @@ struct SettingsView: View {
             ZStack {
                 Color(UIColor.secondarySystemGroupedBackground)
                 if !subManager.isPremium {
-                    AnimatedGlassBorder(cornerRadius: 12)
+                    Color.clear.animatedGlassBorder(cornerRadius: 12)
                 }
             }
         )
