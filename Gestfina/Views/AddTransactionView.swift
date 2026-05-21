@@ -41,14 +41,15 @@ struct AddTransactionView: View {
                     VStack(spacing: 8) {
                         HStack(alignment: .firstTextBaseline, spacing: 4) {
                             Text(viewModel.currencySymbol)
-                                .font(.system(size: 24, weight: .semibold, design: .rounded))
+                                .font(.system(.title3, design: .rounded, weight: .semibold))
                                 .foregroundStyle(.secondary)
                             TextField("0,00", text: $amountText)
-                                .font(.system(size: 44, weight: .bold, design: .rounded))
+                                .font(.system(.largeTitle, design: .rounded, weight: .bold))
                                 .foregroundStyle(selectedType == .income ? Color.appGreen : Color.primary)
                                 .keyboardType(.decimalPad)
                                 .focused($amountFocused)
                                 .multilineTextAlignment(.center)
+                                .contentTransition(.numericText())
                         }
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 12)
@@ -56,9 +57,10 @@ struct AddTransactionView: View {
                         // Type badge
                         HStack(spacing: 5) {
                             Image(systemName: selectedType == .income ? "arrow.down.left" : "arrow.up.right")
-                                .font(.system(size: 10, weight: .bold))
+                                .font(.system(.caption2, weight: .bold))
+                                .accessibilityHidden(true)
                             Text(selectedType.rawValue)
-                                .font(.system(size: 12, weight: .semibold))
+                                .font(.system(.caption, weight: .semibold))
                         }
                         .foregroundStyle(selectedType == .income ? Color.appGreen : Color.appRed)
                         .padding(.horizontal, 12)
@@ -145,12 +147,12 @@ struct AddTransactionView: View {
                                     .shadow(color: selectedCategory == category ? category.color.opacity(0.35) : .clear, radius: 8, y: 4)
 
                                     Text(category.rawValue)
-                                        .font(.system(size: 10, weight: selectedCategory == category ? .bold : .medium))
+                                        .font(.system(.caption2, weight: selectedCategory == category ? .bold : .medium))
                                         .foregroundStyle(selectedCategory == category ? .primary : .secondary)
                                         .lineLimit(1)
                                 }
                             }
-                            .buttonStyle(.plain)
+                            .buttonStyle(SquishyPremiumButtonStyle())
                         }
                     }
                     .padding(.vertical, 8)
@@ -172,14 +174,14 @@ struct AddTransactionView: View {
                         saveTransaction()
                     } label: {
                         Text("Ajouter")
-                            .font(.system(size: 16, weight: .bold))
+                            .font(.headline)
                     }
                     .disabled(!canSave)
                 }
                 ToolbarItemGroup(placement: .keyboard) {
                     Spacer()
                     Button("OK") { amountFocused = false }
-                        .font(.system(size: 15, weight: .semibold))
+                        .font(.subheadline)
                 }
             }
             .onAppear {

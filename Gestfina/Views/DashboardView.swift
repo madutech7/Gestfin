@@ -374,6 +374,7 @@ struct MetricPill: View {
                 Text(amount)
                     .font(.system(size: 15, weight: .bold, design: .rounded))
                     .foregroundStyle(.primary)
+                    .contentTransition(.numericText())
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
             }
@@ -400,6 +401,7 @@ struct SparklineChartCard: View {
                 Text(viewModel.isBalanceVisible ? viewModel.formatAmount(total) : "••••")
                     .font(.system(size: 24, weight: .bold, design: .rounded))
                     .foregroundStyle(.primary)
+                    .contentTransition(.numericText())
             }
 
             Chart(viewModel.dailyExpenses, id: \.day) { item in
@@ -472,6 +474,7 @@ struct PremiumCategoryRow: View {
                     Spacer()
                     Text(viewModel.isBalanceVisible ? viewModel.formatAmount(item.amount) : "••••")
                         .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .contentTransition(.numericText())
                 }
 
                 GeometryReader { geo in
@@ -496,6 +499,7 @@ struct PremiumCategoryRow: View {
             Text("\(Int(item.percentage))%")
                 .font(.system(size: 13, weight: .semibold, design: .rounded))
                 .foregroundStyle(.secondary)
+                .contentTransition(.numericText())
                 .frame(width: 36, alignment: .trailing)
         }
         .padding(.vertical, 12)

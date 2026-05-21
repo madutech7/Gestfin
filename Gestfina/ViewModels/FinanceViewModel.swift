@@ -95,6 +95,8 @@ class FinanceViewModel: ObservableObject {
                 }
             }
             .store(in: &cancellables)
+            
+        setupAnalyticsPipeline()
     }
     
     // MARK: - Période de temps
@@ -128,128 +130,16 @@ class FinanceViewModel: ObservableObject {
     
     // MARK: - Computed Properties
     
-    /// Transactions filtrées par période
-    var filteredTransactions: [Transaction] {
-        let range = selectedPeriod.dateRange
-        var result = transactions.filter { $0.date >= range.start && $0.date <= range.end }
-        
-        if let filter = selectedFilter {
-            result = result.filter { $0.type == filter }
-        }
-        
-        if !searchText.isEmpty {
-            result = result.filter {
-                $0.title.localizedCaseInsensitiveContains(searchText) ||
-                $0.category.rawValue.localizedCaseInsensitiveContains(searchText)
-            }
-        }
-        
-        return result.sorted { $0.date > $1.date }
-    }
-    
-    /// Solde total
-    var totalBalance: Double {
-        transactions.reduce(0) { $0 + $1.signedAmount }
-    }
-    
-    /// Total des revenus pour la période
-    var totalIncome: Double {
-        filteredTransactions
-            .filter { $0.type == .income }
-            .reduce(0) { $0 + $1.amount }
-    }
-    
-    /// Total des dépenses pour la période
-    var totalExpenses: Double {
-        filteredTransactions
-            .filter { $0.type == .expense }
-            .reduce(0) { $0 + $1.amount }
-    }
-    
-    /// Taux d'épargne
-    var savingsRate: Double {
-        guard totalIncome > 0 else { return 0 }
-        return ((totalIncome - totalExpenses) / totalIncome) * 100
-    }
-    
-    /// Dépenses par catégorie
-    var expensesByCategory: [(category: TransactionCategory, amount: Double, percentage: Double)] {
-        let expenses = filteredTransactions.filter { $0.type == .expense }
-        let total = expenses.reduce(0) { $0 + $1.amount }
-        
-        var categoryTotals: [TransactionCategory: Double] = [:]
-        for transaction in expenses {
-            categoryTotals[transaction.category, default: 0] += transaction.amount
-        }
-        
-        return categoryTotals.map { (category, amount) in
-            (category: category, amount: amount, percentage: total > 0 ? (amount / total) * 100 : 0)
-        }.sorted { $0.amount > $1.amount }
-    }
-    
-    /// Revenus par catégorie
-    var incomeByCategory: [(category: TransactionCategory, amount: Double, percentage: Double)] {
-        let incomes = filteredTransactions.filter { $0.type == .income }
-        let total = incomes.reduce(0) { $0 + $1.amount }
-        
-        var categoryTotals: [TransactionCategory: Double] = [:]
-        for transaction in incomes {
-            categoryTotals[transaction.category, default: 0] += transaction.amount
-        }
-        
-        return categoryTotals.map { (category, amount) in
-            (category: category, amount: amount, percentage: total > 0 ? (amount / total) * 100 : 0)
-        }.sorted { $0.amount > $1.amount }
-    }
-    
-    /// Dépenses quotidiennes pour le graphique (7 derniers jours)
-    var dailyExpenses: [(day: String, amount: Double)] {
-        let calendar = Calendar.current
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier: "fr_FR")
-        dateFormatter.dateFormat = "EEE"
-        
-        var result: [(day: String, amount: Double)] = []
-        
-        for i in (0..<7).reversed() {
-            let date = calendar.date(byAdding: .day, value: -i, to: Date())!
-            let dayStart = calendar.startOfDay(for: date)
-            let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart)!
-            
-            let dayExpenses = transactions
-                .filter { $0.type == .expense && $0.date >= dayStart && $0.date < dayEnd }
-                .reduce(0) { $0 + $1.amount }
-            
-            result.append((day: dateFormatter.string(from: date).capitalized, amount: dayExpenses))
-        }
-        
-        return result
-    }
-    
-    /// Dépenses mensuelles pour le graphique (6 derniers mois)
-    var monthlyExpenses: [(month: String, amount: Double)] {
-        let calendar = Calendar.current
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier: "fr_FR")
-        dateFormatter.dateFormat = "MMM"
-        
-        var result: [(month: String, amount: Double)] = []
-        
-        for i in (0..<6).reversed() {
-            let date = calendar.date(byAdding: .month, value: -i, to: Date())!
-            let components = calendar.dateComponents([.year, .month], from: date)
-            let monthStart = calendar.date(from: components)!
-            let monthEnd = calendar.date(byAdding: .month, value: 1, to: monthStart)!
-            
-            let monthExpenses = transactions
-                .filter { $0.type == .expense && $0.date >= monthStart && $0.date < monthEnd }
-                .reduce(0) { $0 + $1.amount }
-            
-            result.append((month: dateFormatter.string(from: date).capitalized, amount: monthExpenses))
-        }
-        
-        return result
-    }
+    // Variables précédemment synchrones, dorénavant calculées en arrière-plan
+    @Published var filteredTransactions: [Transaction] = []
+    @Published var totalBalance: Double = 0
+    @Published var totalIncome: Double = 0
+    @Published var totalExpenses: Double = 0
+    @Published var savingsRate: Double = 0
+    @Published var expensesByCategory: [(category: TransactionCategory, amount: Double, percentage: Double)] = []
+    @Published var incomeByCategory: [(category: TransactionCategory, amount: Double, percentage: Double)] = []
+    @Published var dailyExpenses: [(day: String, amount: Double)] = []
+    @Published var monthlyExpenses: [(month: String, amount: Double)] = []
     
     /// Progression du budget par catégorie
     func budgetProgress(for budget: Budget) -> (spent: Double, percentage: Double) {
@@ -273,9 +163,93 @@ class FinanceViewModel: ObservableObject {
         return budgetProgress(for: budget).percentage
     }
     
-    /// Transactions récentes (5 dernières)
-    var recentTransactions: [Transaction] {
-        Array(transactions.sorted { $0.date > $1.date }.prefix(5))
+    @Published var recentTransactions: [Transaction] = []
+    
+    // MARK: - Pipeline Analytique Asynchrone
+    
+    private func setupAnalyticsPipeline() {
+        Publishers.CombineLatest4($transactions, $selectedPeriod, $searchText, $selectedFilter)
+            .debounce(for: .milliseconds(200), scheduler: DispatchQueue.main)
+            .sink { [weak self] txs, period, text, filter in
+                self?.calculateAnalytics(transactions: txs, period: period, text: text, filter: filter)
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func calculateAnalytics(transactions: [Transaction], period: TimePeriod, text: String, filter: TransactionType?) {
+        Task.detached(priority: .userInitiated) {
+            let range = period.dateRange
+            var filtered = transactions.filter { $0.date >= range.start && $0.date <= range.end }
+            if let f = filter { filtered = filtered.filter { $0.type == f } }
+            if !text.isEmpty {
+                let lowerText = text.lowercased()
+                filtered = filtered.filter {
+                    $0.title.lowercased().contains(lowerText) ||
+                    $0.category.rawValue.lowercased().contains(lowerText)
+                }
+            }
+            let sortedFiltered = filtered.sorted { $0.date > $1.date }
+            
+            let totalBal = transactions.reduce(0) { $0 + $1.signedAmount }
+            let tInc = sortedFiltered.filter { $0.type == .income }.reduce(0) { $0 + $1.amount }
+            let tExp = sortedFiltered.filter { $0.type == .expense }.reduce(0) { $0 + $1.amount }
+            let sRate = tInc > 0 ? ((tInc - tExp) / tInc) * 100 : 0
+            
+            var expTotals: [TransactionCategory: Double] = [:]
+            for t in sortedFiltered where t.type == .expense { expTotals[t.category, default: 0] += t.amount }
+            let expCat = expTotals.map { (cat, amount) in
+                (category: cat, amount: amount, percentage: tExp > 0 ? (amount / tExp) * 100 : 0)
+            }.sorted { $0.amount > $1.amount }
+            
+            var incTotals: [TransactionCategory: Double] = [:]
+            for t in sortedFiltered where t.type == .income { incTotals[t.category, default: 0] += t.amount }
+            let incCat = incTotals.map { (cat, amount) in
+                (category: cat, amount: amount, percentage: tInc > 0 ? (amount / tInc) * 100 : 0)
+            }.sorted { $0.amount > $1.amount }
+            
+            let recents = Array(transactions.sorted { $0.date > $1.date }.prefix(5))
+            
+            let calendar = Calendar.current
+            let now = Date()
+            
+            let dFormatter = DateFormatter()
+            dFormatter.locale = Locale(identifier: "fr_FR")
+            dFormatter.dateFormat = "EEE"
+            var dExp: [(day: String, amount: Double)] = []
+            for i in (0..<7).reversed() {
+                guard let date = calendar.date(byAdding: .day, value: -i, to: now) else { continue }
+                let dayStart = calendar.startOfDay(for: date)
+                guard let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart) else { continue }
+                let sum = transactions.filter { $0.type == .expense && $0.date >= dayStart && $0.date < dayEnd }.reduce(0) { $0 + $1.amount }
+                dExp.append((day: dFormatter.string(from: date).capitalized, amount: sum))
+            }
+            
+            let mFormatter = DateFormatter()
+            mFormatter.locale = Locale(identifier: "fr_FR")
+            mFormatter.dateFormat = "MMM"
+            var mExp: [(month: String, amount: Double)] = []
+            for i in (0..<6).reversed() {
+                guard let date = calendar.date(byAdding: .month, value: -i, to: now) else { continue }
+                let components = calendar.dateComponents([.year, .month], from: date)
+                guard let monthStart = calendar.date(from: components),
+                      let monthEnd = calendar.date(byAdding: .month, value: 1, to: monthStart) else { continue }
+                let sum = transactions.filter { $0.type == .expense && $0.date >= monthStart && $0.date < monthEnd }.reduce(0) { $0 + $1.amount }
+                mExp.append((month: mFormatter.string(from: date).capitalized, amount: sum))
+            }
+            
+            Task { @MainActor [weak self] in
+                self?.filteredTransactions = sortedFiltered
+                self?.totalBalance = totalBal
+                self?.totalIncome = tInc
+                self?.totalExpenses = tExp
+                self?.savingsRate = sRate
+                self?.expensesByCategory = expCat
+                self?.incomeByCategory = incCat
+                self?.recentTransactions = recents
+                self?.dailyExpenses = dExp
+                self?.monthlyExpenses = mExp
+            }
+        }
     }
     
     // MARK: - Actions

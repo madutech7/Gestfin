@@ -238,16 +238,16 @@ struct SettingsView: View {
                         )
                         .frame(width: 40, height: 40)
                     Image(systemName: "crown.fill")
-                        .font(.system(size: 18, weight: .bold))
+                        .font(.headline)
                         .foregroundColor(.white)
                 }
 
                 VStack(alignment: .leading, spacing: 3) {
                     Text("SamaXaalis Pro")
-                        .font(.system(size: 16, weight: .semibold))
+                        .font(.headline)
                         .foregroundColor(.primary)
                     Text(subManager.isPremium ? "Abonnement actif — Merci pour votre soutien !" : "Débloquez les transactions illimitées & stats")
-                        .font(.system(size: 12))
+                        .font(.caption)
                         .foregroundColor(.secondary)
                 }
 
@@ -255,7 +255,7 @@ struct SettingsView: View {
                 
                 if subManager.isPremium {
                     Text("Actif")
-                        .font(.system(size: 12, weight: .bold))
+                        .font(.system(.caption, weight: .bold))
                         .foregroundColor(.white)
                         .padding(.horizontal, 10)
                         .padding(.vertical, 4)
@@ -263,13 +263,21 @@ struct SettingsView: View {
                         .clipShape(Capsule())
                 } else {
                     Image(systemName: "chevron.right")
-                        .font(.system(size: 13, weight: .semibold))
+                        .font(.system(.footnote, weight: .semibold))
                         .foregroundColor(Color(UIColor.tertiaryLabel))
                 }
             }
             .padding(.vertical, 4)
         }
-        .buttonStyle(.plain)
+        .buttonStyle(SquishyPremiumButtonStyle())
+        .listRowBackground(
+            ZStack {
+                Color(UIColor.secondarySystemGroupedBackground)
+                if !subManager.isPremium {
+                    AnimatedGlassBorder(cornerRadius: 12)
+                }
+            }
+        )
     }
 
     // MARK: - Profil Row
@@ -291,22 +299,22 @@ struct SettingsView: View {
                         )
                         .frame(width: 52, height: 52)
                     Text(String(viewModel.userName.prefix(1)).uppercased())
-                        .font(.system(size: 22, weight: .bold, design: .rounded))
+                        .font(.system(.title2, design: .rounded, weight: .bold))
                         .foregroundColor(.white)
                 }
 
                 VStack(alignment: .leading, spacing: 3) {
                     Text(viewModel.userName)
-                        .font(.system(size: 17, weight: .semibold))
+                        .font(.headline)
                         .foregroundColor(.primary)
                     Text("Appuyer pour modifier")
-                        .font(.system(size: 13))
+                        .font(.caption)
                         .foregroundColor(.secondary)
                 }
 
                 Spacer()
                 Image(systemName: "chevron.right")
-                    .font(.system(size: 13, weight: .semibold))
+                    .font(.system(.footnote, weight: .semibold))
                     .foregroundColor(Color(UIColor.tertiaryLabel))
             }
             .padding(.vertical, 6)
@@ -327,7 +335,7 @@ struct SettingsView: View {
                             .foregroundColor(.primary)
                         if let currency = AppCurrency.all.first(where: { $0.code == viewModel.currency }) {
                             Text(currency.name)
-                                .font(.system(size: 12))
+                                .font(.caption)
                                 .foregroundColor(.secondary)
                         }
                     }
@@ -335,20 +343,20 @@ struct SettingsView: View {
                     Image(systemName: "dollarsign.circle.fill")
                         .foregroundStyle(Color.appBlue)
                         .symbolRenderingMode(.hierarchical)
-                        .font(.system(size: 22))
+                        .font(.title2)
                 }
 
                 Spacer()
 
                 HStack(spacing: 6) {
                     Text(viewModel.currencySymbol)
-                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .font(.system(.subheadline, design: .rounded, weight: .bold))
                         .foregroundStyle(Color.appBlue)
                     Text(viewModel.currency)
-                        .font(.system(size: 14))
+                        .font(.subheadline)
                         .foregroundStyle(.secondary)
                     Image(systemName: "chevron.right")
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(.system(.footnote, weight: .semibold))
                         .foregroundColor(Color(UIColor.tertiaryLabel))
                 }
             }
@@ -423,7 +431,7 @@ struct SettingsView: View {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Alertes budget")
                         Text("Quand 80% ou 100% est atteint")
-                            .font(.system(size: 11))
+                            .font(.caption2)
                             .foregroundColor(.secondary)
                     }
                 } icon: {
@@ -438,7 +446,7 @@ struct SettingsView: View {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Rappel quotidien")
                         Text("Saisir vos dépenses du jour")
-                            .font(.system(size: 11))
+                            .font(.caption2)
                             .foregroundColor(.secondary)
                     }
                 } icon: {
@@ -471,7 +479,7 @@ struct SettingsView: View {
             Label("Transactions enregistrées", systemImage: "arrow.left.arrow.right")
             Spacer()
             Text("\(viewModel.transactions.count)")
-                .font(.system(size: 15, weight: .bold, design: .rounded))
+                .font(.system(.subheadline, design: .rounded, weight: .bold))
                 .foregroundStyle(Color.appBlue)
         }
 
@@ -479,7 +487,7 @@ struct SettingsView: View {
             Label("Budgets actifs", systemImage: "chart.pie")
             Spacer()
             Text("\(viewModel.budgets.count)")
-                .font(.system(size: 15, weight: .bold, design: .rounded))
+                .font(.system(.subheadline, design: .rounded, weight: .bold))
                 .foregroundStyle(Color.appBlue)
         }
 
@@ -512,7 +520,7 @@ struct SettingsView: View {
             Label("Développeur", systemImage: "hammer.fill")
             Spacer()
             Text("Madu")
-                .font(.system(size: 15, weight: .semibold))
+                .font(.system(.subheadline, weight: .semibold))
                 .foregroundColor(.secondary)
         }
         HStack {
@@ -535,7 +543,7 @@ struct SettingsView: View {
                                 .fill(Color.appBlue.opacity(0.12))
                                 .frame(width: 30, height: 30)
                             Image(systemName: "person.fill")
-                                .font(.system(size: 13, weight: .semibold))
+                                .font(.system(.footnote, weight: .semibold))
                                 .foregroundStyle(Color.appBlue)
                         }
                         TextField("Prénom", text: $tempName)
@@ -556,7 +564,7 @@ struct SettingsView: View {
                         showNameEditor = false
                         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                     }
-                    .font(.system(size: 16, weight: .bold))
+                    .font(.headline)
                 }
             }
         }
@@ -602,7 +610,7 @@ struct CurrencyPickerSheet: View {
                                             .fill(Color.appBlue.opacity(0.1))
                                             .frame(width: 40, height: 40)
                                         Text(currency.symbol)
-                                            .font(.system(size: 14, weight: .bold, design: .rounded))
+                                            .font(.system(.subheadline, design: .rounded, weight: .bold))
                                             .foregroundColor(.appBlue)
                                             .minimumScaleFactor(0.5)
                                             .lineLimit(1)
@@ -610,10 +618,10 @@ struct CurrencyPickerSheet: View {
 
                                     VStack(alignment: .leading, spacing: 2) {
                                         Text(currency.name)
-                                            .font(.system(size: 15, weight: .medium))
+                                            .font(.subheadline)
                                             .foregroundColor(.primary)
                                         Text(currency.code)
-                                            .font(.system(size: 12))
+                                            .font(.caption)
                                             .foregroundColor(.secondary)
                                     }
 
@@ -622,7 +630,7 @@ struct CurrencyPickerSheet: View {
                                     if selectedCode == currency.code {
                                         Image(systemName: "checkmark.circle.fill")
                                             .foregroundColor(.appBlue)
-                                            .font(.system(size: 20))
+                                            .font(.title3)
                                     }
                                 }
                                 .padding(.vertical, 2)

@@ -69,7 +69,7 @@ struct OnboardingView: View {
                     Spacer()
                     Button(action: completeOnboarding) {
                         Text("Ignorer")
-                            .font(.system(size: 17, weight: .semibold, design: .rounded))
+                            .font(.system(.body, design: .rounded, weight: .semibold))
                             .foregroundColor(.secondary)
                             .padding(.horizontal, 24)
                             .padding(.top, 20)
@@ -116,7 +116,7 @@ struct OnboardingView: View {
                     }
                 }) {
                     Text(currentStep == steps.count - 1 ? "Commencer" : "Continuer")
-                        .font(.system(size: 20, weight: .bold, design: .rounded))
+                        .font(.system(.title3, design: .rounded, weight: .bold))
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 18)
@@ -130,6 +130,7 @@ struct OnboardingView: View {
                         .clipShape(Capsule())
                         .shadow(color: Color.appBlue.opacity(0.4), radius: 15, x: 0, y: 8)
                 }
+                .buttonStyle(SquishyPremiumButtonStyle())
                 .padding(.horizontal, 32)
                 .padding(.bottom, 50)
             }
@@ -185,14 +186,14 @@ struct OnboardingPageView: View {
             
             VStack(spacing: 20) {
                 Text(step.title)
-                    .font(.system(size: 32, weight: .heavy, design: .rounded))
+                    .font(.system(.largeTitle, design: .rounded, weight: .heavy))
                     .multilineTextAlignment(.center)
                     .foregroundColor(.primary)
                     .opacity(isVisible ? 1 : 0)
                     .offset(y: isVisible ? 0 : 25)
                 
                 Text(step.description)
-                    .font(.system(size: 17, weight: .medium))
+                    .font(.system(.body, weight: .medium))
                     .multilineTextAlignment(.center)
                     .foregroundColor(.secondary)
                     .padding(.horizontal, 36)
