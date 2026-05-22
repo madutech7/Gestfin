@@ -576,8 +576,9 @@ struct AuthView: View {
             "grant_type": "authorization_code"
         ]
         
-        let bodyString = bodyComponents.map { "\($0.key)=\($0.value)" }.joined(separator: "&")
-        request.httpBody = bodyString.data(using: .utf8)
+        var components = URLComponents()
+        components.queryItems = bodyComponents.map { URLQueryItem(name: $0.key, value: $0.value) }
+        request.httpBody = components.query?.data(using: .utf8)
         
         URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data, error == nil else {
@@ -609,7 +610,7 @@ struct AuthView: View {
             isLoading = false
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 8) {
             withAnimation {
                 showError = false
             }
