@@ -95,9 +95,7 @@ struct MainTabView: View {
                 }
             }
             .padding(8)
-            .background(.ultraThinMaterial)
-            .clipShape(Capsule())
-            .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
+            .liquidGlassFloating(cornerRadius: 32)
             
             // Separate Island: Add Button
             Button {
@@ -112,11 +110,10 @@ struct MainTabView: View {
                     .font(.system(size: 20, weight: .bold))
                     .foregroundColor(.textPrimary)
                     .frame(width: 54, height: 54)
-                    .background(.ultraThinMaterial)
-                    .clipShape(Circle())
-                    .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
+                    .liquidGlassFloating(cornerRadius: 27) // Round for circle look
             }
         }
+        .floating() // Restore liquid floating animation
         .padding(.horizontal, 20)
         .padding(.bottom, 8)
     }
