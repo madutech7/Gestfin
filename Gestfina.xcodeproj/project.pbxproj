@@ -44,6 +44,7 @@
 		AA0000000000000000003B /* LottieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0000000000000000003B; };
 		AA00000000000000000050 /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000050; };
 		AA00000000000000000051 /* FloatingIslandTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000051; };
+		AA00000000000000000060 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000060; };
 		AA00000000000000000040 /* chart.json in Resources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000040; };
 		AA00000000000000000041 /* security.json in Resources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000041; };
 		AA00000000000000000042 /* wallet.json in Resources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000042; };
@@ -88,6 +89,7 @@
 		FA0000000000000000003B /* LottieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LottieView.swift"; sourceTree = "<group>"; };
 		FA00000000000000000050 /* LanguageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Utils/LanguageManager.swift"; sourceTree = "<group>"; };
 		FA00000000000000000051 /* FloatingIslandTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FloatingIslandTabBar.swift"; sourceTree = "<group>"; };
+		FA00000000000000000060 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Localizable.xcstrings"; sourceTree = "<group>"; };
 		FA00000000000000000040 /* chart.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "chart.json"; sourceTree = "<group>"; };
 		FA00000000000000000041 /* security.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "security.json"; sourceTree = "<group>"; };
 		FA00000000000000000042 /* wallet.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "wallet.json"; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 				FA00000000000000000035 /* NotificationManager.swift */,
 				FA00000000000000000036 /* SpeechRecognizer.swift */,
 				FA00000000000000000050 /* LanguageManager.swift */,
+				FA00000000000000000060 /* Localizable.xcstrings */,
 			);
 			path = Gestfina;
 			sourceTree = "<group>";
@@ -277,6 +280,7 @@
 			files = (
 				AA00000000000000000010 /* Assets.xcassets in Resources */,
 				AA00000000000000000040 /* chart.json in Resources */,
+				AA00000000000000000060 /* Localizable.xcstrings in Resources */,
 				AA00000000000000000041 /* security.json in Resources */,
 				AA00000000000000000042 /* wallet.json in Resources */,
 			);
