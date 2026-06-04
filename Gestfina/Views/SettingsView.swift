@@ -276,36 +276,14 @@ struct SettingsView: View {
     // MARK: - Language Row
 
     private var languageRow: some View {
-        ForEach(AppLanguage.allCases) { language in
-            Button {
-                UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                    langManager.currentLanguage = language
-                }
-            } label: {
-                HStack(spacing: 14) {
-                    Text(language.flag)
-                        .font(.system(size: 28))
-                    
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(language.displayName)
-                            .font(.system(size: 16, weight: .medium))
-                            .foregroundColor(.primary)
-                    }
-                    
-                    Spacer()
-                    
-                    if langManager.currentLanguage == language {
-                        Image(systemName: "checkmark.circle.fill")
-                            .foregroundColor(.appBlue)
-                            .font(.title3)
-                            .transition(.scale.combined(with: .opacity))
-                    }
-                }
-                .padding(.vertical, 4)
+        Picker(selection: $langManager.currentLanguage) {
+            ForEach(AppLanguage.allCases) { language in
+                Text("\(language.flag) \(language.displayName)").tag(language)
             }
-            .buttonStyle(.plain)
+        } label: {
+            Label(L10n.language, systemImage: "globe")
         }
+        .pickerStyle(.navigationLink)
     }
 
     // MARK: - Sécurité
