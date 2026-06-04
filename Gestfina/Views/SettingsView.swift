@@ -12,6 +12,7 @@ struct SettingsView: View {
     @ObservedObject var authManager: AuthenticationManager
     @ObservedObject var notifManager: NotificationManager
     @Environment(\.colorScheme) var colorScheme
+    @ObservedObject private var langManager = LanguageManager.shared
 
     @State private var showResetAlert    = false
     @State private var showNameEditor    = false
@@ -28,59 +29,66 @@ struct SettingsView: View {
                 Section {
                     premiumRow
                 } header: {
-                    Text("Mon abonnement")
+                    Text(L10n.subscription)
                 }
 
                 // MARK: - Profil
                 Section {
                     profileRow
                 } header: {
-                    Text("Profil")
+                    Text(L10n.profile)
                 }
 
                 // MARK: - Devise
                 Section {
                     currencyRow
                 } header: {
-                    Text("Devise")
+                    Text(L10n.currency)
                 } footer: {
-                    Text("La devise sélectionnée sera utilisée pour toutes les transactions et les budgets.")
+                    Text(L10n.currencyFooter)
+                }
+
+                // MARK: - Langue
+                Section {
+                    languageRow
+                } header: {
+                    Text(L10n.languageSection)
                 }
 
                 // MARK: - Apparence
                 Section {
                     Picker(selection: $appearanceMode) {
-                        Text("Système").tag(0)
-                        Text("Clair").tag(1)
-                        Text("Sombre").tag(2)
+                        Text(L10n.systemTheme).tag(0)
+                        Text(L10n.lightTheme).tag(1)
+                        Text(L10n.darkTheme).tag(2)
                     } label: {
-                        Label("Apparence", systemImage: "moon.circle.fill")
+                        Label(L10n.appearance, systemImage: "moon.circle.fill")
                     }
                     .pickerStyle(.menu)
                     .tint(.appBlue)
                 } header: {
-                    Text("Affichage")
+                    Text(L10n.display)
                 }
 
                 // MARK: - Sécurité
                 Section {
                     securitySection
                 } header: {
-                    Text("Sécurité")
+                    Text(L10n.security)
                 } footer: {
                     Text(authManager.isAuthEnabled
-                         ? "L'application se verrouille automatiquement en arrière-plan."
-                         : "Activez \(authManager.biometricName) pour protéger vos données financières.")
+                         ? L10n.securityFooterEnabled(authManager.biometricName)
+                         : L10n.securityFooterDisabled(authManager.biometricName))
                 }
 
                 // MARK: - Notifications
                 Section {
                     notificationsSection
                 } header: {
-                    Text("Notifications")
+                    Text(L10n.notifications)
                 } footer: {
                     if notifManager.authorizationStatus == .denied {
-                        Text("Notifications désactivées. Activez-les dans Réglages > SamaXaalis.")
+                        Text(L10n.notifDenied)
                     }
                 }
 
@@ -88,29 +96,29 @@ struct SettingsView: View {
                 Section {
                     dataSection
                 } header: {
-                    Text("Données")
+                    Text(L10n.data)
                 } footer: {
-                    Text("Vos données sont stockées localement et synchronisées de manière sécurisée sur votre compte SamaXaalis Cloud.")
+                    Text(L10n.dataFooter)
                 }
 
                 // MARK: - À propos
                 Section {
                     aboutSection
                 } header: {
-                    Text("À propos")
+                    Text(L10n.about)
                 }
             }
             .listStyle(.insetGrouped)
-            .navigationTitle("Réglages")
+            .navigationTitle(L10n.settings)
             .navigationBarTitleDisplayMode(.large)
-            .alert("Réinitialiser SamaXaalis ?", isPresented: $showResetAlert) {
-                Button("Annuler", role: .cancel) { }
-                Button("Tout effacer", role: .destructive) {
+            .alert(L10n.resetConfirm, isPresented: $showResetAlert) {
+                Button(L10n.cancel, role: .cancel) { }
+                Button(L10n.deleteAll, role: .destructive) {
                     viewModel.resetAllData()
                     UINotificationFeedbackGenerator().notificationOccurred(.warning)
                 }
             } message: {
-                Text("Toutes vos transactions et budgets locaux seront supprimés. Cette action est irréversible.")
+                Text(L10n.resetMessage)
             }
             .sheet(isPresented: $showNameEditor) {
                 nameEditorSheet
@@ -154,7 +162,7 @@ struct SettingsView: View {
                     Text("SamaXaalis Pro")
                         .font(.headline)
                         .foregroundColor(.primary)
-                    Text(subManager.isPremium ? "Abonnement actif — Merci pour votre soutien !" : "Débloquez les transactions illimitées & stats")
+                    Text(subManager.isPremium ? L10n.activeSubscription : L10n.unlockPremium)
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
@@ -162,7 +170,7 @@ struct SettingsView: View {
                 Spacer()
                 
                 if subManager.isPremium {
-                    Text("Actif")
+                    Text(L10n.active)
                         .font(.system(.caption, weight: .bold))
                         .foregroundColor(.white)
                         .padding(.horizontal, 10)
@@ -207,7 +215,7 @@ struct SettingsView: View {
                     Text(viewModel.userName)
                         .font(.headline)
                         .foregroundColor(.primary)
-                    Text("Appuyer pour modifier")
+                    Text(L10n.tapToEdit)
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
@@ -231,7 +239,7 @@ struct SettingsView: View {
             HStack {
                 Label {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Devise")
+                        Text(L10n.currency)
                             .foregroundColor(.primary)
                         if let currency = AppCurrency.all.first(where: { $0.code == viewModel.currency }) {
                             Text(currency.name)
@@ -265,6 +273,41 @@ struct SettingsView: View {
         .buttonStyle(.plain)
     }
 
+    // MARK: - Language Row
+
+    private var languageRow: some View {
+        ForEach(AppLanguage.allCases) { language in
+            Button {
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                    langManager.currentLanguage = language
+                }
+            } label: {
+                HStack(spacing: 14) {
+                    Text(language.flag)
+                        .font(.system(size: 28))
+                    
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(language.displayName)
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundColor(.primary)
+                    }
+                    
+                    Spacer()
+                    
+                    if langManager.currentLanguage == language {
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundColor(.appBlue)
+                            .font(.title3)
+                            .transition(.scale.combined(with: .opacity))
+                    }
+                }
+                .padding(.vertical, 4)
+            }
+            .buttonStyle(.plain)
+        }
+    }
+
     // MARK: - Sécurité
     
     @ViewBuilder
@@ -293,15 +336,15 @@ struct SettingsView: View {
                 .tint(.appBlue)
             }
         } else {
-            Label("Biométrie non disponible", systemImage: "exclamationmark.shield")
+            Label(L10n.biometricUnavailable, systemImage: "exclamationmark.shield")
                 .foregroundColor(.secondary)
         }
 
         HStack {
-            Label("Stockage chiffré local", systemImage: "lock.shield.fill")
+            Label(L10n.encryptedStorage, systemImage: "lock.shield.fill")
                 .foregroundColor(.primary)
             Spacer()
-            Label("Actif", systemImage: "checkmark.circle.fill")
+            Label(L10n.active, systemImage: "checkmark.circle.fill")
                 .font(.system(size: 13, weight: .semibold))
                 .foregroundColor(.appGreen)
         }
@@ -315,22 +358,22 @@ struct SettingsView: View {
             Button {
                 notifManager.requestAuthorization()
             } label: {
-                Label("Activer les notifications", systemImage: "bell.badge.fill")
+                Label(L10n.enableNotifications, systemImage: "bell.badge.fill")
                     .foregroundColor(.appBlue)
             }
         } else if notifManager.authorizationStatus == .denied {
             Button {
                 notifManager.openSettings()
             } label: {
-                Label("Ouvrir les Réglages système", systemImage: "gear")
+                Label(L10n.openSystemSettings, systemImage: "gear")
                     .foregroundColor(.appBlue)
             }
         } else {
             Toggle(isOn: $notifManager.budgetAlertEnabled) {
                 Label {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Alertes budget")
-                        Text("Quand 80% ou 100% est atteint")
+                        Text(L10n.budgetAlerts)
+                        Text(L10n.budgetAlertSubtitle)
                             .font(.caption2)
                             .foregroundColor(.secondary)
                     }
@@ -344,8 +387,8 @@ struct SettingsView: View {
             Toggle(isOn: $notifManager.dailyReminderEnabled) {
                 Label {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Rappel quotidien")
-                        Text("Saisir vos dépenses du jour")
+                        Text(L10n.dailyReminder)
+                        Text(L10n.dailyReminderSubtitle)
                             .font(.caption2)
                             .foregroundColor(.secondary)
                     }
@@ -358,7 +401,7 @@ struct SettingsView: View {
 
             if notifManager.dailyReminderEnabled {
                 HStack {
-                    Label("Heure du rappel", systemImage: "clock")
+                    Label(L10n.reminderTime, systemImage: "clock")
                     Spacer()
                     Stepper("", value: $notifManager.reminderHour, in: 6...23)
                         .labelsHidden()
@@ -376,7 +419,7 @@ struct SettingsView: View {
     @ViewBuilder
     private var dataSection: some View {
         HStack {
-            Label("Transactions enregistrées", systemImage: "arrow.left.arrow.right")
+            Label(L10n.savedTransactions, systemImage: "arrow.left.arrow.right")
             Spacer()
             Text("\(viewModel.transactions.count)")
                 .font(.system(.subheadline, design: .rounded, weight: .bold))
@@ -384,7 +427,7 @@ struct SettingsView: View {
         }
 
         HStack {
-            Label("Budgets actifs", systemImage: "chart.pie")
+            Label(L10n.activeBudgets, systemImage: "chart.pie")
             Spacer()
             Text("\(viewModel.budgets.count)")
                 .font(.system(.subheadline, design: .rounded, weight: .bold))
@@ -396,14 +439,14 @@ struct SettingsView: View {
             // Mais ici on suit la logique de l'utilisateur qui veut "se déconnecter"
             BackendAuthManager.shared.logout()
         } label: {
-            Label("Se déconnecter", systemImage: "rectangle.portrait.and.arrow.right")
+            Label(L10n.logout, systemImage: "rectangle.portrait.and.arrow.right")
                 .foregroundColor(.orange)
         }
 
         Button {
             showResetAlert = true
         } label: {
-            Label("Réinitialiser l'appareil", systemImage: "trash")
+            Label(L10n.resetDevice, systemImage: "trash")
                 .foregroundColor(.appRed)
         }
     }
@@ -413,32 +456,32 @@ struct SettingsView: View {
     @ViewBuilder
     private var aboutSection: some View {
         HStack {
-            Label("Version", systemImage: "info.circle")
+            Label(L10n.version, systemImage: "info.circle")
             Spacer()
             Text("1.0.0")
                 .foregroundColor(.secondary)
         }
         HStack {
-            Label("Développeur", systemImage: "hammer.fill")
+            Label(L10n.developer, systemImage: "hammer.fill")
             Spacer()
             Text("Madu")
                 .font(.system(.subheadline, weight: .semibold))
                 .foregroundColor(.secondary)
         }
         HStack {
-            Label("Données 100% locales", systemImage: "internaldrive")
+            Label(L10n.localData, systemImage: "internaldrive")
             Spacer()
             Image(systemName: "checkmark.shield.fill")
                 .foregroundColor(.appGreen)
         }
         
         Link(destination: URL(string: "https://samaxaalis.com/privacy")!) {
-            Label("Politique de confidentialité", systemImage: "hand.raised.fill")
+            Label(L10n.privacyPolicy, systemImage: "hand.raised.fill")
                 .foregroundColor(.appBlue)
         }
         
         Link(destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!) {
-            Label("Conditions d'utilisation (EULA)", systemImage: "doc.text.fill")
+            Label(L10n.termsOfUse, systemImage: "doc.text.fill")
                 .foregroundColor(.appBlue)
         }
     }
@@ -448,7 +491,7 @@ struct SettingsView: View {
     private var nameEditorSheet: some View {
         NavigationView {
             Form {
-                Section(header: Text("Votre prénom")) {
+                Section(header: Text(L10n.yourName)) {
                     HStack(spacing: 12) {
                         ZStack {
                             RoundedRectangle(cornerRadius: 8, style: .continuous)
@@ -458,19 +501,19 @@ struct SettingsView: View {
                                 .font(.system(.footnote, weight: .semibold))
                                 .foregroundStyle(Color.appBlue)
                         }
-                        TextField("Prénom", text: $tempName)
+                        TextField(L10n.firstName, text: $tempName)
                     }
                 }
             }
-            .navigationTitle("Modifier le profil")
+            .navigationTitle(L10n.editProfile)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Annuler") { showNameEditor = false }
+                    Button(L10n.cancel) { showNameEditor = false }
                         .foregroundColor(.secondary)
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Enregistrer") {
+                    Button(L10n.save) {
                         viewModel.userName = tempName.isEmpty ? "Madu" : tempName
                         viewModel.saveUserName()
                         showNameEditor = false
@@ -552,12 +595,12 @@ struct CurrencyPickerSheet: View {
                     }
                 }
             }
-            .searchable(text: $searchText, prompt: "Rechercher une devise")
-            .navigationTitle("Choisir une devise")
+            .searchable(text: $searchText, prompt: L10n.searchCurrency)
+            .navigationTitle(L10n.chooseCurrency)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Annuler") { dismiss() }
+                    Button(L10n.cancel) { dismiss() }
                         .foregroundColor(.secondary)
                 }
             }

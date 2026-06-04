@@ -13,6 +13,7 @@ struct MainTabView: View {
     @State private var showPaywall = false
     @EnvironmentObject var viewModel: FinanceViewModel
     @ObservedObject private var subManager = SubscriptionManager.shared
+    @ObservedObject private var langManager = LanguageManager.shared
 
     let authManager: AuthenticationManager
     let notifManager: NotificationManager
@@ -57,32 +58,32 @@ struct MainTabView: View {
         )) {
             DashboardView(authManager: authManager, notifManager: notifManager)
                 .tabItem {
-                    Label("Accueil", systemImage: selectedTab == .dashboard ? "house.fill" : "house")
+                    Label(L10n.tabHome, systemImage: selectedTab == .dashboard ? "house.fill" : "house")
                 }
                 .tag(AppTab.dashboard)
 
             TransactionsView()
                 .tabItem {
-                    Label("Transactions", systemImage: "arrow.left.arrow.right")
+                    Label(L10n.tabTransactions, systemImage: "arrow.left.arrow.right")
                 }
                 .tag(AppTab.transactions)
 
             CoachView()
                 .tabItem {
-                    Label("SamaCoach", systemImage: "sparkles")
+                    Label(L10n.tabCoach, systemImage: "sparkles")
                 }
                 .tag(AppTab.coach)
 
             BudgetView()
                 .tabItem {
-                    Label("Budget", systemImage: selectedTab == .budget ? "chart.pie.fill" : "chart.pie")
+                    Label(L10n.tabBudget, systemImage: selectedTab == .budget ? "chart.pie.fill" : "chart.pie")
                 }
                 .tag(AppTab.budget)
 
             // "+" trigger tab (last position)
             Color.clear
                 .tabItem {
-                    Label("Ajouter", systemImage: "plus.circle.fill")
+                    Label(L10n.tabAdd, systemImage: "plus.circle.fill")
                 }
                 .tag(AppTab.add)
         }

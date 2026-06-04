@@ -18,6 +18,7 @@ struct DashboardView: View {
     @State private var transactionToDelete: AppTransaction?
     @State private var transactionToEdit: AppTransaction?
     @Environment(\.colorScheme) var colorScheme
+    @ObservedObject private var langManager = LanguageManager.shared
 
     let authManager:  AuthenticationManager
     let notifManager: NotificationManager
@@ -74,11 +75,11 @@ struct DashboardView: View {
                     // ── 3. SPARKLINE ACTIVITY ──
                     VStack(alignment: .leading, spacing: 14) {
                         HStack {
-                            Label("Activité", systemImage: "chart.xyaxis.line")
+                            Label(L10n.activity, systemImage: "chart.xyaxis.line")
                                 .font(.system(size: 18, weight: .bold))
                                 .foregroundStyle(.primary)
                             Spacer()
-                            Text("7 jours")
+                            Text(L10n.sevenDays)
                                 .font(.system(size: 13, weight: .medium))
                                 .foregroundStyle(.secondary)
                         }
@@ -92,11 +93,11 @@ struct DashboardView: View {
                     if !viewModel.expensesByCategory.isEmpty {
                         VStack(alignment: .leading, spacing: 14) {
                             HStack {
-                                Label("Dépenses", systemImage: "chart.pie.fill")
+                                Label(L10n.expenses, systemImage: "chart.pie.fill")
                                     .font(.system(size: 18, weight: .bold))
                                     .foregroundStyle(.primary)
                                 Spacer()
-                                Text("\(viewModel.expensesByCategory.count) catégories")
+                                Text("\(viewModel.expensesByCategory.count) \(L10n.categories)")
                                     .font(.system(size: 13, weight: .medium))
                                     .foregroundStyle(.secondary)
                             }
@@ -128,7 +129,7 @@ struct DashboardView: View {
                     // ── 5. RECENT TRANSACTIONS ──
                     VStack(alignment: .leading, spacing: 14) {
                         HStack {
-                            Label("Récentes", systemImage: "clock.arrow.circlepath")
+                            Label(L10n.recent, systemImage: "clock.arrow.circlepath")
                                 .font(.system(size: 18, weight: .bold))
                                 .foregroundStyle(.primary)
                             Spacer()
@@ -147,8 +148,8 @@ struct DashboardView: View {
                         if viewModel.recentTransactions.isEmpty {
                             EmptyStateCard(
                                 icon: "tray",
-                                title: "Aucune transaction",
-                                subtitle: "Ajoutez votre première opération"
+                                title: L10n.noTransaction,
+                                subtitle: L10n.addFirstTransaction
                             )
                             .padding(.horizontal, 20)
                         } else {
@@ -165,13 +166,13 @@ struct DashboardView: View {
                                             Button {
                                                 transactionToEdit = t
                                             } label: {
-                                                Label("Modifier", systemImage: "pencil")
+                                                Label(L10n.edit, systemImage: "pencil")
                                             }
                                             Button(role: .destructive) {
                                                 transactionToDelete = t
                                                 showDeleteAlert = true
                                             } label: {
-                                                Label("Supprimer", systemImage: "trash")
+                                                Label(L10n.delete, systemImage: "trash")
                                             }
                                         }
 
@@ -200,9 +201,9 @@ struct DashboardView: View {
                 EditTransactionView(transaction: transaction)
                     .environmentObject(viewModel)
             }
-            .alert("Supprimer cette transaction ?", isPresented: $showDeleteAlert) {
-                Button("Annuler", role: .cancel) { }
-                Button("Supprimer", role: .destructive) {
+            .alert(L10n.deleteTransactionConfirm, isPresented: $showDeleteAlert) {
+                Button(L10n.cancel, role: .cancel) { }
+                Button(L10n.delete, role: .destructive) {
                     if let t = transactionToDelete {
                         withAnimation(.spring(response: 0.35)) {
                             viewModel.deleteTransaction(t)
@@ -211,7 +212,7 @@ struct DashboardView: View {
                 }
             } message: {
                 if let t = transactionToDelete {
-                    Text("\u{00AB} \(t.title) \u{00BB} sera d\u{00E9}finitivement supprim\u{00E9}e.")
+                    Text(L10n.willBeDeleted(t.title))
                 }
             }
             .refreshable {
@@ -249,7 +250,7 @@ struct BalanceCardView: View {
                     HStack(spacing: 6) {
                         Image(systemName: "creditcard.fill")
                             .font(.system(size: 13, weight: .semibold))
-                        Text("Solde total")
+                        Text(L10n.totalBalance)
                             .font(.system(size: 14, weight: .semibold))
                     }
                     .foregroundStyle(Color.white.opacity(0.7))
@@ -368,13 +369,13 @@ struct QuickMetricsRow: View {
     var body: some View {
         HStack(spacing: 12) {
             MetricPill(
-                title: "Revenus",
+                title: L10n.income,
                 amount: viewModel.isBalanceVisible ? viewModel.formatAmount(viewModel.totalIncome) : "••••",
                 icon: "arrow.down.left",
                 color: .appGreen
             )
             MetricPill(
-                title: "Dépenses",
+                title: L10n.expenses,
                 amount: viewModel.isBalanceVisible ? viewModel.formatAmount(viewModel.totalExpenses) : "••••",
                 icon: "arrow.up.right",
                 color: .appRed
@@ -500,7 +501,7 @@ struct PremiumCategoryRow: View {
 
             VStack(alignment: .leading, spacing: 7) {
                 HStack {
-                    Text(item.category.rawValue)
+                    Text(L10n.categoryName(item.category))
                         .font(.system(size: 15, weight: .medium))
                     Spacer()
                     Text(viewModel.isBalanceVisible ? viewModel.formatAmount(item.amount) : "••••")
@@ -576,7 +577,7 @@ struct ConnectionStatusView: View {
                 HStack(spacing: 4) {
                     Image(systemName: "wifi.slash")
                         .font(.system(size: 11, weight: .bold))
-                    Text("Hors-ligne")
+                    Text(L10n.offline)
                         .font(.system(size: 11, weight: .bold))
                 }
                 .foregroundStyle(Color.white)
@@ -602,7 +603,7 @@ struct ConnectionStatusView: View {
                 HStack(spacing: 4) {
                     Image(systemName: "clock.fill")
                         .font(.system(size: 10, weight: .bold))
-                    Text("\(syncManager.pendingCount) en attente")
+                    Text("\(syncManager.pendingCount) \(L10n.pending)")
                         .font(.system(size: 11, weight: .semibold))
                 }
                 .foregroundStyle(Color.primary)

@@ -28,7 +28,7 @@ struct AddTransactionView: View {
                 Section {
                     Picker("Type", selection: $selectedType) {
                         ForEach(TransactionType.allCases, id: \.self) { type in
-                            Label(type.rawValue, systemImage: type.icon).tag(type)
+                            Label(type == .income ? L10n.incomeType : L10n.expenseType, systemImage: type.icon).tag(type)
                         }
                     }
                     .pickerStyle(.segmented)
@@ -60,7 +60,7 @@ struct AddTransactionView: View {
                             Image(systemName: selectedType == .income ? "arrow.down.left" : "arrow.up.right")
                                 .font(.system(.caption2, weight: .bold))
                                 .accessibilityHidden(true)
-                            Text(selectedType.rawValue)
+                            Text(selectedType == .income ? L10n.incomeType : L10n.expenseType)
                                 .font(.system(.caption, weight: .semibold))
                         }
                         .foregroundStyle(selectedType == .income ? Color.appGreen : Color.appRed)
@@ -72,7 +72,7 @@ struct AddTransactionView: View {
                         )
                     }
                 } header: {
-                    Text("Montant")
+                    Text(L10n.amount)
                 }
 
                 // MARK: - Informations
@@ -86,7 +86,7 @@ struct AddTransactionView: View {
                                 .font(.system(size: 13, weight: .semibold))
                                 .foregroundStyle(Color.appBlue)
                         }
-                        TextField("Titre de la transaction", text: $title)
+                        TextField(L10n.transactionTitle, text: $title)
                     }
 
                     HStack(spacing: 12) {
@@ -112,22 +112,22 @@ struct AddTransactionView: View {
                                 .foregroundStyle(Color.appOrange)
                         }
                         .padding(.top, 3)
-                        TextField("Note (optionnel)", text: $note, axis: .vertical)
+                        TextField(L10n.noteOptional, text: $note, axis: .vertical)
                             .lineLimit(3, reservesSpace: false)
                     }
 
-                    // MARK: - R\u{00E9}currence
+                    // MARK: - Récurrence
                     VStack(alignment: .leading, spacing: 12) {
                         Toggle(isOn: $isRecurring.animation(.spring())) {
-                            Label("Transaction r\u{00E9}currente", systemImage: "repeat")
+                            Label(L10n.recurringTransaction, systemImage: "repeat")
                                 .foregroundStyle(isRecurring ? Color.appBlue : .primary)
                         }
                         .tint(.appBlue)
                         
                         if isRecurring {
-                            Picker("Fr\u{00E9}quence", selection: $selectedFrequency) {
+                            Picker(L10n.frequency, selection: $selectedFrequency) {
                                 ForEach(RecurringFrequency.allCases) { freq in
-                                    Text(freq.rawValue).tag(freq)
+                                    Text(L10n.frequencyName(freq)).tag(freq)
                                 }
                             }
                             .pickerStyle(.segmented)
@@ -136,7 +136,7 @@ struct AddTransactionView: View {
                     }
                     .padding(.vertical, 4)
                 } header: {
-                    Text("Informations")
+                    Text(L10n.information)
                 }
 
                 // MARK: - Catégorie
@@ -167,7 +167,7 @@ struct AddTransactionView: View {
                                     }
                                     .shadow(color: selectedCategory == category ? category.color.opacity(0.35) : .clear, radius: 8, y: 4)
 
-                                    Text(category.rawValue)
+                                    Text(L10n.categoryName(category))
                                         .font(.system(.caption2, weight: selectedCategory == category ? .bold : .medium))
                                         .foregroundStyle(selectedCategory == category ? .primary : .secondary)
                                         .lineLimit(1)
@@ -178,23 +178,23 @@ struct AddTransactionView: View {
                     }
                     .padding(.vertical, 8)
                 } header: {
-                    Text("Catégorie")
+                    Text(L10n.category)
                 }
             }
             .background(Color(UIColor.systemGroupedBackground))
             .scrollContentBackground(.hidden)
-            .navigationTitle("Nouvelle transaction")
+            .navigationTitle(L10n.newTransaction)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Annuler") { dismiss() }
+                    Button(L10n.cancel) { dismiss() }
                         .foregroundStyle(.secondary)
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         saveTransaction()
                     } label: {
-                        Text("Ajouter")
+                        Text(L10n.addButton)
                             .font(.headline)
                     }
                     .disabled(!canSave)

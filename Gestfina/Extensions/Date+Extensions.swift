@@ -12,7 +12,7 @@ extension Date {
     /// Format court: "09 mai"
     var shortFormatted: String {
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "fr_FR")
+        formatter.locale = Locale(identifier: L10n.dateLocaleIdentifier)
         formatter.dateFormat = "dd MMM"
         return formatter.string(from: self)
     }
@@ -20,7 +20,7 @@ extension Date {
     /// Format moyen: "09 mai 2026"
     var mediumFormatted: String {
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "fr_FR")
+        formatter.locale = Locale(identifier: L10n.dateLocaleIdentifier)
         formatter.dateStyle = .medium
         return formatter.string(from: self)
     }
@@ -28,7 +28,7 @@ extension Date {
     /// Format long: "vendredi 09 mai 2026"
     var longFormatted: String {
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "fr_FR")
+        formatter.locale = Locale(identifier: L10n.dateLocaleIdentifier)
         formatter.dateStyle = .long
         return formatter.string(from: self)
     }
@@ -52,10 +52,29 @@ extension Date {
         }
     }
     
+    /// Format relatif localisé (utilise L10n)
+    var localizedRelativeFormatted: String {
+        let calendar = Calendar.current
+        let now = Date()
+        
+        if calendar.isDateInToday(self) {
+            return L10n.today
+        } else if calendar.isDateInYesterday(self) {
+            return L10n.yesterday
+        } else {
+            let components = calendar.dateComponents([.day], from: self, to: now)
+            if let days = components.day, days < 7 {
+                return L10n.daysAgo(days)
+            } else {
+                return shortFormatted
+            }
+        }
+    }
+    
     /// Heure formatée: "14:30"
     var timeFormatted: String {
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "fr_FR")
+        formatter.locale = Locale(identifier: L10n.dateLocaleIdentifier)
         formatter.dateFormat = "HH:mm"
         return formatter.string(from: self)
     }
@@ -63,7 +82,7 @@ extension Date {
     /// Nom du mois: "Mai"
     var monthName: String {
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "fr_FR")
+        formatter.locale = Locale(identifier: L10n.dateLocaleIdentifier)
         formatter.dateFormat = "MMMM"
         return formatter.string(from: self).capitalized
     }

@@ -14,6 +14,7 @@ struct BudgetView: View {
     @State private var showPaywall = false
     @Environment(\.colorScheme) var colorScheme
     @ObservedObject private var subManager = SubscriptionManager.shared
+    @ObservedObject private var langManager = LanguageManager.shared
 
     var body: some View {
         NavigationView {
@@ -32,9 +33,9 @@ struct BudgetView: View {
                             Image(systemName: "chart.pie")
                                 .font(.system(size: 40))
                                 .foregroundStyle(Color.appBlue)
-                            Text("Aucun budget défini")
+                            Text(L10n.noBudget)
                                 .font(.system(size: 17, weight: .semibold))
-                            Text("Créez votre premier budget pour suivre vos dépenses de manière intelligente.")
+                            Text(L10n.createFirstBudget)
                                 .font(.system(size: 15))
                                 .foregroundStyle(.secondary)
                                 .multilineTextAlignment(.center)
@@ -43,7 +44,7 @@ struct BudgetView: View {
                         .padding(.vertical, 32)
                     }
                 } else {
-                    Section(header: Text("Mes budgets")) {
+                    Section(header: Text(L10n.myBudgets)) {
                         ForEach(viewModel.budgets) { budget in
                             NativeBudgetCard(
                                 budget: budget,
@@ -54,7 +55,7 @@ struct BudgetView: View {
                                 Button {
                                     budgetToEdit = budget
                                 } label: {
-                                    Label("Modifier", systemImage: "pencil")
+                                    Label(L10n.edit, systemImage: "pencil")
                                 }
                                 .tint(.appBlue)
                             }
@@ -64,7 +65,7 @@ struct BudgetView: View {
                                         viewModel.deleteBudget(budget)
                                     }
                                 } label: {
-                                    Label("Supprimer", systemImage: "trash")
+                                    Label(L10n.delete, systemImage: "trash")
                                 }
                             }
                         }
@@ -72,7 +73,7 @@ struct BudgetView: View {
                 }
             }
             .listStyle(.insetGrouped)
-            .navigationTitle("Budgets")
+            .navigationTitle(L10n.budgets)
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -151,7 +152,7 @@ struct NativeOverviewCard: View {
                 VStack(spacing: 0) {
                     Text("\(Int(pct))%")
                         .font(.system(size: 16, weight: .bold, design: .rounded))
-                    Text("utilisé")
+                    Text(L10n.used)
                         .font(.system(size: 10, weight: .medium))
                         .foregroundStyle(.secondary)
                 }
@@ -160,7 +161,7 @@ struct NativeOverviewCard: View {
             // Text Info
             VStack(alignment: .leading, spacing: 8) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Budget global")
+                    Text(L10n.globalBudget)
                         .font(.system(size: 13, weight: .regular))
                         .foregroundStyle(.secondary)
                     Text(viewModel.isBalanceVisible ? viewModel.formatAmount(totalBudget) : "••••")
@@ -169,7 +170,7 @@ struct NativeOverviewCard: View {
                 
                 HStack(spacing: 16) {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Dépensé")
+                        Text(L10n.spent)
                             .font(.system(size: 11, weight: .regular))
                             .foregroundStyle(.secondary)
                         Text(viewModel.isBalanceVisible ? viewModel.formatAmount(totalSpent) : "••••")
@@ -178,7 +179,7 @@ struct NativeOverviewCard: View {
                     }
                     
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Restant")
+                        Text(L10n.remaining)
                             .font(.system(size: 11, weight: .regular))
                             .foregroundStyle(.secondary)
                         Text(viewModel.isBalanceVisible ? viewModel.formatAmount(remaining) : "••••")
@@ -218,9 +219,9 @@ struct NativeBudgetCard: View {
 
                 // Title & Subtitle
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(budget.category.rawValue)
+                    Text(L10n.categoryName(budget.category))
                         .font(.system(size: 17, weight: .semibold))
-                    Text(budget.period.rawValue)
+                    Text(L10n.budgetPeriodName(budget.period))
                         .font(.system(size: 13, weight: .regular))
                         .foregroundStyle(.secondary)
                 }
@@ -231,7 +232,7 @@ struct NativeBudgetCard: View {
                 VStack(alignment: .trailing, spacing: 2) {
                     Text(viewModel.isBalanceVisible ? viewModel.formatAmount(progress.spent) : "••••")
                         .font(.system(size: 17, weight: .semibold, design: .rounded))
-                    Text("sur \(viewModel.isBalanceVisible ? budget.formattedLimit : "••••")")
+                    Text(L10n.ofLimit(viewModel.isBalanceVisible ? budget.formattedLimit : "••••"))
                         .font(.system(size: 13, weight: .regular))
                         .foregroundStyle(.secondary)
                 }
@@ -255,14 +256,14 @@ struct NativeBudgetCard: View {
 
                 // Footer
                 HStack {
-                    Text("\(Int(progress.percentage))% utilisé")
+                    Text(L10n.usedPercent(Int(progress.percentage)))
                         .font(.system(size: 12, weight: .regular))
                         .foregroundStyle(progress.percentage > 90 ? Color.appRed : .secondary)
                     
                     Spacer()
                     
                     let remainingAmount = max(budget.limit - progress.spent, 0)
-                    Text("Reste \(viewModel.isBalanceVisible ? viewModel.formatAmount(remainingAmount) : "••••")")
+                    Text(L10n.remainsAmount(viewModel.isBalanceVisible ? viewModel.formatAmount(remainingAmount) : "••••"))
                         .font(.system(size: 12, weight: .regular))
                         .foregroundStyle(.secondary)
                 }
@@ -294,17 +295,17 @@ struct NativeBudgetFormSheet: View {
     var body: some View {
         NavigationView {
             Form {
-                Section(header: Text("Catégorie")) {
-                    Picker("Catégorie", selection: $category) {
+                Section(header: Text(L10n.category)) {
+                    Picker(L10n.category, selection: $category) {
                         ForEach(TransactionCategory.expenseCategories) { cat in
-                            Label(cat.rawValue, systemImage: cat.icon)
+                            Label(L10n.categoryName(cat), systemImage: cat.icon)
                                 .tag(cat)
                         }
                     }
                     .pickerStyle(.navigationLink)
                 }
 
-                Section(header: Text("Limite de dépense")) {
+                Section(header: Text(L10n.spendingLimit)) {
                     HStack {
                         Text(viewModel.currencySymbol)
                             .foregroundStyle(.secondary)
@@ -314,25 +315,25 @@ struct NativeBudgetFormSheet: View {
                     }
                 }
 
-                Section(header: Text("Fréquence")) {
-                    Picker("Période", selection: $period) {
+                Section(header: Text(L10n.frequency)) {
+                    Picker(L10n.period, selection: $period) {
                         ForEach(BudgetPeriod.allCases, id: \.self) { p in
-                            Text(p.rawValue).tag(p)
+                            Text(L10n.budgetPeriodName(p)).tag(p)
                         }
                     }
                     .pickerStyle(.segmented)
                 }
             }
-            .navigationTitle(isEditing ? "Modifier le budget" : "Nouveau budget")
+            .navigationTitle(isEditing ? L10n.editBudget : L10n.newBudget)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Annuler") {
+                    Button(L10n.cancel) {
                         dismiss()
                     }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(isEditing ? "Enregistrer" : "Ajouter") {
+                    Button(isEditing ? L10n.save : L10n.addButton) {
                         let limit = Double(limitText.replacingOccurrences(of: ",", with: ".")) ?? 0
                         if isEditing, var updated = budgetToEdit {
                             updated.category = category
@@ -350,7 +351,7 @@ struct NativeBudgetFormSheet: View {
                 }
                 ToolbarItemGroup(placement: .keyboard) {
                     Spacer()
-                    Button("Terminé") {
+                    Button(L10n.done) {
                         limitFocused = false
                     }
                     .fontWeight(.semibold)

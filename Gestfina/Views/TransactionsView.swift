@@ -13,6 +13,7 @@ struct TransactionsView: View {
     @State private var transactionToDelete: AppTransaction?
     @State private var transactionToEdit: AppTransaction?
     @Environment(\.colorScheme) var colorScheme
+    @ObservedObject private var langManager = LanguageManager.shared
     
     // Nouveaux états Premium
     @State private var showPaywall = false
@@ -31,13 +32,13 @@ struct TransactionsView: View {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 8) {
                             Group {
-                                PremiumFilterChip(title: "Tout", isSelected: viewModel.selectedFilter == nil, color: Color.appBlue) {
+                                PremiumFilterChip(title: L10n.all, isSelected: viewModel.selectedFilter == nil, color: Color.appBlue) {
                                     viewModel.selectedFilter = nil
                                 }
-                                PremiumFilterChip(title: "Revenus", isSelected: viewModel.selectedFilter == .income, color: Color.appGreen) {
+                                PremiumFilterChip(title: L10n.income, isSelected: viewModel.selectedFilter == .income, color: Color.appGreen) {
                                     viewModel.selectedFilter = .income
                                 }
-                                PremiumFilterChip(title: "Dépenses", isSelected: viewModel.selectedFilter == .expense, color: Color.appRed) {
+                                PremiumFilterChip(title: L10n.expenses, isSelected: viewModel.selectedFilter == .expense, color: Color.appRed) {
                                     viewModel.selectedFilter = .expense
                                 }
                             }
@@ -48,7 +49,7 @@ struct TransactionsView: View {
                                 .padding(.horizontal, 4)
 
                             ForEach(FinanceViewModel.TimePeriod.allCases, id: \.self) { period in
-                                PremiumFilterChip(title: period.rawValue, isSelected: viewModel.selectedPeriod == period, color: Color.appBlue) {
+                                PremiumFilterChip(title: L10n.periodName(period), isSelected: viewModel.selectedPeriod == period, color: Color.appBlue) {
                                     viewModel.selectedPeriod = period
                                 }
                             }
@@ -66,7 +67,7 @@ struct TransactionsView: View {
                                 Image(systemName: "number")
                                     .font(.system(size: 13, weight: .bold))
                                     .foregroundStyle(Color.appBlue)
-                                Text("\(viewModel.filteredTransactions.count) opérations")
+                                Text(L10n.operationsCount(viewModel.filteredTransactions.count))
                                     .font(.system(size: 14, weight: .semibold))
                                     .foregroundStyle(.secondary)
                             }
@@ -103,10 +104,10 @@ struct TransactionsView: View {
                                     .foregroundStyle(Color.appBlue)
                             }
                             VStack(spacing: 6) {
-                                Text("Aucune transaction")
+                                Text(L10n.noTransaction)
                                     .font(.system(size: 20, weight: .bold, design: .rounded))
                                     .foregroundStyle(.primary)
-                                Text("Ajoutez votre première opération\nvia le bouton +")
+                                Text(L10n.addFirstViaPlus)
                                     .font(.system(size: 14))
                                     .foregroundStyle(.secondary)
                                     .multilineTextAlignment(.center)
@@ -125,7 +126,7 @@ struct TransactionsView: View {
                     let sortedKeys = grouped.keys.sorted(by: >)
 
                     ForEach(sortedKeys, id: \.self) { date in
-                        Section(header: Text(date.relativeFormatted).textCase(nil)) {
+                        Section(header: Text(date.localizedRelativeFormatted).textCase(nil)) {
                             ForEach(grouped[date]!) { transaction in
                                 TransactionRow(transaction: transaction)
                                     .contentShape(Rectangle())
@@ -136,7 +137,7 @@ struct TransactionsView: View {
                                         Button {
                                             transactionToEdit = transaction
                                         } label: {
-                                            Label("Modifier", systemImage: "pencil")
+                                            Label(L10n.edit, systemImage: "pencil")
                                         }
                                         .tint(.appBlue)
                                     }
@@ -145,7 +146,7 @@ struct TransactionsView: View {
                                             transactionToDelete = transaction
                                             showDeleteAlert = true
                                         } label: {
-                                            Label("Supprimer", systemImage: "trash")
+                                            Label(L10n.delete, systemImage: "trash")
                                         }
                                     }
                             }
@@ -156,12 +157,12 @@ struct TransactionsView: View {
             .listStyle(.insetGrouped)
             .background(Color(UIColor.systemGroupedBackground))
             .scrollContentBackground(.hidden)
-            .searchable(text: $viewModel.searchText, prompt: "Rechercher une transaction")
+            .searchable(text: $viewModel.searchText, prompt: L10n.searchTransaction)
             .refreshable {
                 SyncManager.shared.triggerSynchronization()
                 try? await Task.sleep(nanoseconds: 1_000_000_000)
             }
-            .navigationTitle("Transactions")
+            .navigationTitle(L10n.tabTransactions)
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -174,7 +175,7 @@ struct TransactionsView: View {
                                 showPaywall = true
                             }
                         } label: {
-                            Label("Exporter en CSV", systemImage: "tablecells")
+                            Label(L10n.exportCSV, systemImage: "tablecells")
                         }
                         
                         Button {
@@ -185,13 +186,13 @@ struct TransactionsView: View {
                                 showPaywall = true
                             }
                         } label: {
-                            Label("Exporter en PDF", systemImage: "doc.richtext")
+                            Label(L10n.exportPDF, systemImage: "doc.richtext")
                         }
                     } label: {
                         HStack(spacing: 4) {
                             Image(systemName: "square.and.arrow.up")
                                 .font(.system(size: 15, weight: .bold))
-                            Text("Exporter")
+                            Text(L10n.export)
                                 .font(.system(size: 13, weight: .semibold))
                         }
                         .foregroundStyle(Color.appBlue)
@@ -199,9 +200,9 @@ struct TransactionsView: View {
                 }
             }
         }
-        .alert("Supprimer cette transaction ?", isPresented: $showDeleteAlert) {
-            Button("Annuler", role: .cancel) { }
-            Button("Supprimer", role: .destructive) {
+        .alert(L10n.deleteTransactionConfirm, isPresented: $showDeleteAlert) {
+            Button(L10n.cancel, role: .cancel) { }
+            Button(L10n.delete, role: .destructive) {
                 if let t = transactionToDelete {
                     withAnimation(.spring(response: 0.35)) {
                         viewModel.deleteTransaction(t)
@@ -210,7 +211,7 @@ struct TransactionsView: View {
             }
         } message: {
             if let t = transactionToDelete {
-                Text("« \(t.title) » sera définitivement supprimée.")
+                Text(L10n.willBeDeleted(t.title))
             }
         }
         .sheet(isPresented: $showPaywall) {
@@ -235,14 +236,14 @@ struct TransactionsView: View {
         
         for tx in viewModel.filteredTransactions {
             let dateStr = formatter.string(from: tx.date)
-            let typeStr = tx.type == .income ? "Revenu" : "Dépense"
+            let typeStr = tx.type == .income ? L10n.incomeType : L10n.expenseType
             let amountStr = String(format: "%.2f", tx.amount)
             
             // Nettoyer les caractères spéciaux et les séparateurs point-virgule
             let titleCleaned = tx.title.replacingOccurrences(of: ";", with: ",").replacingOccurrences(of: "\"", with: "'")
             let noteCleaned = tx.note.replacingOccurrences(of: ";", with: ",").replacingOccurrences(of: "\"", with: "'")
             
-            csvString += "\(dateStr);\"\(titleCleaned)\";\(typeStr);\(tx.category.rawValue);\(amountStr);\"\(noteCleaned)\"\n"
+            csvString += "\(dateStr);\"\(titleCleaned)\";\(typeStr);\(L10n.categoryName(tx.category));\(amountStr);\"\(noteCleaned)\"\n"
         }
         
         let tempDirectory = FileManager.default.temporaryDirectory
@@ -264,7 +265,7 @@ struct TransactionsView: View {
     private func exportToPDF() {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd/MM/yyyy"
-        formatter.locale = Locale(identifier: "fr_FR")
+        formatter.locale = Locale(identifier: L10n.dateLocaleIdentifier)
         
         let pdfMetaData = [
             kCGPDFContextCreator: "SamaXaalis",
@@ -305,7 +306,7 @@ struct TransactionsView: View {
             let totalExp = viewModel.filteredTransactions.filter { $0.type == .expense }.reduce(0) { $0 + $1.amount }
             let summaryFont = UIFont.systemFont(ofSize: 13, weight: .semibold)
             let summaryAttr: [NSAttributedString.Key: Any] = [.font: summaryFont, .foregroundColor: UIColor.label]
-            let summary = "Revenus: \(viewModel.formatAmount(totalInc))  |  Dépenses: \(viewModel.formatAmount(totalExp))  |  Solde: \(viewModel.formatAmount(totalInc - totalExp))" as NSString
+            let summary = "\(L10n.income): \(viewModel.formatAmount(totalInc))  |  \(L10n.expenses): \(viewModel.formatAmount(totalExp))  |  \(L10n.totalBalance): \(viewModel.formatAmount(totalInc - totalExp))" as NSString
             summary.draw(at: CGPoint(x: margin, y: yPos), withAttributes: summaryAttr)
             yPos += 34
             
@@ -321,7 +322,7 @@ struct TransactionsView: View {
             // Table header
             let headerFont = UIFont.systemFont(ofSize: 10, weight: .bold)
             let headerAttr: [NSAttributedString.Key: Any] = [.font: headerFont, .foregroundColor: UIColor.secondaryLabel]
-            let columns: [(String, CGFloat)] = [("Date", margin), ("Titre", margin + 70), ("Catégorie", margin + 230), ("Montant", margin + 360)]
+            let columns: [(String, CGFloat)] = [("Date", margin), ("Titre", margin + 70), (L10n.category, margin + 230), (L10n.amount, margin + 360)]
             for (text, x) in columns {
                 (text as NSString).draw(at: CGPoint(x: x, y: yPos), withAttributes: headerAttr)
             }
@@ -346,7 +347,7 @@ struct TransactionsView: View {
                 let titleRect = CGRect(x: margin + 70, y: yPos, width: 155, height: 14)
                 (tx.title as NSString).draw(in: titleRect, withAttributes: rowAttr)
                 
-                (tx.category.rawValue as NSString).draw(at: CGPoint(x: margin + 230, y: yPos), withAttributes: rowAttr)
+                (L10n.categoryName(tx.category) as NSString).draw(at: CGPoint(x: margin + 230, y: yPos), withAttributes: rowAttr)
                 
                 let prefix = tx.type == .income ? "+" : "-"
                 let amountStr = "\(prefix)\(viewModel.formatAmount(tx.amount))" as NSString

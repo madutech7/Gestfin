@@ -52,11 +52,11 @@ struct TransactionRow: View {
                 }
 
                 HStack(spacing: 5) {
-                    Text(transaction.category.rawValue)
+                    Text(L10n.categoryName(transaction.category))
                         .font(.system(size: 13, weight: .medium))
                     Text("·")
                         .font(.system(size: 13, weight: .bold))
-                    Text(transaction.date.relativeFormatted)
+                    Text(transaction.date.localizedRelativeFormatted)
                         .font(.system(size: 13))
                 }
                 .foregroundStyle(.secondary)
@@ -73,7 +73,7 @@ struct TransactionRow: View {
                     .minimumScaleFactor(0.5)
 
                 // Subtle type indicator
-                Text(transaction.type == .income ? "Revenu" : "Dépense")
+                Text(transaction.type == .income ? L10n.incomeType : L10n.expenseType)
                     .font(.system(size: 10, weight: .medium))
                     .foregroundStyle(transaction.type == .income ? Color.appGreen.opacity(0.7) : Color.secondary.opacity(0.6))
             }
@@ -84,13 +84,13 @@ struct TransactionRow: View {
                 Haptics.play(.light)
                 UIPasteboard.general.string = transaction.formattedAmount
             }) {
-                Label("Copier le montant", systemImage: "doc.on.doc")
+                Label(L10n.copyAmount, systemImage: "doc.on.doc")
             }
             Button(action: {
                 Haptics.play(.light)
                 UIPasteboard.general.string = transaction.title
             }) {
-                Label("Copier le titre", systemImage: "text.cursor")
+                Label(L10n.copyTitle, systemImage: "text.cursor")
             }
         }
     }

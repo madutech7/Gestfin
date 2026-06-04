@@ -30,7 +30,7 @@ struct EditTransactionView: View {
                 Section {
                     Picker("Type", selection: $selectedType) {
                         ForEach(TransactionType.allCases, id: \.self) { type in
-                            Label(type.rawValue, systemImage: type.icon).tag(type)
+                            Label(type == .income ? L10n.incomeType : L10n.expenseType, systemImage: type.icon).tag(type)
                         }
                     }
                     .pickerStyle(.segmented)
@@ -64,7 +64,7 @@ struct EditTransactionView: View {
                         HStack(spacing: 5) {
                             Image(systemName: selectedType == .income ? "arrow.down.left" : "arrow.up.right")
                                 .font(.system(.caption2, weight: .bold))
-                            Text(selectedType.rawValue)
+                            Text(selectedType == .income ? L10n.incomeType : L10n.expenseType)
                                 .font(.system(.caption, weight: .semibold))
                         }
                         .foregroundStyle(selectedType == .income ? Color.appGreen : Color.appRed)
@@ -76,7 +76,7 @@ struct EditTransactionView: View {
                         )
                     }
                 } header: {
-                    Text("Montant")
+                    Text(L10n.amount)
                 }
 
                 // MARK: - Informations
@@ -90,7 +90,7 @@ struct EditTransactionView: View {
                                 .font(.system(size: 13, weight: .semibold))
                                 .foregroundStyle(Color.appBlue)
                         }
-                        TextField("Titre de la transaction", text: $title)
+                        TextField(L10n.transactionTitle, text: $title)
                     }
 
                     HStack(spacing: 12) {
@@ -116,22 +116,22 @@ struct EditTransactionView: View {
                                 .foregroundStyle(Color.appOrange)
                         }
                         .padding(.top, 3)
-                        TextField("Note (optionnel)", text: $note, axis: .vertical)
+                        TextField(L10n.noteOptional, text: $note, axis: .vertical)
                             .lineLimit(3, reservesSpace: false)
                     }
 
                     // MARK: - Récurrence
                     VStack(alignment: .leading, spacing: 12) {
                         Toggle(isOn: $isRecurring.animation(.spring())) {
-                            Label("Transaction récurrente", systemImage: "repeat")
+                            Label(L10n.recurringTransaction, systemImage: "repeat")
                                 .foregroundStyle(isRecurring ? Color.appBlue : .primary)
                         }
                         .tint(.appBlue)
                         
                         if isRecurring {
-                            Picker("Fréquence", selection: $selectedFrequency) {
+                            Picker(L10n.frequency, selection: $selectedFrequency) {
                                 ForEach(RecurringFrequency.allCases) { freq in
-                                    Text(freq.rawValue).tag(freq)
+                                    Text(L10n.frequencyName(freq)).tag(freq)
                                 }
                             }
                             .pickerStyle(.segmented)
@@ -140,7 +140,7 @@ struct EditTransactionView: View {
                     }
                     .padding(.vertical, 4)
                 } header: {
-                    Text("Informations")
+                    Text(L10n.information)
                 }
 
                 // MARK: - Catégorie
@@ -171,7 +171,7 @@ struct EditTransactionView: View {
                                     }
                                     .shadow(color: selectedCategory == category ? category.color.opacity(0.35) : .clear, radius: 8, y: 4)
 
-                                    Text(category.rawValue)
+                                    Text(L10n.categoryName(category))
                                         .font(.system(.caption2, weight: selectedCategory == category ? .bold : .medium))
                                         .foregroundStyle(selectedCategory == category ? .primary : .secondary)
                                         .lineLimit(1)
@@ -182,7 +182,7 @@ struct EditTransactionView: View {
                     }
                     .padding(.vertical, 8)
                 } header: {
-                    Text("Catégorie")
+                    Text(L10n.category)
                 }
 
                 // MARK: - Supprimer
@@ -192,7 +192,7 @@ struct EditTransactionView: View {
                     } label: {
                         HStack {
                             Spacer()
-                            Text("Supprimer cette transaction")
+                            Text(L10n.deleteThisTransaction)
                                 .font(.system(.headline, design: .rounded))
                             Spacer()
                         }
@@ -201,18 +201,18 @@ struct EditTransactionView: View {
             }
             .background(Color(UIColor.systemGroupedBackground))
             .scrollContentBackground(.hidden)
-            .navigationTitle("Modifier")
+            .navigationTitle(L10n.editTransaction)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Annuler") { dismiss() }
+                    Button(L10n.cancel) { dismiss() }
                         .foregroundStyle(.secondary)
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         saveChanges()
                     } label: {
-                        Text("Enregistrer")
+                        Text(L10n.save)
                             .font(.headline)
                     }
                     .disabled(!canSave)
