@@ -42,6 +42,8 @@
 		AA00000000000000000039 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000039; };
 		AA0000000000000000003A /* EditTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0000000000000000003A; };
 		AA0000000000000000003B /* LottieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0000000000000000003B; };
+		AA00000000000000000050 /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000050; };
+		AA00000000000000000051 /* FloatingIslandTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000051; };
 		AA00000000000000000040 /* chart.json in Resources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000040; };
 		AA00000000000000000041 /* security.json in Resources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000041; };
 		AA00000000000000000042 /* wallet.json in Resources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000042; };
@@ -84,6 +86,8 @@
 		FA00000000000000000039 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OnboardingView.swift"; sourceTree = "<group>"; };
 		FA0000000000000000003A /* EditTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EditTransactionView.swift"; sourceTree = "<group>"; };
 		FA0000000000000000003B /* LottieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LottieView.swift"; sourceTree = "<group>"; };
+		FA00000000000000000050 /* LanguageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Utils/LanguageManager.swift"; sourceTree = "<group>"; };
+		FA00000000000000000051 /* FloatingIslandTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FloatingIslandTabBar.swift"; sourceTree = "<group>"; };
 		FA00000000000000000040 /* chart.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "chart.json"; sourceTree = "<group>"; };
 		FA00000000000000000041 /* security.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "security.json"; sourceTree = "<group>"; };
 		FA00000000000000000042 /* wallet.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "wallet.json"; sourceTree = "<group>"; };
@@ -129,6 +133,7 @@
 				FA00000000000000000034 /* KeychainHelper.swift */,
 				FA00000000000000000035 /* NotificationManager.swift */,
 				FA00000000000000000036 /* SpeechRecognizer.swift */,
+				FA00000000000000000050 /* LanguageManager.swift */,
 			);
 			path = Gestfina;
 			sourceTree = "<group>";
@@ -169,6 +174,7 @@
 				FA00000000000000000038 /* SettingsView.swift */,
 				FA00000000000000000039 /* OnboardingView.swift */,
 				FA0000000000000000003A /* EditTransactionView.swift */,
+				FA00000000000000000051 /* FloatingIslandTabBar.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -317,6 +323,8 @@
 				AA00000000000000000039 /* OnboardingView.swift in Sources */,
 				AA0000000000000000003A /* EditTransactionView.swift in Sources */,
 				AA0000000000000000003B /* LottieView.swift in Sources */,
+				AA00000000000000000050 /* LanguageManager.swift in Sources */,
+				AA00000000000000000051 /* FloatingIslandTabBar.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

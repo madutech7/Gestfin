@@ -30,7 +30,8 @@ struct EditTransactionView: View {
                 Section {
                     Picker("Type", selection: $selectedType) {
                         ForEach(TransactionType.allCases, id: \.self) { type in
-                            Label(type == .income ? L10n.incomeType : L10n.expenseType, systemImage: type.icon).tag(type)
+                            let title = type == .income ? L10n.incomeType : L10n.expenseType
+                            Label(title, systemImage: type.icon).tag(type)
                         }
                     }
                     .pickerStyle(.segmented)
