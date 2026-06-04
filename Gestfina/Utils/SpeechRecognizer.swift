@@ -39,7 +39,7 @@ class SpeechRecognizer: ObservableObject {
     func startTranscribing() {
         Task { @MainActor in
             do {
-                try await startRecording()
+                try startRecording()
             } catch {
                 print("Speech error: \(error)")
             }

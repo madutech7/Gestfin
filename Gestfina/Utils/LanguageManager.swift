@@ -98,6 +98,7 @@ struct L10n {
     static var language: String { String(localized: "language") }
     static var languageSection: String { String(localized: "languageSection") }
     static var security: String { String(localized: "security") }
+    static var biometricUnavailable: String { String(localized: "biometricUnavailable") }
     static func securityFooterEnabled(_ biometricName: String) -> String { String(localized: "securityFooterEnabled") }
     static func securityFooterDisabled(_ biometricName: String) -> String { String(localized: "securityFooterDisabled \(biometricName)") }
     static var encryptedStorage: String { String(localized: "encryptedStorage") }
@@ -124,6 +125,7 @@ struct L10n {
     static var localData: String { String(localized: "localData") }
     static var privacyPolicy: String { String(localized: "privacyPolicy") }
     static var termsOfUse: String { String(localized: "termsOfUse") }
+    static var version: String { String(localized: "version") }
     static var editProfile: String { String(localized: "editProfile") }
     static var yourName: String { String(localized: "yourName") }
     static var firstName: String { String(localized: "firstName") }
@@ -200,6 +202,7 @@ struct L10n {
     static var copyTitle: String { String(localized: "copyTitle") }
     
     // MARK: - Dates
+    static var dateLocaleIdentifier: String { LanguageManager.shared.currentLanguage.rawValue }
     static var today: String { String(localized: "today") }
     static var yesterday: String { String(localized: "yesterday") }
     static func daysAgo(_ n: Int) -> String { String(localized: "daysAgo \(n)") }
@@ -207,5 +210,9 @@ struct L10n {
     // MARK: - Complex (Bridge)
     static func categoryName(_ cat: TransactionCategory) -> String {
         return String(localized: LocalizedStringResource(stringLiteral: cat.rawValue))
+    }
+    
+    static func frequencyName(_ freq: RecurringFrequency) -> String {
+        return String(localized: LocalizedStringResource(stringLiteral: freq.rawValue))
     }
 }

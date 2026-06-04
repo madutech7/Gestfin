@@ -798,31 +798,39 @@
         "fr": { "stringUnit": { "state": "translated", "value": "Comment optimiser mes économies ?" } },
         "en": { "stringUnit": { "state": "translated", "value": "How to optimize my savings?" } },
         "wo": { "stringUnit": { "state": "translated", "value": "Naka laa mëna aar sama xaalis?" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "كيف أحسن مدخراتي؟" } }
+        "ar": { "stringUnit": { "state": "translated", "value": "كيف يمكنني تحسين مدخراتي؟" } }
       }
     },
     "coachSuggestion2": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Réduire le budget alimentation" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Reduce the food budget" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Wàññi budge lekk" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "تقليل ميزانية الطعام" } }
+        "fr": { "stringUnit": { "state": "translated", "value": "Analyse mes dépenses du mois dernier" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Analyze my spending from last month" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Raññe sama depaans yu weesu" } },
+        "ar": { "stringUnit": { "state": "translated", "value": "حلل مصروفاتي في الشهر الماضي" } }
       }
     },
     "coachSuggestion3": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Analyser un projet d'achat" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Analyze a purchase project" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Seetlu jëkk bu bees" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "تحليل مشروع شراء" } }
+        "fr": { "stringUnit": { "state": "translated", "value": "Crée un plan budgétaire hebdomadaire" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Create a weekly budget plan" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Sosal ma budge bu ayu bés" } },
+        "ar": { "stringUnit": { "state": "translated", "value": "أنشئ خطة ميزانية أسبوعية" } }
       }
     },
     "isLocked": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "est verrouillé" } },
-        "en": { "stringUnit": { "state": "translated", "value": "is locked" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "tëj na" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "مقفل" } }
+        "fr": { "stringUnit": { "state": "translated", "value": "SamaXaalis est verrouillé" } },
+        "en": { "stringUnit": { "state": "translated", "value": "SamaXaalis is locked" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "SamaXaalis tëj na" } },
+        "ar": { "stringUnit": { "state": "translated", "value": "SamaXaalis مقفل" } }
+      }
+    },
+    "useBiometric %@": {
+      "localizations": {
+        "fr": { "stringUnit": { "state": "translated", "value": "Utiliser %@" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Use %@" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Jëfandikoo %@" } },
+        "ar": { "stringUnit": { "state": "translated", "value": "استخدام %@" } }
       }
     },
     "welcomeTitle": {
@@ -830,61 +838,61 @@
         "fr": { "stringUnit": { "state": "translated", "value": "Bienvenue sur SamaXaalis" } },
         "en": { "stringUnit": { "state": "translated", "value": "Welcome to SamaXaalis" } },
         "wo": { "stringUnit": { "state": "translated", "value": "Dalal jàmm ci SamaXaalis" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "مرحباً في SamaXaalis" } }
+        "ar": { "stringUnit": { "state": "translated", "value": "مرحباً بك في SamaXaalis" } }
       }
     },
     "welcomeDesc": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "La façon la plus simple et élégante de gérer votre portefeuille et vos finances personnelles au quotidien." } },
-        "en": { "stringUnit": { "state": "translated", "value": "The simplest and most elegant way to manage your wallet and personal finances daily." } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Yoon bi gëna sedd ngir saytu sa xaalis bés bu nekk." } },
-        "ar": { "stringUnit": { "state": "translated", "value": "الطريقة الأبسط والأكثر أناقة لإدارة محفظتك وأموالك الشخصية يومياً." } }
+        "fr": { "stringUnit": { "state": "translated", "value": "Prenez le contrôle de vos finances avec élégance et simplicité." } },
+        "en": { "stringUnit": { "state": "translated", "value": "Take control of your finances with elegance and simplicity." } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Tegal sa loxo ci sa xaalis ak jàmm." } },
+        "ar": { "stringUnit": { "state": "translated", "value": "تحكم في أمورك المالية بأناقة وبساطة." } }
       }
     },
     "trackTitle": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Suivez vos dépenses" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Track your expenses" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Topp say depaans" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "تتبع مصروفاتك" } }
+        "fr": { "stringUnit": { "state": "translated", "value": "Suivi Intelligent" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Smart Tracking" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Topp bu bees" } },
+        "ar": { "stringUnit": { "state": "translated", "value": "تتبع ذكي" } }
       }
     },
     "trackDesc": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Obtenez des statistiques claires, fluides et précises sur vos habitudes de consommation." } },
-        "en": { "stringUnit": { "state": "translated", "value": "Get clear, smooth and accurate statistics on your spending habits." } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Am stats yu leer ci sa jëfandikoo xaalis." } },
-        "ar": { "stringUnit": { "state": "translated", "value": "احصل على إحصائيات واضحة ودقيقة عن عادات الإنفاق." } }
+        "fr": { "stringUnit": { "state": "translated", "value": "Visualisez vos dépenses par catégorie et maîtrisez votre budget." } },
+        "en": { "stringUnit": { "state": "translated", "value": "Visualize your spending by category and master your budget." } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Gis sa depaans yi te master sa budge." } },
+        "ar": { "stringUnit": { "state": "translated", "value": "تصور مصروفاتك حسب الفئة وتحكم في ميزانيتك." } }
       }
     },
     "securityTitle": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Sécurité absolue" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Absolute Security" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Aar bu mat" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "أمان مطلق" } }
+        "fr": { "stringUnit": { "state": "translated", "value": "Sécurité Maximale" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Maximum Security" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Aar bu mbooleem" } },
+        "ar": { "stringUnit": { "state": "translated", "value": "أقصى درجات الأمان" } }
       }
     },
     "securityDesc": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Vos données sont protégées par Face ID et chiffrées en toute sécurité sur votre appareil." } },
-        "en": { "stringUnit": { "state": "translated", "value": "Your data is protected by Face ID and securely encrypted on your device." } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Say njoxe dañu ñu aar ak Face ID te dañu ñu denc ci aar." } },
-        "ar": { "stringUnit": { "state": "translated", "value": "بياناتك محمية بـ Face ID ومشفرة بأمان على جهازك." } }
+        "fr": { "stringUnit": { "state": "translated", "value": "Vos données sont chiffrées et protégées par biométrie." } },
+        "en": { "stringUnit": { "state": "translated", "value": "Your data is encrypted and protected by biometrics." } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Sa njoxe yi dañu ñu aar ci biir." } },
+        "ar": { "stringUnit": { "state": "translated", "value": "بياناتك مشفرة ومحمية بالقياسات الحيوية." } }
       }
     },
     "skip": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Ignorer" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Passer" } },
         "en": { "stringUnit": { "state": "translated", "value": "Skip" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Jël" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Jálla" } },
         "ar": { "stringUnit": { "state": "translated", "value": "تخطي" } }
       }
     },
     "start": {
       "localizations": {
         "fr": { "stringUnit": { "state": "translated", "value": "Commencer" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Get Started" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Start" } },
         "wo": { "stringUnit": { "state": "translated", "value": "Tàmbali" } },
         "ar": { "stringUnit": { "state": "translated", "value": "ابدأ" } }
       }
@@ -893,7 +901,7 @@
       "localizations": {
         "fr": { "stringUnit": { "state": "translated", "value": "Continuer" } },
         "en": { "stringUnit": { "state": "translated", "value": "Continue" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Jokk" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Wéy" } },
         "ar": { "stringUnit": { "state": "translated", "value": "متابعة" } }
       }
     },
@@ -917,7 +925,7 @@
       "localizations": {
         "fr": { "stringUnit": { "state": "translated", "value": "Copier le montant" } },
         "en": { "stringUnit": { "state": "translated", "value": "Copy amount" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Natt jëmu bi" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Duppi jëmu bi" } },
         "ar": { "stringUnit": { "state": "translated", "value": "نسخ المبلغ" } }
       }
     },
@@ -925,7 +933,7 @@
       "localizations": {
         "fr": { "stringUnit": { "state": "translated", "value": "Copier le titre" } },
         "en": { "stringUnit": { "state": "translated", "value": "Copy title" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Natt sañ-sañ bi" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Duppi sañ-sañ bi" } },
         "ar": { "stringUnit": { "state": "translated", "value": "نسخ العنوان" } }
       }
     },
@@ -941,82 +949,169 @@
       "localizations": {
         "fr": { "stringUnit": { "state": "translated", "value": "Hier" } },
         "en": { "stringUnit": { "state": "translated", "value": "Yesterday" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Démb" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Demb" } },
         "ar": { "stringUnit": { "state": "translated", "value": "أمس" } }
       }
     },
-    "willBeDeleted": {
-      "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "« %@ » sera définitivement supprimée." } },
-        "en": { "stringUnit": { "state": "translated", "value": "\"%@\" will be permanently deleted." } },
-        "wo": { "stringUnit": { "state": "translated", "value": "« %@ » dina far ci lu mujj." } },
-        "ar": { "stringUnit": { "state": "translated", "value": "سيتم حذف \"%@\" نهائياً." } }
-      }
-    },
-    "securityFooterEnabled": {
-      "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "L'application se verrouille automatiquement en arrière-plan." } },
-        "en": { "stringUnit": { "state": "translated", "value": "The app locks automatically in the background." } },
-        "wo": { "stringUnit": { "state": "translated", "value": "App bi dafa tëj boppam ci jalgati." } },
-        "ar": { "stringUnit": { "state": "translated", "value": "يتم قفل التطبيق تلقائياً في الخلفية." } }
-      }
-    },
-    "securityFooterDisabled": {
-      "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Activez %@ pour protéger vos données financières." } },
-        "en": { "stringUnit": { "state": "translated", "value": "Enable %@ to protect your financial data." } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Teral %@ ngir aar sa xaalis yi." } },
-        "ar": { "stringUnit": { "state": "translated", "value": "تفعيل %@ لحماية بياناتك المالية." } }
-      }
-    },
-    "operationsCount": {
-      "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "%lld opérations" } },
-        "en": { "stringUnit": { "state": "translated", "value": "%lld operations" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "%lld jëf" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "%lld عمليات" } }
-      }
-    },
-    "remainsAmount": {
-      "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Reste %@" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Remains %@" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Desu %@" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "المتبقي %@" } }
-      }
-    },
-    "ofLimit": {
-      "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "sur %@" } },
-        "en": { "stringUnit": { "state": "translated", "value": "of %@" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "ci %@" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "من %@" } }
-      }
-    },
-    "useBiometric": {
-      "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Utiliser %@" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Use %@" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Jëfandikoo %@" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "استخدام %@" } }
-      }
-    },
-    "daysAgo": {
+    "daysAgo %lld": {
       "localizations": {
         "fr": { "stringUnit": { "state": "translated", "value": "Il y a %lld jours" } },
         "en": { "stringUnit": { "state": "translated", "value": "%lld days ago" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "%lld fan ci ginaaw" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Am na %lld fan" } },
         "ar": { "stringUnit": { "state": "translated", "value": "منذ %lld أيام" } }
       }
     },
-    "usedPercent": {
+    "Salaire": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "%lld% utilisé" } },
-        "en": { "stringUnit": { "state": "translated", "value": "%lld% used" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "%lld% jëfandikoo" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "%lld% مستخدم" } }
+        "fr": { "stringUnit": { "state": "translated", "value": "Salaire" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Salary" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Paya" } },
+        "ar": { "stringUnit": { "state": "translated", "value": "الراتب" } }
+      }
+    },
+    "Freelance": {
+      "localizations": {
+        "fr": { "stringUnit": { "state": "translated", "value": "Freelance" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Freelance" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Kuru-kuru" } },
+        "ar": { "stringUnit": { "state": "translated", "value": "عمل حر" } }
+      }
+    },
+    "Investissement": {
+      "localizations": {
+        "fr": { "stringUnit": { "state": "translated", "value": "Investissement" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Investment" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Tegal xaalis" } },
+        "ar": { "stringUnit": { "state": "translated", "value": "الاستثمار" } }
+      }
+    },
+    "Alimentation": {
+      "localizations": {
+        "fr": { "stringUnit": { "state": "translated", "value": "Alimentation" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Food" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Lekk ak Naan" } },
+        "ar": { "stringUnit": { "state": "translated", "value": "طعام" } }
+      }
+    },
+    "Logement": {
+      "localizations": {
+        "fr": { "stringUnit": { "state": "translated", "value": "Logement" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Housing" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Kër" } },
+        "ar": { "stringUnit": { "state": "translated", "value": "سكن" } }
+      }
+    },
+    "Transport": {
+      "localizations": {
+        "fr": { "stringUnit": { "state": "translated", "value": "Transport" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Transport" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Tuggal" } },
+        "ar": { "stringUnit": { "state": "translated", "value": "نقل" } }
+      }
+    },
+    "Factures": {
+      "localizations": {
+        "fr": { "stringUnit": { "state": "translated", "value": "Factures" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Bills" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Faktir" } },
+        "ar": { "stringUnit": { "state": "translated", "value": "فواتير" } }
+      }
+    },
+    "Loisirs": {
+      "localizations": {
+        "fr": { "stringUnit": { "state": "translated", "value": "Loisirs" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Entertainment" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Baanexu" } },
+        "ar": { "stringUnit": { "state": "translated", "value": "ترفيه" } }
+      }
+    },
+    "Shopping": {
+      "localizations": {
+        "fr": { "stringUnit": { "state": "translated", "value": "Shopping" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Shopping" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Jënd" } },
+        "ar": { "stringUnit": { "state": "translated", "value": "تسوق" } }
+      }
+    },
+    "Santé": {
+      "localizations": {
+        "fr": { "stringUnit": { "state": "translated", "value": "Santé" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Health" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Wer-gi-yaram" } },
+        "ar": { "stringUnit": { "state": "translated", "value": "صحة" } }
+      }
+    },
+    "Éducation": {
+      "localizations": {
+        "fr": { "stringUnit": { "state": "translated", "value": "Éducation" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Education" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Njang" } },
+        "ar": { "stringUnit": { "state": "translated", "value": "تعليم" } }
+      }
+    },
+    "Épargne": {
+      "localizations": {
+        "fr": { "stringUnit": { "state": "translated", "value": "Épargne" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Savings" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Denc" } },
+        "ar": { "stringUnit": { "state": "translated", "value": "ادخار" } }
+      }
+    },
+    "Autre": {
+      "localizations": {
+        "fr": { "stringUnit": { "state": "translated", "value": "Autre" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Other" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Leneen" } },
+        "ar": { "stringUnit": { "state": "translated", "value": "آخر" } }
+      }
+    },
+    "Quotidien": {
+      "localizations": {
+        "fr": { "stringUnit": { "state": "translated", "value": "Quotidien" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Daily" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Bés bu nekk" } },
+        "ar": { "stringUnit": { "state": "translated", "value": "يومي" } }
+      }
+    },
+    "Hebdomadaire": {
+      "localizations": {
+        "fr": { "stringUnit": { "state": "translated", "value": "Hebdomadaire" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Weekly" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Ayu bés" } },
+        "ar": { "stringUnit": { "state": "translated", "value": "أسبوعي" } }
+      }
+    },
+    "Mensuel": {
+      "localizations": {
+        "fr": { "stringUnit": { "state": "translated", "value": "Mensuel" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Monthly" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Weer bu nekk" } },
+        "ar": { "stringUnit": { "state": "translated", "value": "شهري" } }
+      }
+    },
+    "Annuel": {
+      "localizations": {
+        "fr": { "stringUnit": { "state": "translated", "value": "Annuel" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Yearly" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "At bu nekk" } },
+        "ar": { "stringUnit": { "state": "translated", "value": "سنوي" } }
+      }
+    },
+    "biometricUnavailable": {
+      "localizations": {
+        "fr": { "stringUnit": { "state": "translated", "value": "Biométrie indisponible" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Biometrics unavailable" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Biométrie amul" } },
+        "ar": { "stringUnit": { "state": "translated", "value": "القياسات الحيوية غير متوفرة" } }
+      }
+    },
+    "version": {
+      "localizations": {
+        "fr": { "stringUnit": { "state": "translated", "value": "Version" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Version" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Version" } },
+        "ar": { "stringUnit": { "state": "translated", "value": "الإصدار" } }
       }
     }
-  },
-  "version": "1.0"
+  }
 }
