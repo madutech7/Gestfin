@@ -1112,6 +1112,38 @@
         "wo": { "stringUnit": { "state": "translated", "value": "Version" } },
         "ar": { "stringUnit": { "state": "translated", "value": "الإصدار" } }
       }
+    },
+    "Semaine": {
+      "localizations": {
+        "fr": { "stringUnit": { "state": "translated", "value": "Semaine" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Week" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Ayu bés" } },
+        "ar": { "stringUnit": { "state": "translated", "value": "أسبوع" } }
+      }
+    },
+    "Mois": {
+      "localizations": {
+        "fr": { "stringUnit": { "state": "translated", "value": "Mois" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Month" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Weer" } },
+        "ar": { "stringUnit": { "state": "translated", "value": "شهر" } }
+      }
+    },
+    "Année": {
+      "localizations": {
+        "fr": { "stringUnit": { "state": "translated", "value": "Année" } },
+        "en": { "stringUnit": { "state": "translated", "value": "Year" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "At" } },
+        "ar": { "stringUnit": { "state": "translated", "value": "سنة" } }
+      }
+    },
+    "Tout": {
+      "localizations": {
+        "fr": { "stringUnit": { "state": "translated", "value": "Tout" } },
+        "en": { "stringUnit": { "state": "translated", "value": "All" } },
+        "wo": { "stringUnit": { "state": "translated", "value": "Lépp" } },
+        "ar": { "stringUnit": { "state": "translated", "value": "الكل" } }
+      }
     }
   }
 }

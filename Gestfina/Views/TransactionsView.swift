@@ -278,7 +278,7 @@ struct TransactionsView: View {
         let pageWidth: CGFloat = 595.2   // A4
         let pageHeight: CGFloat = 841.8
         let margin: CGFloat = 40
-        let contentWidth = pageWidth - margin * 2
+        _ = pageWidth - margin * 2
         
         let renderer = UIGraphicsPDFRenderer(bounds: CGRect(x: 0, y: 0, width: pageWidth, height: pageHeight), format: format)
         

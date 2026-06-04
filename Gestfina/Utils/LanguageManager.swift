@@ -215,4 +215,12 @@ struct L10n {
     static func frequencyName(_ freq: RecurringFrequency) -> String {
         return String(localized: LocalizedStringResource(stringLiteral: freq.rawValue))
     }
+    
+    static func periodName(_ period: FinanceViewModel.TimePeriod) -> String {
+        return String(localized: LocalizedStringResource(stringLiteral: period.rawValue))
+    }
+    
+    static func budgetPeriodName(_ period: BudgetPeriod) -> String {
+        return String(localized: LocalizedStringResource(stringLiteral: period.rawValue))
+    }
 }
