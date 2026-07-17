@@ -13,7 +13,6 @@ struct MainTabView: View {
     @State private var showPaywall = false
     @EnvironmentObject var viewModel: FinanceViewModel
     @ObservedObject private var subManager = SubscriptionManager.shared
-    @ObservedObject private var langManager = LanguageManager.shared
 
     let authManager: AuthenticationManager
     let notifManager: NotificationManager

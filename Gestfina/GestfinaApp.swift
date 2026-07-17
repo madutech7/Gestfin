@@ -17,7 +17,6 @@ struct GestfinaApp: App {
     
     @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding: Bool = false
     @AppStorage("gestfina_appearance") private var appearanceMode: Int = 0
-    @AppStorage("gestfina_app_language") private var appLanguage: AppLanguage = .french
     @ObservedObject private var backendAuth = BackendAuthManager.shared
     
     private var colorSchemeOverride: ColorScheme? {
@@ -53,7 +52,7 @@ struct GestfinaApp: App {
                         .zIndex(2000)
                 }
             }
-            .environment(\.locale, appLanguage.locale)
+            .environment(\.locale, Locale(identifier: "fr_FR"))
             .preferredColorScheme(colorSchemeOverride)
             .animation(.easeInOut(duration: 0.25), value: authManager.isUnlocked)
             .animation(.spring(response: 0.45, dampingFraction: 0.8), value: backendAuth.isLoggedIn)

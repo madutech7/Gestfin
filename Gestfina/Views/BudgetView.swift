@@ -14,7 +14,6 @@ struct BudgetView: View {
     @State private var showPaywall = false
     @Environment(\.colorScheme) var colorScheme
     @ObservedObject private var subManager = SubscriptionManager.shared
-    @ObservedObject private var langManager = LanguageManager.shared
 
     var body: some View {
         NavigationView {

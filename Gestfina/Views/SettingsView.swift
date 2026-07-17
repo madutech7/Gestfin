@@ -12,7 +12,6 @@ struct SettingsView: View {
     @ObservedObject var authManager: AuthenticationManager
     @ObservedObject var notifManager: NotificationManager
     @Environment(\.colorScheme) var colorScheme
-    @ObservedObject private var langManager = LanguageManager.shared
 
     @State private var showResetAlert    = false
     @State private var showNameEditor    = false
@@ -48,12 +47,6 @@ struct SettingsView: View {
                     Text(L10n.currencyFooter)
                 }
 
-                // MARK: - Langue
-                Section {
-                    languageRow
-                } header: {
-                    Text(L10n.languageSection)
-                }
 
                 // MARK: - Apparence
                 Section {
@@ -273,18 +266,6 @@ struct SettingsView: View {
         .buttonStyle(.plain)
     }
 
-    // MARK: - Language Row
-
-    private var languageRow: some View {
-        Picker(selection: $langManager.currentLanguage) {
-            ForEach(AppLanguage.allCases) { language in
-                Text("\(language.flag) \(language.displayName)").tag(language)
-            }
-        } label: {
-            Label(L10n.language, systemImage: "globe")
-        }
-        .pickerStyle(.navigationLink)
-    }
 
     // MARK: - Sécurité
     

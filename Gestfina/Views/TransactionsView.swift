@@ -13,7 +13,6 @@ struct TransactionsView: View {
     @State private var transactionToDelete: AppTransaction?
     @State private var transactionToEdit: AppTransaction?
     @Environment(\.colorScheme) var colorScheme
-    @ObservedObject private var langManager = LanguageManager.shared
     
     // Nouveaux états Premium
     @State private var showPaywall = false

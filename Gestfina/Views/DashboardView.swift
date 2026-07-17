@@ -18,7 +18,6 @@ struct DashboardView: View {
     @State private var transactionToDelete: AppTransaction?
     @State private var transactionToEdit: AppTransaction?
     @Environment(\.colorScheme) var colorScheme
-    @ObservedObject private var langManager = LanguageManager.shared
 
     let authManager:  AuthenticationManager
     let notifManager: NotificationManager
