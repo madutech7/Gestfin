@@ -44,6 +44,14 @@
 		AA0000000000000000003B /* LottieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0000000000000000003B; };
 		AA00000000000000000050 /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000050; };
 		AA00000000000000000051 /* FloatingIslandTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000051; };
+		AA00000000000000000071 /* PrivacyBlurOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000071; };
+		AA00000000000000000072 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000072; };
+		AA00000000000000000073 /* SavingsGoal.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000073; };
+		AA00000000000000000074 /* SavingsGoalsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000074; };
+		AA00000000000000000075 /* ReceiptScannerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000075; };
+		AA00000000000000000076 /* ReceiptScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000076; };
+		AA00000000000000000077 /* PDFReportGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000077; };
+		AA00000000000000000078 /* EncryptedStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000078; };
 		AA00000000000000000060 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000060; };
 		AA00000000000000000040 /* chart.json in Resources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000040; };
 		AA00000000000000000041 /* security.json in Resources */ = {isa = PBXBuildFile; fileRef = FA00000000000000000041; };
@@ -89,6 +97,14 @@
 		FA0000000000000000003B /* LottieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LottieView.swift"; sourceTree = "<group>"; };
 		FA00000000000000000050 /* LanguageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Utils/LanguageManager.swift"; sourceTree = "<group>"; };
 		FA00000000000000000051 /* FloatingIslandTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FloatingIslandTabBar.swift"; sourceTree = "<group>"; };
+		FA00000000000000000071 /* PrivacyBlurOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PrivacyBlurOverlay.swift"; sourceTree = "<group>"; };
+		FA00000000000000000072 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Account.swift"; sourceTree = "<group>"; };
+		FA00000000000000000073 /* SavingsGoal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavingsGoal.swift"; sourceTree = "<group>"; };
+		FA00000000000000000074 /* SavingsGoalsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavingsGoalsView.swift"; sourceTree = "<group>"; };
+		FA00000000000000000075 /* ReceiptScannerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Utils/ReceiptScannerManager.swift"; sourceTree = "<group>"; };
+		FA00000000000000000076 /* ReceiptScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReceiptScannerView.swift"; sourceTree = "<group>"; };
+		FA00000000000000000077 /* PDFReportGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Utils/PDFReportGenerator.swift"; sourceTree = "<group>"; };
+		FA00000000000000000078 /* EncryptedStorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Utils/EncryptedStorageManager.swift"; sourceTree = "<group>"; };
 		FA00000000000000000060 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Localizable.xcstrings"; sourceTree = "<group>"; };
 		FA00000000000000000040 /* chart.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "chart.json"; sourceTree = "<group>"; };
 		FA00000000000000000041 /* security.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "security.json"; sourceTree = "<group>"; };
@@ -136,6 +152,9 @@
 				FA00000000000000000035 /* NotificationManager.swift */,
 				FA00000000000000000036 /* SpeechRecognizer.swift */,
 				FA00000000000000000050 /* LanguageManager.swift */,
+				FA00000000000000000075 /* ReceiptScannerManager.swift */,
+				FA00000000000000000077 /* PDFReportGenerator.swift */,
+				FA00000000000000000078 /* EncryptedStorageManager.swift */,
 				FA00000000000000000060 /* Localizable.xcstrings */,
 			);
 			path = Gestfina;
@@ -148,6 +167,8 @@
 				FA00000000000000000003 /* Category.swift */,
 				FA00000000000000000004 /* Budget.swift */,
 				FA00000000000000000016 /* AICoachModels.swift */,
+				FA00000000000000000072 /* Account.swift */,
+				FA00000000000000000073 /* SavingsGoal.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -178,6 +199,8 @@
 				FA00000000000000000039 /* OnboardingView.swift */,
 				FA0000000000000000003A /* EditTransactionView.swift */,
 				FA00000000000000000051 /* FloatingIslandTabBar.swift */,
+				FA00000000000000000074 /* SavingsGoalsView.swift */,
+				FA00000000000000000076 /* ReceiptScannerView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -188,6 +211,7 @@
 				FA0000000000000000000C /* TransactionRow.swift */,
 				FA0000000000000000000D /* GlassModifiers.swift */,
 				FA0000000000000000003B /* LottieView.swift */,
+				FA00000000000000000071 /* PrivacyBlurOverlay.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -329,6 +353,14 @@
 				AA0000000000000000003B /* LottieView.swift in Sources */,
 				AA00000000000000000050 /* LanguageManager.swift in Sources */,
 				AA00000000000000000051 /* FloatingIslandTabBar.swift in Sources */,
+				AA00000000000000000071 /* PrivacyBlurOverlay.swift in Sources */,
+				AA00000000000000000072 /* Account.swift in Sources */,
+				AA00000000000000000073 /* SavingsGoal.swift in Sources */,
+				AA00000000000000000074 /* SavingsGoalsView.swift in Sources */,
+				AA00000000000000000075 /* ReceiptScannerManager.swift in Sources */,
+				AA00000000000000000076 /* ReceiptScannerView.swift in Sources */,
+				AA00000000000000000077 /* PDFReportGenerator.swift in Sources */,
+				AA00000000000000000078 /* EncryptedStorageManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
