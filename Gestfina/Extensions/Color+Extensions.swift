@@ -26,6 +26,11 @@ extension Color {
     static let backgroundTertiary = Color(hex: "F1F5F9")
     static let surfaceColor = Color.white
     
+    // MARK: - App Background & Card
+    
+    static let appBackground = Color(UIColor.systemBackground)
+    static let appCardBackground = Color(UIColor.secondarySystemBackground)
+    
     // MARK: - Glass surfaces
     
     static let glassLight = Color.black.opacity(0.02)

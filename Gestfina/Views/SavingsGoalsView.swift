@@ -269,7 +269,7 @@ struct SavingsGoalsView: View {
                     HStack(spacing: 12) {
                         ForEach(availableColors, id: \.self) { colorHex in
                             Circle()
-                                .fill(Color(hex: colorHex) ?? .blue)
+                                .fill(Color(hex: colorHex))
                                 .frame(width: 32, height: 32)
                                 .overlay(
                                     Circle()

@@ -19,7 +19,7 @@ struct SavingsGoal: Identifiable, Codable, Equatable {
     var note: String
     
     var color: Color {
-        Color(hex: hexColor) ?? .blue
+        Color(hex: hexColor)
     }
     
     var progressPercentage: Double {

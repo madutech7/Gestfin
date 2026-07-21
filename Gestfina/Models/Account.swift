@@ -54,7 +54,7 @@ struct Account: Identifiable, Codable, Equatable, Hashable {
     var isDefault: Bool = false
     
     var color: Color {
-        Color(hex: hexColor) ?? .blue
+        Color(hex: hexColor)
     }
     
     static var defaultAccounts: [Account] {
