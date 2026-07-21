@@ -378,31 +378,35 @@ class FinanceViewModel: ObservableObject {
         return String(format: "%.1f%%", value)
     }
     
-    // MARK: - Persistance (UserDefaults + JSON)
+    // MARK: - Persistance Chiffrée (iOS Data Protection API)
     
     private func saveTransactions() {
-        if let data = try? JSONEncoder().encode(transactions) {
-            UserDefaults.standard.set(data, forKey: transactionsKey)
-        }
+        _ = EncryptedStorageManager.shared.save(transactions, forKey: transactionsKey)
     }
     
     private func loadTransactions() {
-        if let data = UserDefaults.standard.data(forKey: transactionsKey),
-           let decoded = try? JSONDecoder().decode([AppTransaction].self, from: data) {
-            transactions = decoded
+        EncryptedStorageManager.shared.migrateFromUserDefaultsIfNeeded(
+            userDefaultsKey: transactionsKey,
+            storageKey: transactionsKey,
+            type: [AppTransaction].self
+        )
+        if let loaded = EncryptedStorageManager.shared.load(forKey: transactionsKey, as: [AppTransaction].self) {
+            transactions = loaded
         }
     }
     
     private func saveBudgets() {
-        if let data = try? JSONEncoder().encode(budgets) {
-            UserDefaults.standard.set(data, forKey: budgetsKey)
-        }
+        _ = EncryptedStorageManager.shared.save(budgets, forKey: budgetsKey)
     }
     
     private func loadBudgets() {
-        if let data = UserDefaults.standard.data(forKey: budgetsKey),
-           let decoded = try? JSONDecoder().decode([Budget].self, from: data) {
-            budgets = decoded
+        EncryptedStorageManager.shared.migrateFromUserDefaultsIfNeeded(
+            userDefaultsKey: budgetsKey,
+            storageKey: budgetsKey,
+            type: [Budget].self
+        )
+        if let loaded = EncryptedStorageManager.shared.load(forKey: budgetsKey, as: [Budget].self) {
+            budgets = loaded
         }
     }
     
@@ -509,33 +513,37 @@ class FinanceViewModel: ObservableObject {
     // MARK: - Comptes & Épargne
     
     func loadAccounts() {
-        if let data = UserDefaults.standard.data(forKey: accountsKey),
-           let decoded = try? JSONDecoder().decode([Account].self, from: data) {
-            accounts = decoded
+        EncryptedStorageManager.shared.migrateFromUserDefaultsIfNeeded(
+            userDefaultsKey: accountsKey,
+            storageKey: accountsKey,
+            type: [Account].self
+        )
+        if let loaded = EncryptedStorageManager.shared.load(forKey: accountsKey, as: [Account].self) {
+            accounts = loaded
         } else {
             accounts = Account.defaultAccounts
         }
     }
     
     func saveAccounts() {
-        if let encoded = try? JSONEncoder().encode(accounts) {
-            UserDefaults.standard.set(encoded, forKey: accountsKey)
-        }
+        _ = EncryptedStorageManager.shared.save(accounts, forKey: accountsKey)
     }
     
     func loadSavingsGoals() {
-        if let data = UserDefaults.standard.data(forKey: savingsGoalsKey),
-           let decoded = try? JSONDecoder().decode([SavingsGoal].self, from: data) {
-            savingsGoals = decoded
+        EncryptedStorageManager.shared.migrateFromUserDefaultsIfNeeded(
+            userDefaultsKey: savingsGoalsKey,
+            storageKey: savingsGoalsKey,
+            type: [SavingsGoal].self
+        )
+        if let loaded = EncryptedStorageManager.shared.load(forKey: savingsGoalsKey, as: [SavingsGoal].self) {
+            savingsGoals = loaded
         } else {
             savingsGoals = SavingsGoal.sampleGoals
         }
     }
     
     func saveSavingsGoals() {
-        if let encoded = try? JSONEncoder().encode(savingsGoals) {
-            UserDefaults.standard.set(encoded, forKey: savingsGoalsKey)
-        }
+        _ = EncryptedStorageManager.shared.save(savingsGoals, forKey: savingsGoalsKey)
     }
     
     func addSavingsGoal(_ goal: SavingsGoal) {

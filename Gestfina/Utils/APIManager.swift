@@ -358,9 +358,9 @@ class APIManager {
     
     // MARK: - Fetch APIs
     
-    func fetchTransactions(completion: @escaping ([AppTransaction]?) -> Void) {
+    func fetchTransactions(page: Int = 1, limit: Int = 50, completion: @escaping ([AppTransaction]?) -> Void) {
         ensureAuthenticated { [weak self] authSuccess in
-            guard authSuccess, let self = self, let url = URL(string: "\(self.baseURL)/transactions?limit=1000") else {
+            guard authSuccess, let self = self, let url = URL(string: "\(self.baseURL)/transactions?page=\(page)&limit=\(limit)") else {
                 print("\u{274C} [APIManager] fetchTransactions: authentification \u{00E9}chou\u{00E9}e ou URL invalide")
                 completion(nil)
                 return
