@@ -21,6 +21,14 @@ class FinanceViewModel: ObservableObject {
         didSet { saveBudgets() }
     }
     
+    @Published var accounts: [Account] = [] {
+        didSet { saveAccounts() }
+    }
+    
+    @Published var savingsGoals: [SavingsGoal] = [] {
+        didSet { saveSavingsGoals() }
+    }
+    
     @Published var selectedPeriod: TimePeriod = .month
     @Published var searchText: String = ""
     @Published var selectedFilter: TransactionType? = nil
@@ -39,10 +47,12 @@ class FinanceViewModel: ObservableObject {
     
     // MARK: - Keys de stockage
     
-    private let transactionsKey = "gestfina_transactions"
-    private let budgetsKey       = "gestfina_budgets"
-    private let userNameKey      = "gestfina_username"
-    private let currencyKey      = "gestfina_currency"
+    private let transactionsKey     = "gestfina_transactions"
+    private let budgetsKey          = "gestfina_budgets"
+    private let accountsKey         = "gestfina_accounts"
+    private let savingsGoalsKey    = "gestfina_savings_goals"
+    private let userNameKey         = "gestfina_username"
+    private let currencyKey         = "gestfina_currency"
     private let isBalanceVisibleKey = "gestfina_is_balance_visible"
     
     private var cancellables = Set<AnyCancellable>()
@@ -61,6 +71,8 @@ class FinanceViewModel: ObservableObject {
     init() {
         loadTransactions()
         loadBudgets()
+        loadAccounts()
+        loadSavingsGoals()
         loadUserName()
         if let saved = UserDefaults.standard.string(forKey: currencyKey) {
             currency = saved
@@ -491,6 +503,60 @@ class FinanceViewModel: ObservableObject {
         
         if !newTransactions.isEmpty {
             transactions.append(contentsOf: newTransactions)
+        }
+    }
+    
+    // MARK: - Comptes & Épargne
+    
+    func loadAccounts() {
+        if let data = UserDefaults.standard.data(forKey: accountsKey),
+           let decoded = try? JSONDecoder().decode([Account].self, from: data) {
+            accounts = decoded
+        } else {
+            accounts = Account.defaultAccounts
+        }
+    }
+    
+    func saveAccounts() {
+        if let encoded = try? JSONEncoder().encode(accounts) {
+            UserDefaults.standard.set(encoded, forKey: accountsKey)
+        }
+    }
+    
+    func loadSavingsGoals() {
+        if let data = UserDefaults.standard.data(forKey: savingsGoalsKey),
+           let decoded = try? JSONDecoder().decode([SavingsGoal].self, from: data) {
+            savingsGoals = decoded
+        } else {
+            savingsGoals = SavingsGoal.sampleGoals
+        }
+    }
+    
+    func saveSavingsGoals() {
+        if let encoded = try? JSONEncoder().encode(savingsGoals) {
+            UserDefaults.standard.set(encoded, forKey: savingsGoalsKey)
+        }
+    }
+    
+    func addSavingsGoal(_ goal: SavingsGoal) {
+        savingsGoals.append(goal)
+    }
+    
+    func depositToSavingsGoal(goalId: UUID, amount: Double) {
+        if let index = savingsGoals.firstIndex(where: { $0.id == goalId }) {
+            savingsGoals[index].currentAmount += amount
+            
+            // Créer une transaction dépense automatique liée au versement d'épargne
+            let goalTitle = savingsGoals[index].title
+            let tx = AppTransaction(
+                title: "Épargne : \(goalTitle)",
+                amount: amount,
+                date: Date(),
+                category: .savings,
+                type: .expense,
+                note: "Versement vers la cagnotte \(goalTitle)"
+            )
+            addTransaction(tx)
         }
     }
 }

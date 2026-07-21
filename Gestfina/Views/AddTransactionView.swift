@@ -19,6 +19,8 @@ struct AddTransactionView: View {
     @State private var note = ""
     @State private var isRecurring = false
     @State private var selectedFrequency: RecurringFrequency = .monthly
+    @State private var selectedAccountId: UUID?
+    @State private var showingScanner = false
     @FocusState private var amountFocused: Bool
 
     var body: some View {
@@ -136,9 +138,43 @@ struct AddTransactionView: View {
                         }
                     }
                     .padding(.vertical, 4)
+                // MARK: - Compte / Portefeuille
+                Section {
+                    Picker("Compte", selection: $selectedAccountId) {
+                        Text("Aucun (Par défaut)").tag(UUID?.none)
+                        ForEach(viewModel.accounts) { acc in
+                            HStack {
+                                Image(systemName: acc.iconName)
+                                Text(acc.name)
+                            }
+                            .tag(UUID?.some(acc.id))
+                        }
+                    }
                 } header: {
-                    Text(L10n.information)
+                    Text("Compte / Portefeuille")
                 }
+                
+                // MARK: - Scan OCR
+                Section {
+                    Button(action: { showingScanner = true }) {
+                        HStack {
+                            Image(systemName: "doc.viewfinder")
+                                .font(.headline)
+                                .foregroundColor(.appBlue)
+                            Text("Scanner un reçu / facture (OCR)")
+                                .font(.subheadline)
+                                .foregroundColor(.appBlue)
+                                .bold()
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                        }
+                    }
+                }
+                
+                // MARK: - Informations
+                Section {
 
                 // MARK: - Catégorie
                 Section {
@@ -211,6 +247,16 @@ struct AddTransactionView: View {
                     amountFocused = true
                 }
             }
+            .sheet(isPresented: $showingScanner) {
+                ReceiptScannerView { detectedAmount, detectedMerchant in
+                    if let amount = detectedAmount {
+                        self.amountText = String(format: "%.2f", amount)
+                    }
+                    if let merchant = detectedMerchant, !merchant.isEmpty {
+                        self.title = merchant
+                    }
+                }
+            }
         }
     }
 
@@ -231,7 +277,8 @@ struct AddTransactionView: View {
             type: selectedType,
             note: note,
             isRecurring: isRecurring,
-            recurringFrequency: isRecurring ? selectedFrequency : nil
+            recurringFrequency: isRecurring ? selectedFrequency : nil,
+            accountId: selectedAccountId
         )
         viewModel.addTransaction(transaction)
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()

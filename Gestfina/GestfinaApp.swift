@@ -50,6 +50,11 @@ struct GestfinaApp: App {
                     OnboardingView(hasSeenOnboarding: $hasSeenOnboarding)
                         .transition(.move(edge: .bottom).combined(with: .opacity))
                         .zIndex(2000)
+                // Écran de confidentialité quand l'app est en arrière-plan
+                if scenePhase == .background || scenePhase == .inactive {
+                    PrivacyBlurOverlay()
+                        .transition(.opacity)
+                        .zIndex(3000)
                 }
             }
             .environment(\.locale, Locale(identifier: "fr_FR"))

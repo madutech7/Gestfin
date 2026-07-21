@@ -62,6 +62,9 @@ struct AppTransaction: Identifiable, Codable, Equatable {
     var recurringFrequency: RecurringFrequency?
     var lastRecurrenceDate: Date? // Date de la dernière fois qu'elle a été générée
     
+    // Compte associé
+    var accountId: UUID?
+    
     init(
         id: UUID = UUID(),
         title: String,
@@ -72,7 +75,8 @@ struct AppTransaction: Identifiable, Codable, Equatable {
         note: String = "",
         isRecurring: Bool = false,
         recurringFrequency: RecurringFrequency? = nil,
-        lastRecurrenceDate: Date? = nil
+        lastRecurrenceDate: Date? = nil,
+        accountId: UUID? = nil
     ) {
         self.id = id
         self.title = title
@@ -84,6 +88,7 @@ struct AppTransaction: Identifiable, Codable, Equatable {
         self.isRecurring = isRecurring
         self.recurringFrequency = recurringFrequency
         self.lastRecurrenceDate = lastRecurrenceDate
+        self.accountId = accountId
     }
     
     /// Montant signé (négatif pour les dépenses)

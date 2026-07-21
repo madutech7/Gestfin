@@ -9,6 +9,7 @@ import SwiftUI
 
 struct BudgetView: View {
     @EnvironmentObject var viewModel: FinanceViewModel
+    @State private var showSavingsGoals = false
     @State private var showAddBudget = false
     @State private var budgetToEdit: Budget? = nil
     @State private var showPaywall = false
@@ -24,6 +25,40 @@ struct BudgetView: View {
                         .padding(.vertical, 8)
                 }
                 .listRowBackground(Color(UIColor.secondarySystemGroupedBackground))
+                
+                // ── OBJECTIFS D'ÉPARGNE (CAGNOTTES) ──
+                Section {
+                    Button(action: { showSavingsGoals = true }) {
+                        HStack(spacing: 12) {
+                            ZStack {
+                                Circle()
+                                    .fill(Color.appGreen.opacity(0.15))
+                                    .frame(width: 38, height: 38)
+                                
+                                Image(systemName: "target")
+                                    .font(.system(size: 18, weight: .bold))
+                                    .foregroundColor(.appGreen)
+                            }
+                            
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Objectifs d'Épargne & Cagnottes")
+                                    .font(.system(size: 15, weight: .semibold))
+                                    .foregroundColor(.primary)
+                                
+                                let totalSaved = viewModel.savingsGoals.reduce(0) { $0 + $1.currentAmount }
+                                Text("\(viewModel.savingsGoals.count) cagnotte(s) • \(viewModel.formatAmount(totalSaved)) épargnés")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            
+                            Spacer()
+                            
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                }
 
                 // ── BUDGET LIST ──
                 if viewModel.budgets.isEmpty {
@@ -89,6 +124,10 @@ struct BudgetView: View {
                             .foregroundStyle(Color.appBlue)
                     }
                 }
+            }
+            .sheet(isPresented: $showSavingsGoals) {
+                SavingsGoalsView()
+                    .environmentObject(viewModel)
             }
             .sheet(isPresented: $showAddBudget) {
                 NativeBudgetFormSheet(viewModel: viewModel, budgetToEdit: nil)

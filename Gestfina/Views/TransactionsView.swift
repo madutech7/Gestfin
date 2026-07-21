@@ -262,117 +262,16 @@ struct TransactionsView: View {
     // MARK: - Générateur d'Exportation PDF Premium
     
     private func exportToPDF() {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd/MM/yyyy"
-        formatter.locale = Locale(identifier: L10n.dateLocaleIdentifier)
-        
-        let pdfMetaData = [
-            kCGPDFContextCreator: "SamaXaalis",
-            kCGPDFContextAuthor: viewModel.userName,
-            kCGPDFContextTitle: "Rapport Financier SamaXaalis"
-        ]
-        let format = UIGraphicsPDFRendererFormat()
-        format.documentInfo = pdfMetaData as [String: Any]
-        
-        let pageWidth: CGFloat = 595.2   // A4
-        let pageHeight: CGFloat = 841.8
-        let margin: CGFloat = 40
-        _ = pageWidth - margin * 2
-        
-        let renderer = UIGraphicsPDFRenderer(bounds: CGRect(x: 0, y: 0, width: pageWidth, height: pageHeight), format: format)
-        
-        let data = renderer.pdfData { context in
-            context.beginPage()
-            var yPos: CGFloat = margin
-            
-            // Title
-            let titleFont = UIFont.systemFont(ofSize: 24, weight: .bold)
-            let titleAttr: [NSAttributedString.Key: Any] = [.font: titleFont, .foregroundColor: UIColor.label]
-            let title = "Rapport Financier" as NSString
-            title.draw(at: CGPoint(x: margin, y: yPos), withAttributes: titleAttr)
-            yPos += 36
-            
-            // Subtitle
-            let subFont = UIFont.systemFont(ofSize: 12, weight: .medium)
-            let subAttr: [NSAttributedString.Key: Any] = [.font: subFont, .foregroundColor: UIColor.secondaryLabel]
-            let dateStr = formatter.string(from: Date())
-            let subtitle = "Généré le \(dateStr) — \(viewModel.filteredTransactions.count) opérations" as NSString
-            subtitle.draw(at: CGPoint(x: margin, y: yPos), withAttributes: subAttr)
-            yPos += 30
-            
-            // Summary
-            let totalInc = viewModel.filteredTransactions.filter { $0.type == .income }.reduce(0) { $0 + $1.amount }
-            let totalExp = viewModel.filteredTransactions.filter { $0.type == .expense }.reduce(0) { $0 + $1.amount }
-            let summaryFont = UIFont.systemFont(ofSize: 13, weight: .semibold)
-            let summaryAttr: [NSAttributedString.Key: Any] = [.font: summaryFont, .foregroundColor: UIColor.label]
-            let summary = "\(L10n.income): \(viewModel.formatAmount(totalInc))  |  \(L10n.expenses): \(viewModel.formatAmount(totalExp))  |  \(L10n.totalBalance): \(viewModel.formatAmount(totalInc - totalExp))" as NSString
-            summary.draw(at: CGPoint(x: margin, y: yPos), withAttributes: summaryAttr)
-            yPos += 34
-            
-            // Separator
-            let separatorPath = UIBezierPath()
-            separatorPath.move(to: CGPoint(x: margin, y: yPos))
-            separatorPath.addLine(to: CGPoint(x: pageWidth - margin, y: yPos))
-            UIColor.separator.setStroke()
-            separatorPath.lineWidth = 0.5
-            separatorPath.stroke()
-            yPos += 16
-            
-            // Table header
-            let headerFont = UIFont.systemFont(ofSize: 10, weight: .bold)
-            let headerAttr: [NSAttributedString.Key: Any] = [.font: headerFont, .foregroundColor: UIColor.secondaryLabel]
-            let columns: [(String, CGFloat)] = [("Date", margin), ("Titre", margin + 70), (L10n.category, margin + 230), (L10n.amount, margin + 360)]
-            for (text, x) in columns {
-                (text as NSString).draw(at: CGPoint(x: x, y: yPos), withAttributes: headerAttr)
-            }
-            yPos += 22
-            
-            // Rows
-            let rowFont = UIFont.systemFont(ofSize: 10, weight: .regular)
-            let rowAmountFont = UIFont.monospacedDigitSystemFont(ofSize: 10, weight: .semibold)
-            
-            for tx in viewModel.filteredTransactions {
-                if yPos > pageHeight - 60 {
-                    context.beginPage()
-                    yPos = margin
-                }
-                
-                let rowAttr: [NSAttributedString.Key: Any] = [.font: rowFont, .foregroundColor: UIColor.label]
-                let amountColor: UIColor = tx.type == .income ? .systemGreen : .label
-                let amountAttr: [NSAttributedString.Key: Any] = [.font: rowAmountFont, .foregroundColor: amountColor]
-                
-                (formatter.string(from: tx.date) as NSString).draw(at: CGPoint(x: margin, y: yPos), withAttributes: rowAttr)
-                
-                let titleRect = CGRect(x: margin + 70, y: yPos, width: 155, height: 14)
-                (tx.title as NSString).draw(in: titleRect, withAttributes: rowAttr)
-                
-                (L10n.categoryName(tx.category) as NSString).draw(at: CGPoint(x: margin + 230, y: yPos), withAttributes: rowAttr)
-                
-                let prefix = tx.type == .income ? "+" : "-"
-                let amountStr = "\(prefix)\(viewModel.formatAmount(tx.amount))" as NSString
-                amountStr.draw(at: CGPoint(x: margin + 360, y: yPos), withAttributes: amountAttr)
-                
-                yPos += 20
-            }
-            
-            // Footer
-            let footerFont = UIFont.systemFont(ofSize: 8, weight: .medium)
-            let footerAttr: [NSAttributedString.Key: Any] = [.font: footerFont, .foregroundColor: UIColor.tertiaryLabel]
-            let footer = "SamaXaalis — Rapport généré automatiquement" as NSString
-            footer.draw(at: CGPoint(x: margin, y: pageHeight - 30), withAttributes: footerAttr)
-        }
-        
-        let tempDir = FileManager.default.temporaryDirectory
-        let filename = "SamaXaalis_Rapport_\(Int(Date().timeIntervalSince1970)).pdf"
-        let fileURL = tempDir.appendingPathComponent(filename)
-        
-        do {
-            try data.write(to: fileURL)
+        if let pdfURL = PDFReportGenerator.shared.generateMonthlyReport(
+            transactions: viewModel.filteredTransactions,
+            budgets: viewModel.budgets,
+            periodTitle: viewModel.selectedPeriod.rawValue,
+            userName: viewModel.userName,
+            currencySymbol: viewModel.currencySymbol
+        ) {
             DispatchQueue.main.async {
-                self.exportURL = IdentifiableURL(url: fileURL)
+                self.exportURL = IdentifiableURL(url: pdfURL)
             }
-        } catch {
-            print("Erreur PDF: \(error)")
         }
     }
 }
