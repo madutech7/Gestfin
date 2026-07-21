@@ -22,13 +22,13 @@ class PDFReportGenerator {
         userName: String,
         currencySymbol: String
     ) -> URL? {
-        let pdfMetaData = [
-            kCGPDFContextCreator: "Gestfina",
-            kCGPDFContextAuthor: userName,
-            kCGPDFContextTitle: "Rapport Financier - \(periodTitle)"
+        let pdfMetaData: [String: Any] = [
+            kCGPDFContextCreator as String: "Gestfina",
+            kCGPDFContextAuthor as String: userName,
+            kCGPDFContextTitle as String: "Rapport Financier - \(periodTitle)"
         ]
         let format = UIGraphicsPDFRendererFormat()
-        format.documentInfo = pdfMetaData as [String: Any]
+        format.documentInfo = pdfMetaData
         
         let pageWidth: CGFloat = 8.5 * 72.0
         let pageHeight: CGFloat = 11.0 * 72.0
