@@ -138,6 +138,10 @@ struct AddTransactionView: View {
                         }
                     }
                     .padding(.vertical, 4)
+                } header: {
+                    Text(L10n.information)
+                }
+
                 // MARK: - Compte / Portefeuille
                 Section {
                     Picker("Compte", selection: $selectedAccountId) {
@@ -173,9 +177,6 @@ struct AddTransactionView: View {
                     }
                 }
                 
-                // MARK: - Informations
-                Section {
-
                 // MARK: - Catégorie
                 Section {
                     let categories = selectedType == .income
