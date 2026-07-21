@@ -23,7 +23,7 @@ struct SavingsGoalsView: View {
     @State private var newSelectedIcon: String = "target"
     
     private let availableIcons = ["target", "shield.fill", "airplane", "car.fill", "house.fill", "desktopcomputer", "bag.fill", "gift.fill"]
-    private let availableColors = ["#007AFF", "#34C759", "#FF9500", "#FF3B30", "#AF52DE", "#5856D6", "#FFCC00"]
+    private let availableColors = ["#6366F1", "#10B981", "#F59E0B", "#F43F5E", "#8B5CF6", "#06B6D4", "#EC4899"]
     
     var body: some View {
         NavigationView {

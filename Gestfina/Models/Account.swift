@@ -33,13 +33,13 @@ enum AccountType: String, Codable, CaseIterable, Identifiable {
     
     var defaultHexColor: String {
         switch self {
-        case .cash: return "#34C759"
-        case .bank: return "#007AFF"
-        case .wave: return "#32ADE6"
-        case .orangeMoney: return "#FF9500"
-        case .creditCard: return "#AF52DE"
-        case .crypto: return "#FFCC00"
-        case .other: return "#8E8E93"
+        case .cash: return "#10B981"
+        case .bank: return "#6366F1"
+        case .wave: return "#06B6D4"
+        case .orangeMoney: return "#F59E0B"
+        case .creditCard: return "#8B5CF6"
+        case .crypto: return "#F43F5E"
+        case .other: return "#64748B"
         }
     }
 }
