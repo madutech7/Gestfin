@@ -2,7 +2,7 @@
 //  SavingsGoalsView.swift
 //  Gestfina
 //
-//  Vue pour la gestion et le suivi des objectifs d'épargne (Cagnottes)
+//  Design Ultra-Premium Apple iOS 26 — Cagnottes & Objectifs d'Épargne
 //
 
 import SwiftUI
@@ -12,11 +12,10 @@ struct SavingsGoalsView: View {
     @Environment(\.dismiss) var dismiss
     
     @State private var showingAddGoalSheet = false
-    @State private var showingAddFundsSheet = false
     @State private var selectedGoal: SavingsGoal?
     @State private var depositAmount: String = ""
     
-    // Champs pour nouveau goal
+    // Champs pour nouvel objectif
     @State private var newTitle: String = ""
     @State private var newTargetAmount: String = ""
     @State private var newCurrentAmount: String = ""
@@ -27,25 +26,31 @@ struct SavingsGoalsView: View {
     private let availableColors = ["#007AFF", "#34C759", "#FF9500", "#FF3B30", "#AF52DE", "#5856D6", "#FFCC00"]
     
     var body: some View {
-        NavigationStack {
+        NavigationView {
             ZStack {
-                Color.appBackground
+                Color(UIColor.systemGroupedBackground)
                     .ignoresSafeArea()
                 
-                ScrollView {
-                    VStack(spacing: 20) {
-                        // Header Récapitulatif Épargne
+                ScrollView(.vertical, showsIndicators: false) {
+                    VStack(spacing: 24) {
+                        // Header Global Épargne
                         savingsHeaderCard
                         
-                        // Liste des Objectifs
+                        // Liste des Cagnottes
                         if viewModel.savingsGoals.isEmpty {
                             emptyStateView
                         } else {
-                            VStack(alignment: .leading, spacing: 14) {
-                                Text("Mes Cagnottes")
-                                    .font(.headline)
-                                    .foregroundColor(.gray)
-                                    .padding(.horizontal)
+                            VStack(alignment: .leading, spacing: 16) {
+                                HStack {
+                                    Label("Mes Cagnottes", systemImage: "sparkles")
+                                        .font(.system(size: 18, weight: .bold))
+                                        .foregroundStyle(.primary)
+                                    Spacer()
+                                    Text("\(viewModel.savingsGoals.count) objectifs")
+                                        .font(.system(size: 13, weight: .medium))
+                                        .foregroundStyle(.secondary)
+                                }
+                                .padding(.horizontal, 4)
                                 
                                 ForEach(viewModel.savingsGoals) { goal in
                                     savingsGoalCard(goal)
@@ -53,24 +58,38 @@ struct SavingsGoalsView: View {
                             }
                         }
                     }
-                    .padding(.vertical)
+                    .padding(.horizontal, 20)
+                    .padding(.top, 16)
+                    .padding(.bottom, 32)
                 }
             }
-            .navigationTitle("Objectifs d'Épargne")
+            .navigationTitle("Cagnottes & Épargne")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button(action: { dismiss() }) {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
+                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                        dismiss()
+                    } label: {
                         Image(systemName: "xmark.circle.fill")
-                            .foregroundStyle(.gray, Color.white.opacity(0.1))
+                            .font(.system(size: 22))
+                            .foregroundStyle(.secondary)
                     }
                 }
                 
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button(action: { showingAddGoalSheet = true }) {
-                        Image(systemName: "plus.circle.fill")
-                            .font(.system(size: 20, weight: .bold))
-                            .foregroundColor(.appBlue)
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                        showingAddGoalSheet = true
+                    } label: {
+                        ZStack {
+                            Circle()
+                                .fill(Color.appBlue.opacity(0.12))
+                                .frame(width: 36, height: 36)
+                            Image(systemName: "plus")
+                                .font(.system(size: 16, weight: .bold))
+                                .foregroundColor(.appBlue)
+                        }
                     }
                 }
             }
@@ -83,206 +102,276 @@ struct SavingsGoalsView: View {
         }
     }
     
-    // MARK: - Subviews
+    // MARK: - Header Récapitulatif
     
     private var savingsHeaderCard: some View {
         let totalSaved = viewModel.savingsGoals.reduce(0) { $0 + $1.currentAmount }
         let totalTarget = viewModel.savingsGoals.reduce(0) { $0 + $1.targetAmount }
         let globalProgress = totalTarget > 0 ? min((totalSaved / totalTarget) * 100, 100) : 0
         
-        return VStack(spacing: 14) {
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
+        return VStack(spacing: 20) {
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 6) {
                     Text("Total Épargné")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundStyle(.secondary)
+                        .textCase(.uppercase)
                     
                     Text(viewModel.formatAmount(totalSaved))
-                        .font(.system(size: 28, weight: .bold, design: .rounded))
-                        .foregroundColor(.white)
+                        .font(.system(size: 32, weight: .bold, design: .rounded))
+                        .foregroundStyle(.primary)
                 }
                 
                 Spacer()
                 
                 ZStack {
                     Circle()
-                        .stroke(Color.white.opacity(0.1), lineWidth: 8)
-                        .frame(width: 54, height: 54)
+                        .stroke(Color.black.opacity(0.06), lineWidth: 8)
+                        .frame(width: 60, height: 60)
                     
                     Circle()
                         .trim(from: 0, to: globalProgress / 100)
                         .stroke(
-                            LinearGradient(colors: [.appGreen, .appBlue], startPoint: .top, endPoint: .bottom),
+                            LinearGradient.gradientGreen,
                             style: StrokeStyle(lineWidth: 8, lineCap: .round)
                         )
-                        .frame(width: 54, height: 54)
+                        .frame(width: 60, height: 60)
                         .rotationEffect(.degrees(-90))
                     
                     Text("\(Int(globalProgress))%")
-                        .font(.system(size: 12, weight: .bold))
-                        .foregroundColor(.white)
+                        .font(.system(size: 13, weight: .bold, design: .rounded))
+                        .foregroundStyle(.primary)
                 }
             }
             
-            GeometryReader { geo in
-                ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 6)
-                        .fill(Color.white.opacity(0.1))
-                        .frame(height: 8)
-                    
-                    RoundedRectangle(cornerRadius: 6)
-                        .fill(LinearGradient(colors: [.appGreen, .appBlue], startPoint: .leading, endPoint: .trailing))
-                        .frame(width: geo.size.width * CGFloat(globalProgress / 100), height: 8)
+            VStack(spacing: 8) {
+                GeometryReader { geo in
+                    ZStack(alignment: .leading) {
+                        Capsule()
+                            .fill(Color.black.opacity(0.06))
+                            .frame(height: 10)
+                        
+                        Capsule()
+                            .fill(LinearGradient.gradientGreen)
+                            .frame(width: geo.size.width * CGFloat(globalProgress / 100), height: 10)
+                    }
                 }
-            }
-            .frame(height: 8)
-            
-            HStack {
-                Text("Objectif global : \(viewModel.formatAmount(totalTarget))")
-                    .font(.caption)
-                    .foregroundColor(.gray)
-                Spacer()
+                .frame(height: 10)
+                
+                HStack {
+                    Text("Objectif global : \(viewModel.formatAmount(totalTarget))")
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Text("\(viewModel.formatAmount(max(0, totalTarget - totalSaved))) restants")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(.appGreen)
+                }
             }
         }
-        .padding(18)
-        .background(
-            RoundedRectangle(cornerRadius: 20)
-                .fill(Color.appCardBackground)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 20)
-                        .stroke(Color.white.opacity(0.08), lineWidth: 1)
-                )
-        )
-        .padding(.horizontal)
+        .padding(20)
+        .liquidGlass(cornerRadius: 24)
+        .shadow(color: Color.appGreen.opacity(0.12), radius: 16, x: 0, y: 8)
     }
     
+    // MARK: - Carte d'objectif d'épargne
+    
     private func savingsGoalCard(_ goal: SavingsGoal) -> some View {
-        VStack(spacing: 14) {
+        VStack(spacing: 16) {
             HStack(spacing: 14) {
                 ZStack {
-                    Circle()
-                        .fill(goal.color.opacity(0.2))
-                        .frame(width: 46, height: 46)
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .fill(goal.color.opacity(0.12))
+                        .frame(width: 50, height: 50)
                     
                     Image(systemName: goal.iconName)
-                        .font(.system(size: 20, weight: .semibold))
+                        .font(.system(size: 22, weight: .semibold))
                         .foregroundColor(goal.color)
                 }
                 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(goal.title)
-                        .font(.headline)
-                        .foregroundColor(.white)
+                        .font(.system(size: 16, weight: .bold))
+                        .foregroundStyle(.primary)
                     
-                    Text("\(viewModel.formatAmount(goal.currentAmount)) sur \(viewModel.formatAmount(goal.targetAmount))")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
+                    HStack(spacing: 4) {
+                        Text(viewModel.formatAmount(goal.currentAmount))
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundColor(goal.color)
+                        Text("/")
+                            .font(.system(size: 13))
+                            .foregroundStyle(.secondary)
+                        Text(viewModel.formatAmount(goal.targetAmount))
+                            .font(.system(size: 13))
+                            .foregroundStyle(.secondary)
+                    }
                 }
                 
                 Spacer()
                 
-                Button(action: { selectedGoal = goal }) {
+                Button {
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                    selectedGoal = goal
+                } label: {
                     HStack(spacing: 4) {
                         Image(systemName: "plus")
-                        Text("Alimenter")
+                        Text("Déposer")
                     }
-                    .font(.system(size: 13, weight: .semibold))
+                    .font(.system(size: 13, weight: .bold))
                     .foregroundColor(.white)
-                    .padding(.horizontal, 12)
+                    .padding(.horizontal, 14)
                     .padding(.vertical, 8)
                     .background(
                         Capsule()
                             .fill(goal.color)
+                            .shadow(color: goal.color.opacity(0.3), radius: 8, y: 4)
                     )
                 }
             }
             
             // Jauge de progression
-            GeometryReader { geo in
-                ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(Color.white.opacity(0.1))
-                        .frame(height: 6)
-                    
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(goal.color)
-                        .frame(width: geo.size.width * CGFloat(goal.progressPercentage / 100), height: 6)
+            VStack(spacing: 6) {
+                GeometryReader { geo in
+                    ZStack(alignment: .leading) {
+                        Capsule()
+                            .fill(Color.black.opacity(0.06))
+                            .frame(height: 8)
+                        
+                        Capsule()
+                            .fill(goal.color)
+                            .frame(width: geo.size.width * CGFloat(goal.progressPercentage / 100), height: 8)
+                    }
+                }
+                .frame(height: 8)
+                
+                HStack {
+                    Text("\(Int(goal.progressPercentage))% atteint")
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Text("Reste \(viewModel.formatAmount(goal.remainingAmount))")
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundStyle(.secondary)
                 }
             }
-            .frame(height: 6)
         }
-        .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 18)
-                .fill(Color.appCardBackground)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 18)
-                        .stroke(Color.white.opacity(0.06), lineWidth: 1)
-                )
-        )
-        .padding(.horizontal)
+        .padding(18)
+        .liquidGlass(cornerRadius: 22)
     }
     
+    // MARK: - État Vide
+    
     private var emptyStateView: some View {
-        VStack(spacing: 14) {
-            Image(systemName: "target")
-                .font(.system(size: 48))
-                .foregroundColor(.gray)
+        VStack(spacing: 16) {
+            ZStack {
+                Circle()
+                    .fill(Color.appBlue.opacity(0.1))
+                    .frame(width: 80, height: 80)
+                Image(systemName: "target")
+                    .font(.system(size: 38))
+                    .foregroundColor(.appBlue)
+            }
             
-            Text("Aucune cagnotte pour le moment")
-                .font(.headline)
-                .foregroundColor(.white)
+            Text("Aucune cagnotte créée")
+                .font(.system(size: 18, weight: .bold))
+                .foregroundStyle(.primary)
             
-            Text("Fixez-vous des objectifs d'épargne pour financer vos projets.")
-                .font(.subheadline)
-                .foregroundColor(.gray)
+            Text("Fixez-vous des objectifs d'épargne clairs pour concrétiser vos projets d'avenir.")
+                .font(.system(size: 14))
+                .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
-                .padding(.horizontal)
+                .padding(.horizontal, 24)
             
-            Button(action: { showingAddGoalSheet = true }) {
-                Text("Créer un objectif")
-                    .fontWeight(.semibold)
+            Button {
+                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                showingAddGoalSheet = true
+            } label: {
+                Text("Créer une cagnotte")
+                    .font(.system(size: 15, weight: .bold))
                     .foregroundColor(.white)
-                    .padding(.horizontal, 24)
+                    .padding(.horizontal, 28)
                     .padding(.vertical, 12)
-                    .background(Capsule().fill(Color.appBlue))
+                    .background(
+                        Capsule()
+                            .fill(LinearGradient.gradientPrimary)
+                            .shadow(color: Color.appBlue.opacity(0.35), radius: 12, y: 6)
+                    )
             }
             .padding(.top, 8)
         }
-        .padding(30)
+        .padding(32)
+        .liquidGlass(cornerRadius: 24)
     }
     
-    // MARK: - Sheets
+    // MARK: - Modales Sheets
     
     private var addGoalSheet: some View {
-        NavigationStack {
+        NavigationView {
             Form {
-                Section(header: Text("Détails de l'objectif")) {
-                    TextField("Titre (ex: Fonds d'urgence)", text: $newTitle)
-                    TextField("Montant cible", text: $newTargetAmount)
-                        .keyboardType(.decimalPad)
-                    TextField("Montant déjà épargné", text: $newCurrentAmount)
-                        .keyboardType(.decimalPad)
+                Section {
+                    HStack(spacing: 12) {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                .fill(Color.appBlue.opacity(0.12))
+                                .frame(width: 30, height: 30)
+                            Image(systemName: "flag.fill")
+                                .font(.system(size: 13, weight: .semibold))
+                                .foregroundStyle(Color.appBlue)
+                        }
+                        TextField("Nom de la cagnotte (ex: Vacances)", text: $newTitle)
+                    }
+                    
+                    HStack(spacing: 12) {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                .fill(Color.appGreen.opacity(0.12))
+                                .frame(width: 30, height: 30)
+                            Image(systemName: "target")
+                                .font(.system(size: 13, weight: .semibold))
+                                .foregroundStyle(Color.appGreen)
+                        }
+                        TextField("Montant cible", text: $newTargetAmount)
+                            .keyboardType(.decimalPad)
+                    }
+                    
+                    HStack(spacing: 12) {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                .fill(Color.appPurple.opacity(0.12))
+                                .frame(width: 30, height: 30)
+                            Image(systemName: "banknote.fill")
+                                .font(.system(size: 13, weight: .semibold))
+                                .foregroundStyle(Color.appPurple)
+                        }
+                        TextField("Somme de départ (optionnelle)", text: $newCurrentAmount)
+                            .keyboardType(.decimalPad)
+                    }
+                } header: {
+                    Text("INFORMATIONS DE LA CAGNOTTE")
                 }
                 
-                Section(header: Text("Couleur")) {
-                    HStack(spacing: 12) {
+                Section {
+                    HStack(spacing: 14) {
                         ForEach(availableColors, id: \.self) { colorHex in
                             Circle()
                                 .fill(Color(hex: colorHex))
-                                .frame(width: 32, height: 32)
+                                .frame(width: 34, height: 34)
                                 .overlay(
                                     Circle()
-                                        .stroke(Color.white, lineWidth: newSelectedColor == colorHex ? 3 : 0)
+                                        .stroke(Color.primary, lineWidth: newSelectedColor == colorHex ? 2.5 : 0)
                                 )
                                 .onTapGesture {
+                                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
                                     newSelectedColor = colorHex
                                 }
                         }
                     }
+                    .padding(.vertical, 4)
+                } header: {
+                    Text("COULEUR D'ACCENTUATION")
                 }
             }
-            .navigationTitle("Nouvel Objectif")
+            .navigationTitle("Nouvelle Cagnotte")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -290,10 +379,10 @@ struct SavingsGoalsView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Créer") {
-                        if let target = Double(newTargetAmount), !newTitle.isEmpty {
-                            let current = Double(newCurrentAmount) ?? 0
+                        if let target = Double(newTargetAmount.replacingOccurrences(of: ",", with: ".")), !newTitle.isEmpty {
+                            let current = Double(newCurrentAmount.replacingOccurrences(of: ",", with: ".")) ?? 0
                             let goal = SavingsGoal(
-                                title: newTitle,
+                                title: newTitle.trimmingCharacters(in: .whitespaces),
                                 targetAmount: target,
                                 currentAmount: current,
                                 hexColor: newSelectedColor,
@@ -301,6 +390,7 @@ struct SavingsGoalsView: View {
                                 note: ""
                             )
                             viewModel.addSavingsGoal(goal)
+                            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                             showingAddGoalSheet = false
                             newTitle = ""
                             newTargetAmount = ""
@@ -314,46 +404,57 @@ struct SavingsGoalsView: View {
     }
     
     private func depositSheet(for goal: SavingsGoal) -> some View {
-        NavigationStack {
-            VStack(spacing: 20) {
-                Text("Alimenter '\(goal.title)'")
-                    .font(.headline)
-                    .foregroundColor(.white)
+        NavigationView {
+            VStack(spacing: 24) {
+                VStack(spacing: 8) {
+                    Text("Ajouter des fonds à")
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundStyle(.secondary)
+                    
+                    Text(goal.title)
+                        .font(.system(size: 22, weight: .bold))
+                        .foregroundStyle(.primary)
+                }
                 
                 TextField("Montant à ajouter", text: $depositAmount)
                     .keyboardType(.decimalPad)
-                    .font(.title)
+                    .font(.system(size: 36, weight: .bold, design: .rounded))
                     .multilineTextAlignment(.center)
                     .padding()
-                    .background(RoundedRectangle(cornerRadius: 12).fill(Color.appCardBackground))
+                    .liquidGlass(cornerRadius: 20)
                     .padding(.horizontal)
                 
-                Button(action: {
-                    if let amount = Double(depositAmount), amount > 0 {
+                Button {
+                    if let amount = Double(depositAmount.replacingOccurrences(of: ",", with: ".")), amount > 0 {
                         viewModel.depositToSavingsGoal(goalId: goal.id, amount: amount)
+                        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                         depositAmount = ""
                         selectedGoal = nil
                     }
-                }) {
-                    Text("Valider l'ajout")
-                        .font(.headline)
+                } label: {
+                    Text("Confirmer le dépôt")
+                        .font(.system(size: 16, weight: .bold))
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(RoundedRectangle(cornerRadius: 14).fill(Color.appGreen))
+                        .padding(.vertical, 16)
+                        .background(
+                            Capsule()
+                                .fill(goal.color)
+                                .shadow(color: goal.color.opacity(0.35), radius: 10, y: 5)
+                        )
                         .padding(.horizontal)
                 }
                 
                 Spacer()
             }
             .padding(.top, 24)
-            .background(Color.appBackground.ignoresSafeArea())
+            .background(Color(UIColor.systemGroupedBackground).ignoresSafeArea())
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Fermer") { selectedGoal = nil }
+                    Button("Annuler") { selectedGoal = nil }
                 }
             }
         }
-        .presentationDetents([.height(300)])
+        .presentationDetents([.height(340)])
     }
 }

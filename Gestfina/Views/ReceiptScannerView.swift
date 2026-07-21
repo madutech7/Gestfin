@@ -2,7 +2,7 @@
 //  ReceiptScannerView.swift
 //  Gestfina
 //
-//  Vue d'analyse OCR de tickets de caisse et factures avec prévisualisation
+//  Design Ultra-Premium Apple iOS 26 — Scanner de Reçu OCR
 //
 
 import SwiftUI
@@ -21,138 +21,153 @@ struct ReceiptScannerView: View {
     @State private var errorMessage: String?
     
     var body: some View {
-        NavigationStack {
+        NavigationView {
             ZStack {
-                Color.appBackground
+                Color(UIColor.systemGroupedBackground)
                     .ignoresSafeArea()
                 
-                VStack(spacing: 20) {
+                VStack(spacing: 24) {
                     if let image = selectedImage {
-                        // Zone d'aperçu de l'image
+                        // Zone d'aperçu de l'image scannée
                         ZStack {
                             Image(uiImage: image)
                                 .resizable()
                                 .scaledToFit()
                                 .frame(maxHeight: 320)
-                                .cornerRadius(16)
-                                .shadow(color: .black.opacity(0.3), radius: 10)
+                                .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+                                .shadow(color: Color.black.opacity(0.15), radius: 16, x: 0, y: 8)
                             
                             if isScanning {
                                 ZStack {
-                                    Color.black.opacity(0.6)
-                                        .cornerRadius(16)
+                                    Color.black.opacity(0.55)
+                                        .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
                                     
-                                    VStack(spacing: 12) {
+                                    VStack(spacing: 14) {
                                         ProgressView()
                                             .tint(.white)
-                                            .scaleEffect(1.3)
+                                            .scaleEffect(1.4)
                                         
-                                        Text("Analyse du reçu en cours...")
-                                            .font(.subheadline)
+                                        Text("Analyse OCR intelligente en cours...")
+                                            .font(.system(size: 14, weight: .bold))
                                             .foregroundColor(.white)
-                                            .bold()
                                     }
                                 }
                             }
                         }
-                        .padding(.horizontal)
+                        .padding(.horizontal, 20)
                         
-                        // Résultats détectés
+                        // Résultats de l'analyse Vision
                         if !isScanning {
-                            VStack(spacing: 12) {
-                                Text("Résultats de la détection")
-                                    .font(.headline)
-                                    .foregroundColor(.gray)
-                                
+                            VStack(spacing: 16) {
                                 HStack {
+                                    Label("Résultats de la détection", systemImage: "sparkles")
+                                        .font(.system(size: 15, weight: .bold))
+                                        .foregroundStyle(.primary)
+                                    Spacer()
+                                }
+                                .padding(.horizontal, 4)
+                                
+                                HStack(spacing: 16) {
                                     VStack(alignment: .leading, spacing: 4) {
-                                        Text("Commerçant / Titre")
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
+                                        Text("COMMERÇANT / LIBELLÉ")
+                                            .font(.system(size: 11, weight: .semibold))
+                                            .foregroundStyle(.secondary)
                                         Text(detectedMerchant ?? "Non détecté")
-                                            .font(.subheadline)
-                                            .foregroundColor(.white)
-                                            .bold()
+                                            .font(.system(size: 16, weight: .bold))
+                                            .foregroundStyle(.primary)
                                     }
                                     
                                     Spacer()
                                     
                                     VStack(alignment: .trailing, spacing: 4) {
-                                        Text("Montant détecté")
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
+                                        Text("MONTANT DÉTECTÉ")
+                                            .font(.system(size: 11, weight: .semibold))
+                                            .foregroundStyle(.secondary)
                                         Text(detectedAmount != nil ? String(format: "%.2f", detectedAmount!) : "Non détecté")
-                                            .font(.headline)
+                                            .font(.system(size: 18, weight: .bold, design: .rounded))
                                             .foregroundColor(.appGreen)
                                     }
                                 }
-                                .padding()
-                                .background(RoundedRectangle(cornerRadius: 14).fill(Color.appCardBackground))
-                                .padding(.horizontal)
+                                .padding(18)
+                                .liquidGlass(cornerRadius: 20)
                                 
-                                Button(action: {
+                                Button {
+                                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                                     onScanCompleted(detectedAmount, detectedMerchant)
                                     dismiss()
-                                }) {
-                                    Text("Utiliser ces données")
-                                        .font(.headline)
-                                        .foregroundColor(.white)
-                                        .frame(maxWidth: .infinity)
-                                        .padding()
-                                        .background(Capsule().fill(Color.appBlue))
-                                        .padding(.horizontal)
+                                } label: {
+                                    HStack {
+                                        Image(systemName: "checkmark.circle.fill")
+                                        Text("Utiliser ces données")
+                                    }
+                                    .font(.system(size: 16, weight: .bold))
+                                    .foregroundColor(.white)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 16)
+                                    .background(
+                                        Capsule()
+                                            .fill(LinearGradient.gradientPrimary)
+                                            .shadow(color: Color.appBlue.opacity(0.35), radius: 12, y: 6)
+                                    )
                                 }
                             }
+                            .padding(.horizontal, 20)
                         }
                     } else {
-                        // État initial : invitation à importer une photo
-                        VStack(spacing: 18) {
+                        // État d'accueil pour la sélection de la facture
+                        VStack(spacing: 24) {
                             ZStack {
                                 Circle()
-                                    .fill(Color.appBlue.opacity(0.15))
-                                    .frame(width: 90, height: 90)
+                                    .fill(Color.appBlue.opacity(0.12))
+                                    .frame(width: 100, height: 100)
                                 
                                 Image(systemName: "doc.viewfinder")
-                                    .font(.system(size: 44))
+                                    .font(.system(size: 48, weight: .medium))
                                     .foregroundColor(.appBlue)
                             }
                             
-                            VStack(spacing: 6) {
-                                Text("Scanner une facture / reçu")
-                                    .font(.title3)
-                                    .bold()
-                                    .foregroundColor(.white)
+                            VStack(spacing: 8) {
+                                Text("Scan Intelligent de Reçu")
+                                    .font(.system(size: 22, weight: .bold))
+                                    .foregroundStyle(.primary)
                                 
-                                Text("Sélectionnez une photo de votre ticket de caisse pour extraire automatiquement le montant et le commerçant.")
-                                    .font(.subheadline)
-                                    .foregroundColor(.gray)
+                                Text("Sélectionnez une photo de votre ticket de caisse pour en extraire automatiquement le montant et le commerçant.")
+                                    .font(.system(size: 14))
+                                    .foregroundStyle(.secondary)
                                     .multilineTextAlignment(.center)
-                                    .padding(.horizontal, 30)
+                                    .padding(.horizontal, 24)
                             }
                             
                             PhotosPicker(selection: $selectedItem, matching: .images) {
-                                HStack {
+                                HStack(spacing: 8) {
                                     Image(systemName: "photo.on.rectangle.angled")
                                     Text("Choisir une photo")
                                 }
-                                .font(.headline)
+                                .font(.system(size: 15, weight: .bold))
                                 .foregroundColor(.white)
-                                .padding(.horizontal, 24)
+                                .padding(.horizontal, 28)
                                 .padding(.vertical, 14)
-                                .background(Capsule().fill(Color.appBlue))
+                                .background(
+                                    Capsule()
+                                        .fill(LinearGradient.gradientPrimary)
+                                        .shadow(color: Color.appBlue.opacity(0.35), radius: 12, y: 6)
+                                )
                             }
                         }
-                        .padding(.vertical, 40)
+                        .padding(32)
+                        .liquidGlass(cornerRadius: 24)
+                        .padding(.horizontal, 20)
                     }
                     
                     Spacer()
                 }
+                .padding(.top, 20)
             }
-            .navigationTitle("Scan de Reçu OCR")
+            .navigationTitle("Scanner un Reçu OCR")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Annuler") { dismiss() }
+                    Button("Fermer") { dismiss() }
                 }
             }
             .onChange(of: selectedItem) { newItem in

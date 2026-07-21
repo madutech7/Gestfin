@@ -12,10 +12,10 @@ class SpeechRecognizer: ObservableObject {
         
         var message: String {
             switch self {
-            case .nilRecognizer: return "Can't initialize speech recognizer"
-            case .notAuthorized: return "Not authorized to recognize speech"
-            case .notPermittedToRecord: return "Not permitted to record audio"
-            case .recognizerIsUnavailable: return "Recognizer is unavailable"
+            case .nilRecognizer: return "Impossible d'initialiser la reconnaissance vocale"
+            case .notAuthorized: return "Non autorisé à utiliser la reconnaissance vocale"
+            case .notPermittedToRecord: return "Non autorisé à enregistrer l'audio"
+            case .recognizerIsUnavailable: return "Le service de reconnaissance vocale est indisponible"
             }
         }
     }
