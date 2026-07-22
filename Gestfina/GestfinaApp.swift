@@ -59,7 +59,7 @@ struct GestfinaApp: App {
                         .zIndex(3000)
                 }
             }
-            .environment(\.locale, Locale(identifier: "fr_FR"))
+            .environment(\.locale, Locale(identifier: "fr"))
             .preferredColorScheme(colorSchemeOverride)
             .animation(.easeInOut(duration: 0.25), value: authManager.isUnlocked)
             .animation(.spring(response: 0.45, dampingFraction: 0.8), value: backendAuth.isLoggedIn)

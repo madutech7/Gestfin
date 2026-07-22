@@ -3,1146 +3,4006 @@
   "strings": {
     "tabHome": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Accueil" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Home" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Kër" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "الرئيسية" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accueil"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accueil"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kër"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الرئيسية"
+          }
+        }
       }
     },
     "tabTransactions": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Transactions" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Transactions" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Raññe" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "المعاملات" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transactions"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transactions"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Raññe"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "المعاملات"
+          }
+        }
       }
     },
     "tabCoach": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "SamaCoach" } },
-        "en": { "stringUnit": { "state": "translated", "value": "SamaCoach" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "SamaCoach" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "SamaCoach" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SamaCoach"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SamaCoach"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SamaCoach"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SamaCoach"
+          }
+        }
       }
     },
     "tabBudget": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Budget" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Budget" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Budge" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "الميزانية" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Budget"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Budget"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Budge"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الميزانية"
+          }
+        }
       }
     },
     "tabAdd": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Ajouter" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Add" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Yokk" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "إضافة" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ajouter"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ajouter"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yokk"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "إضافة"
+          }
+        }
       }
     },
     "totalBalance": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Solde total" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Total Balance" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Sàldu mbooleem" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "الرصيد الإجمالي" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Solde total"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Solde total"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sàldu mbooleem"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الرصيد الإجمالي"
+          }
+        }
       }
     },
     "income": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Revenus" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Income" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Xaalis bu ñëw" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "الدخل" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Revenus"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Revenus"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xaalis bu ñëw"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الدخل"
+          }
+        }
       }
     },
     "expenses": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Dépenses" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Expenses" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Depaans" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "المصروفات" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dépenses"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dépenses"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Depaans"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "المصروفات"
+          }
+        }
       }
     },
     "activity": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Activité" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Activity" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Liggéey" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "النشاط" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Activité"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Activité"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liggéey"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "النشاط"
+          }
+        }
       }
     },
     "sevenDays": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "7 jours" } },
-        "en": { "stringUnit": { "state": "translated", "value": "7 days" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "7 fan" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "7 أيام" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "7 jours"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "7 jours"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "7 fan"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "7 أيام"
+          }
+        }
       }
     },
     "categories": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "catégories" } },
-        "en": { "stringUnit": { "state": "translated", "value": "categories" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "xeet" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "فئات" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "catégories"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "catégories"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "xeet"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "فئات"
+          }
+        }
       }
     },
     "recent": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Récentes" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Recent" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Yéésal" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "الأخيرة" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Récentes"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Récentes"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yéésal"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الأخيرة"
+          }
+        }
       }
     },
     "noTransaction": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Aucune transaction" } },
-        "en": { "stringUnit": { "state": "translated", "value": "No transactions" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Amul raññe" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "لا توجد معاملات" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucune transaction"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucune transaction"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Amul raññe"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "لا توجد معاملات"
+          }
+        }
       }
     },
     "addFirstTransaction": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Ajoutez votre première opération" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Add your first transaction" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Yokk sa njëkk raññe" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "أضف أول معاملة لك" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ajoutez votre première opération"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ajoutez votre première opération"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yokk sa njëkk raññe"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "أضف أول معاملة لك"
+          }
+        }
       }
     },
     "edit": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Modifier" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Edit" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Soppi" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "تعديل" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modifier"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modifier"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Soppi"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تعديل"
+          }
+        }
       }
     },
     "delete": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Supprimer" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Delete" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Far" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "حذف" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Supprimer"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Supprimer"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Far"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حذف"
+          }
+        }
       }
     },
     "deleteTransactionConfirm": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Supprimer cette transaction ?" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Delete this transaction?" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Bëgg nga far raññe bi?" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "هل تريد حذف هذه المعاملة؟" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Supprimer cette transaction ?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Supprimer cette transaction ?"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bëgg nga far raññe bi?"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "هل تريد حذف هذه المعاملة؟"
+          }
+        }
       }
     },
     "cancel": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Annuler" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Cancel" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Nàkk" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "إلغاء" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Annuler"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Annuler"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nàkk"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "إلغاء"
+          }
+        }
       }
     },
     "offline": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Hors-ligne" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Offline" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Ci biir" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "غير متصل" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hors-ligne"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hors-ligne"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ci biir"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "غير متصل"
+          }
+        }
       }
     },
     "pending": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "en attente" } },
-        "en": { "stringUnit": { "state": "translated", "value": "pending" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "xaar na" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "قيد الانتظار" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "en attente"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "en attente"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "xaar na"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "قيد الانتظار"
+          }
+        }
       }
     },
     "settings": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Réglages" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Settings" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Teral" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "الإعدادات" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réglages"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réglages"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teral"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الإعدادات"
+          }
+        }
       }
     },
     "subscription": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Mon abonnement" } },
-        "en": { "stringUnit": { "state": "translated", "value": "My Subscription" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Sama abonman" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "اشتراكي" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mon abonnement"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mon abonnement"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sama abonman"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اشتراكي"
+          }
+        }
       }
     },
     "activeSubscription": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Abonnement actif — Merci pour votre soutien !" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Active subscription — Thank you for your support!" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Abonman bi dafa am — Jërëjëf ci sa ndimbal!" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "اشتراك فعال — شكراً لدعمك!" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abonnement actif — Merci pour votre soutien !"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abonnement actif — Merci pour votre soutien !"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abonman bi dafa am — Jërëjëf ci sa ndimbal!"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اشتراك فعال — شكراً لدعمك!"
+          }
+        }
       }
     },
     "unlockPremium": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Débloquez les transactions illimitées & stats" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Unlock unlimited transactions & stats" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Ubbi raññe yu ñaari ak stats" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "فتح المعاملات غير المحدودة والإحصائيات" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Débloquez les transactions illimitées & stats"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Débloquez les transactions illimitées & stats"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ubbi raññe yu ñaari ak stats"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "فتح المعاملات غير المحدودة والإحصائيات"
+          }
+        }
       }
     },
     "active": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Actif" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Active" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Dafa dox" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "فعال" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Actif"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Actif"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dafa dox"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "فعال"
+          }
+        }
       }
     },
     "profile": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Profil" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Profile" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Profil" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "الملف الشخصي" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Profil"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Profil"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Profil"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الملف الشخصي"
+          }
+        }
       }
     },
     "tapToEdit": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Appuyer pour modifier" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Tap to edit" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Bës ngir soppi" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "انقر للتعديل" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Appuyer pour modifier"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Appuyer pour modifier"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bës ngir soppi"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "انقر للتعديل"
+          }
+        }
       }
     },
     "currency": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Devise" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Currency" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Xaalis" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "العملة" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Devise"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Devise"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xaalis"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "العملة"
+          }
+        }
       }
     },
     "currencyFooter": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "La devise sélectionnée sera utilisée pour toutes les transactions et les budgets." } },
-        "en": { "stringUnit": { "state": "translated", "value": "The selected currency will be used for all transactions and budgets." } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Xaalis bi nga tànn dina jëfandikoo ci raññe yi ak budge yi." } },
-        "ar": { "stringUnit": { "state": "translated", "value": "سيتم استخدام العملة المختارة لجميع المعاملات والميزانيات." } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La devise sélectionnée sera utilisée pour toutes les transactions et les budgets."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La devise sélectionnée sera utilisée pour toutes les transactions et les budgets."
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xaalis bi nga tànn dina jëfandikoo ci raññe yi ak budge yi."
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سيتم استخدام العملة المختارة لجميع المعاملات والميزانيات."
+          }
+        }
       }
     },
     "display": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Affichage" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Display" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Wone" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "العرض" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Affichage"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Affichage"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wone"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "العرض"
+          }
+        }
       }
     },
     "appearance": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Apparence" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Appearance" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Mel" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "المظهر" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apparence"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apparence"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mel"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "المظهر"
+          }
+        }
       }
     },
     "systemTheme": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Système" } },
-        "en": { "stringUnit": { "state": "translated", "value": "System" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Sisteem" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "النظام" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Système"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Système"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sisteem"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "النظام"
+          }
+        }
       }
     },
     "lightTheme": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Clair" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Light" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Leer" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "فاتح" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clair"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clair"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leer"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "فاتح"
+          }
+        }
       }
     },
     "darkTheme": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Sombre" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Dark" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Lëndëm" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "داكن" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sombre"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sombre"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lëndëm"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "داكن"
+          }
+        }
       }
     },
     "language": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Langue" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Language" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Làkk" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "اللغة" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Langue"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Langue"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Làkk"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اللغة"
+          }
+        }
       }
     },
     "languageSection": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Langue de l'application" } },
-        "en": { "stringUnit": { "state": "translated", "value": "App Language" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Làkk bi ci jëfandiku" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "لغة التطبيق" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Langue de l'application"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Langue de l'application"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Làkk bi ci jëfandiku"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "لغة التطبيق"
+          }
+        }
       }
     },
     "security": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Sécurité" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Security" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Aar" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "الأمان" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sécurité"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sécurité"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aar"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الأمان"
+          }
+        }
       }
     },
     "encryptedStorage": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Stockage chiffré local" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Encrypted local storage" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Duukaasu ci biir" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "تخزين محلي مشفر" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stockage chiffré local"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stockage chiffré local"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Duukaasu ci biir"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تخزين محلي مشفر"
+          }
+        }
       }
     },
     "notifications": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Notifications" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Notifications" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Yëgal" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "الإشعارات" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notifications"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notifications"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yëgal"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الإشعارات"
+          }
+        }
       }
     },
     "enableNotifications": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Activer les notifications" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Enable notifications" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Teral yëgal yi" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "تفعيل الإشعارات" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Activer les notifications"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Activer les notifications"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teral yëgal yi"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تفعيل الإشعارات"
+          }
+        }
       }
     },
     "openSystemSettings": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Ouvrir les Réglages système" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Open System Settings" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Ubbi teral yi" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "فتح إعدادات النظام" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ouvrir les Réglages système"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ouvrir les Réglages système"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ubbi teral yi"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "فتح إعدادات النظام"
+          }
+        }
       }
     },
     "notifDenied": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Notifications désactivées. Activez-les dans Réglages > SamaXaalis." } },
-        "en": { "stringUnit": { "state": "translated", "value": "Notifications disabled. Enable them in Settings > SamaXaalis." } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Yëgal yi tëj nañu. Ubbi ko ci Teral > SamaXaalis." } },
-        "ar": { "stringUnit": { "state": "translated", "value": "الإشعارات معطلة. قم بتفعيلها من الإعدادات > SamaXaalis." } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notifications désactivées. Activez-les dans Réglages > SamaXaalis."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notifications désactivées. Activez-les dans Réglages > SamaXaalis."
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yëgal yi tëj nañu. Ubbi ko ci Teral > SamaXaalis."
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الإشعارات معطلة. قم بتفعيلها من الإعدادات > SamaXaalis."
+          }
+        }
       }
     },
     "budgetAlerts": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Alertes budget" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Budget alerts" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Yëgal budge" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "تنبيهات الميزانية" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alertes budget"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alertes budget"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yëgal budge"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تنبيهات الميزانية"
+          }
+        }
       }
     },
     "budgetAlertSubtitle": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Quand 80% ou 100% est atteint" } },
-        "en": { "stringUnit": { "state": "translated", "value": "When 80% or 100% is reached" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Bu 80% walla 100% féete" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "عند الوصول إلى 80% أو 100%" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quand 80% ou 100% est atteint"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quand 80% ou 100% est atteint"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu 80% walla 100% féete"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "عند الوصول إلى 80% أو 100%"
+          }
+        }
       }
     },
     "dailyReminder": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Rappel quotidien" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Daily reminder" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Fàttaliku bés bu nekk" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "تذكير يومي" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rappel quotidien"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rappel quotidien"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fàttaliku bés bu nekk"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تذكير يومي"
+          }
+        }
       }
     },
     "dailyReminderSubtitle": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Saisir vos dépenses du jour" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Log your daily expenses" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Bind sa depaans yu tey" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "سجل مصروفاتك اليومية" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saisir vos dépenses du jour"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saisir vos dépenses du jour"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bind sa depaans yu tey"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سجل مصروفاتك اليومية"
+          }
+        }
       }
     },
     "reminderTime": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Heure du rappel" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Reminder time" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Waxtu fàttaliku" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "وقت التذكير" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Heure du rappel"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Heure du rappel"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waxtu fàttaliku"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "وقت التذكير"
+          }
+        }
       }
     },
     "data": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Données" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Data" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Njoxe" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "البيانات" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Données"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Données"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Njoxe"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "البيانات"
+          }
+        }
       }
     },
     "savedTransactions": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Transactions enregistrées" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Saved transactions" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Raññe yi denc nañu" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "المعاملات المحفوظة" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transactions enregistrées"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transactions enregistrées"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Raññe yi denc nañu"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "المعاملات المحفوظة"
+          }
+        }
       }
     },
     "activeBudgets": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Budgets actifs" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Active budgets" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Budge yu am doole" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "الميزانيات النشطة" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Budgets actifs"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Budgets actifs"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Budge yu am doole"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الميزانيات النشطة"
+          }
+        }
       }
     },
     "logout": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Se déconnecter" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Log out" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Génn" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "تسجيل الخروج" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se déconnecter"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se déconnecter"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Génn"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تسجيل الخروج"
+          }
+        }
       }
     },
     "resetDevice": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Réinitialiser l'appareil" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Reset device" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Tàmbali" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "إعادة تعيين الجهاز" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réinitialiser l'appareil"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réinitialiser l'appareil"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tàmbali"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "إعادة تعيين الجهاز"
+          }
+        }
       }
     },
     "resetConfirm": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Réinitialiser SamaXaalis ?" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Reset SamaXaalis?" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Tàmbali SamaXaalis?" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "إعادة تعيين SamaXaalis؟" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réinitialiser SamaXaalis ?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réinitialiser SamaXaalis ?"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tàmbali SamaXaalis?"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "إعادة تعيين SamaXaalis؟"
+          }
+        }
       }
     },
     "deleteAll": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Tout effacer" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Delete all" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Far lépp" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "حذف الكل" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tout effacer"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tout effacer"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Far lépp"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حذف الكل"
+          }
+        }
       }
     },
     "resetMessage": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Toutes vos transactions et budgets locaux seront supprimés. Cette action est irréversible." } },
-        "en": { "stringUnit": { "state": "translated", "value": "All your local transactions and budgets will be deleted. This action is irreversible." } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Sa raññe yi ak budge yi lépp dina ñu far. Jëf jii duñu ko dellu." } },
-        "ar": { "stringUnit": { "state": "translated", "value": "سيتم حذف جميع المعاملات والميزانيات المحلية. لا يمكن التراجع عن هذا الإجراء." } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toutes vos transactions et budgets locaux seront supprimés. Cette action est irréversible."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toutes vos transactions et budgets locaux seront supprimés. Cette action est irréversible."
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sa raññe yi ak budge yi lépp dina ñu far. Jëf jii duñu ko dellu."
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سيتم حذف جميع المعاملات والميزانيات المحلية. لا يمكن التراجع عن هذا الإجراء."
+          }
+        }
       }
     },
     "dataFooter": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Vos données sont stockées localement et synchronisées de manière sécurisée sur votre compte SamaXaalis Cloud." } },
-        "en": { "stringUnit": { "state": "translated", "value": "Your data is stored locally and securely synced to your SamaXaalis Cloud account." } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Sa njoxe yi dañu ñu denc ci sa telefon te sync ci SamaXaalis Cloud." } },
-        "ar": { "stringUnit": { "state": "translated", "value": "يتم تخزين بياناتك محلياً ومزامنتها بأمان مع حساب SamaXaalis Cloud." } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vos données sont stockées localement et synchronisées de manière sécurisée sur votre compte SamaXaalis Cloud."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vos données sont stockées localement et synchronisées de manière sécurisée sur votre compte SamaXaalis Cloud."
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sa njoxe yi dañu ñu denc ci sa telefon te sync ci SamaXaalis Cloud."
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "يتم تخزين بياناتك محلياً ومزامنتها بأمان مع حساب SamaXaalis Cloud."
+          }
+        }
       }
     },
     "about": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "À propos" } },
-        "en": { "stringUnit": { "state": "translated", "value": "About" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Ci kaw" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "حول" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "À propos"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "À propos"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ci kaw"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حول"
+          }
+        }
       }
     },
     "developer": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Développeur" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Developer" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Jotukaay" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "المطور" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Développeur"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Développeur"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jotukaay"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "المطور"
+          }
+        }
       }
     },
     "localData": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Données 100% locales" } },
-        "en": { "stringUnit": { "state": "translated", "value": "100% local data" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Njoxe 100% ci biir" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "بيانات محلية 100%" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Données 100% locales"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Données 100% locales"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Njoxe 100% ci biir"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "بيانات محلية 100%"
+          }
+        }
       }
     },
     "privacyPolicy": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Politique de confidentialité" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Privacy Policy" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Sàqub sutura" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "سياسة الخصوصية" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Politique de confidentialité"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Politique de confidentialité"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sàqub sutura"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سياسة الخصوصية"
+          }
+        }
       }
     },
     "termsOfUse": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Conditions d'utilisation (EULA)" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Terms of Use (EULA)" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Sàrt yi" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "شروط الاستخدام (EULA)" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Conditions d'utilisation (EULA)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Conditions d'utilisation (EULA)"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sàrt yi"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "شروط الاستخدام (EULA)"
+          }
+        }
       }
     },
     "editProfile": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Modifier le profil" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Edit Profile" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Soppi profil" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "تعديل الملف الشخصي" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modifier le profil"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modifier le profil"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Soppi profil"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تعديل الملف الشخصي"
+          }
+        }
       }
     },
     "yourName": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Votre prénom" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Your first name" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Sa tur" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "اسمك الأول" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Votre prénom"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Votre prénom"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sa tur"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اسمك الأول"
+          }
+        }
       }
     },
     "firstName": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Prénom" } },
-        "en": { "stringUnit": { "state": "translated", "value": "First name" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Tur" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "الاسم" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prénom"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prénom"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tur"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الاسم"
+          }
+        }
       }
     },
     "save": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Enregistrer" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Save" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Denc" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "حفظ" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enregistrer"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enregistrer"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Denc"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حفظ"
+          }
+        }
       }
     },
     "searchCurrency": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Rechercher une devise" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Search currency" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Wut xaalis" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "البحث عن عملة" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rechercher une devise"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rechercher une devise"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wut xaalis"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "البحث عن عملة"
+          }
+        }
       }
     },
     "chooseCurrency": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Choisir une devise" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Choose currency" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Tànn xaalis" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "اختيار العملة" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choisir une devise"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choisir une devise"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tànn xaalis"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اختيار العملة"
+          }
+        }
       }
     },
     "amount": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Montant" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Amount" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Jëmu" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "المبلغ" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Montant"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Montant"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jëmu"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "المبلغ"
+          }
+        }
       }
     },
     "transactionTitle": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Titre de la transaction" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Transaction title" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Sañ-sañu raññe bi" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "عنوان المعاملة" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Titre de la transaction"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Titre de la transaction"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sañ-sañu raññe bi"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "عنوان المعاملة"
+          }
+        }
       }
     },
     "noteOptional": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Note (optionnel)" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Note (optional)" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Binde (su bëggee)" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "ملاحظة (اختياري)" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Note (optionnel)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Note (optionnel)"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Binde (su bëggee)"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ملاحظة (اختياري)"
+          }
+        }
       }
     },
     "recurringTransaction": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Transaction récurrente" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Recurring transaction" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Raññe bu déllu" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "معاملة متكررة" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transaction récurrente"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transaction récurrente"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Raññe bu déllu"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "معاملة متكررة"
+          }
+        }
       }
     },
     "frequency": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Fréquence" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Frequency" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Ñaari" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "التكرار" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fréquence"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fréquence"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ñaari"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "التكرار"
+          }
+        }
       }
     },
     "information": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Informations" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Information" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Xibaar" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "المعلومات" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Informations"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Informations"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xibaar"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "المعلومات"
+          }
+        }
       }
     },
     "category": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Catégorie" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Category" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Xeet" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "الفئة" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Catégorie"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Catégorie"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xeet"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الفئة"
+          }
+        }
       }
     },
     "newTransaction": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Nouvelle transaction" } },
-        "en": { "stringUnit": { "state": "translated", "value": "New Transaction" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Raññe bu bees" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "معاملة جديدة" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nouvelle transaction"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nouvelle transaction"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Raññe bu bees"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "معاملة جديدة"
+          }
+        }
       }
     },
     "addButton": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Ajouter" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Add" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Yokk" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "إضافة" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ajouter"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ajouter"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yokk"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "إضافة"
+          }
+        }
       }
     },
     "editTransaction": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Modifier" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Edit" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Soppi" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "تعديل" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modifier"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modifier"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Soppi"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تعديل"
+          }
+        }
       }
     },
     "deleteThisTransaction": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Supprimer cette transaction" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Delete this transaction" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Far raññe bii" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "حذف هذه المعاملة" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Supprimer cette transaction"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Supprimer cette transaction"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Far raññe bii"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حذف هذه المعاملة"
+          }
+        }
       }
     },
     "searchTransaction": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Rechercher une transaction" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Search transactions" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Wut raññe" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "البحث عن معاملة" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rechercher une transaction"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rechercher une transaction"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wut raññe"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "البحث عن معاملة"
+          }
+        }
       }
     },
     "all": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Tout" } },
-        "en": { "stringUnit": { "state": "translated", "value": "All" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Lépp" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "الكل" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tout"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tout"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lépp"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الكل"
+          }
+        }
       }
     },
     "addFirstViaPlus": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Ajoutez votre première opération\nvia le bouton +" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Add your first transaction\nusing the + button" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Yokk sa njëkk raññe\nci jokkere +" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "أضف أول معاملة لك\nباستخدام زر +" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ajoutez votre première opération\nvia le bouton +"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ajoutez votre première opération\nvia le bouton +"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yokk sa njëkk raññe\nci jokkere +"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "أضف أول معاملة لك\nباستخدام زر +"
+          }
+        }
       }
     },
     "exportCSV": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Exporter en CSV" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Export as CSV" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Yóbbu CSV" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "تصدير CSV" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exporter en CSV"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exporter en CSV"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yóbbu CSV"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تصدير CSV"
+          }
+        }
       }
     },
     "exportPDF": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Exporter en PDF" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Export as PDF" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Yóbbu PDF" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "تصدير PDF" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exporter en PDF"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exporter en PDF"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yóbbu PDF"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تصدير PDF"
+          }
+        }
       }
     },
     "export": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Exporter" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Export" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Yóbbu" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "تصدير" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exporter"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exporter"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yóbbu"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تصدير"
+          }
+        }
       }
     },
     "budgets": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Budgets" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Budgets" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Budge" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "الميزانيات" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Budgets"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Budgets"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Budge"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الميزانيات"
+          }
+        }
       }
     },
     "myBudgets": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Mes budgets" } },
-        "en": { "stringUnit": { "state": "translated", "value": "My Budgets" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Samay budge" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "ميزانياتي" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mes budgets"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mes budgets"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Samay budge"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ميزانياتي"
+          }
+        }
       }
     },
     "noBudget": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Aucun budget défini" } },
-        "en": { "stringUnit": { "state": "translated", "value": "No budgets defined" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Amul budge" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "لا توجد ميزانيات" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucun budget défini"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucun budget défini"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Amul budge"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "لا توجد ميزانيات"
+          }
+        }
       }
     },
     "createFirstBudget": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Créez votre premier budget pour suivre vos dépenses de manière intelligente." } },
-        "en": { "stringUnit": { "state": "translated", "value": "Create your first budget to track your expenses intelligently." } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Sos sa njëkk budge ngir topp sa depaans." } },
-        "ar": { "stringUnit": { "state": "translated", "value": "أنشئ ميزانيتك الأولى لتتبع مصروفاتك بذكاء." } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Créez votre premier budget pour suivre vos dépenses de manière intelligente."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Créez votre premier budget pour suivre vos dépenses de manière intelligente."
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sos sa njëkk budge ngir topp sa depaans."
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "أنشئ ميزانيتك الأولى لتتبع مصروفاتك بذكاء."
+          }
+        }
       }
     },
     "used": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "utilisé" } },
-        "en": { "stringUnit": { "state": "translated", "value": "used" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "jëfandikoo" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "مستخدم" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "utilisé"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "utilisé"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "jëfandikoo"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مستخدم"
+          }
+        }
       }
     },
     "globalBudget": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Budget global" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Global Budget" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Budge mbooleem" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "الميزانية الإجمالية" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Budget global"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Budget global"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Budge mbooleem"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الميزانية الإجمالية"
+          }
+        }
       }
     },
     "spent": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Dépensé" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Spent" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Dépensé" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "المصروف" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dépensé"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dépensé"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dépensé"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "المصروف"
+          }
+        }
       }
     },
     "remaining": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Restant" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Remaining" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Desu" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "المتبقي" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restant"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restant"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desu"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "المتبقي"
+          }
+        }
       }
     },
     "spendingLimit": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Limite de dépense" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Spending limit" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Caabi depaans" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "حد الإنفاق" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Limite de dépense"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Limite de dépense"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Caabi depaans"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حد الإنفاق"
+          }
+        }
       }
     },
     "period": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Période" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Period" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Diiru" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "الفترة" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Période"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Période"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diiru"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الفترة"
+          }
+        }
       }
     },
     "newBudget": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Nouveau budget" } },
-        "en": { "stringUnit": { "state": "translated", "value": "New Budget" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Budge bu bees" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "ميزانية جديدة" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nouveau budget"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nouveau budget"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Budge bu bees"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ميزانية جديدة"
+          }
+        }
       }
     },
     "editBudget": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Modifier le budget" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Edit Budget" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Soppi budge bi" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "تعديل الميزانية" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modifier le budget"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modifier le budget"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Soppi budge bi"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تعديل الميزانية"
+          }
+        }
       }
     },
     "done": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Terminé" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Done" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Jeex na" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "تم" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terminé"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terminé"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jeex na"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تم"
+          }
+        }
       }
     },
     "askCoach": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Demandez à SamaCoach..." } },
-        "en": { "stringUnit": { "state": "translated", "value": "Ask SamaCoach..." } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Laaj SamaCoach..." } },
-        "ar": { "stringUnit": { "state": "translated", "value": "اسأل SamaCoach..." } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Demandez à SamaCoach..."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Demandez à SamaCoach..."
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Laaj SamaCoach..."
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اسأل SamaCoach..."
+          }
+        }
       }
     },
     "editQuestion": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Modifier la question" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Edit question" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Soppi laaj bi" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "تعديل السؤال" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modifier la question"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modifier la question"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Soppi laaj bi"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تعديل السؤال"
+          }
+        }
       }
     },
     "coachSuggestion1": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Comment optimiser mes économies ?" } },
-        "en": { "stringUnit": { "state": "translated", "value": "How to optimize my savings?" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Naka laa mëna aar sama xaalis?" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "كيف يمكنني تحسين مدخراتي؟" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comment optimiser mes économies ?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comment optimiser mes économies ?"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Naka laa mëna aar sama xaalis?"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "كيف يمكنني تحسين مدخراتي؟"
+          }
+        }
       }
     },
     "coachSuggestion2": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Analyse mes dépenses du mois dernier" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Analyze my spending from last month" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Raññe sama depaans yu weesu" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "حلل مصروفاتي في الشهر الماضي" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Analyse mes dépenses du mois dernier"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Analyse mes dépenses du mois dernier"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Raññe sama depaans yu weesu"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حلل مصروفاتي في الشهر الماضي"
+          }
+        }
       }
     },
     "coachSuggestion3": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Crée un plan budgétaire hebdomadaire" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Create a weekly budget plan" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Sosal ma budge bu ayu bés" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "أنشئ خطة ميزانية أسبوعية" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Crée un plan budgétaire hebdomadaire"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Crée un plan budgétaire hebdomadaire"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sosal ma budge bu ayu bés"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "أنشئ خطة ميزانية أسبوعية"
+          }
+        }
       }
     },
     "isLocked": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "SamaXaalis est verrouillé" } },
-        "en": { "stringUnit": { "state": "translated", "value": "SamaXaalis is locked" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "SamaXaalis tëj na" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "SamaXaalis مقفل" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SamaXaalis est verrouillé"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SamaXaalis est verrouillé"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SamaXaalis tëj na"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SamaXaalis مقفل"
+          }
+        }
       }
     },
     "useBiometric %@": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Utiliser %@" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Use %@" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Jëfandikoo %@" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "استخدام %@" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Utiliser %@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Utiliser %@"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jëfandikoo %@"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "استخدام %@"
+          }
+        }
       }
     },
     "welcomeTitle": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Bienvenue sur SamaXaalis" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Welcome to SamaXaalis" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Dalal jàmm ci SamaXaalis" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "مرحباً بك في SamaXaalis" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bienvenue sur SamaXaalis"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bienvenue sur SamaXaalis"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dalal jàmm ci SamaXaalis"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مرحباً بك في SamaXaalis"
+          }
+        }
       }
     },
     "welcomeDesc": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Prenez le contrôle de vos finances avec élégance et simplicité." } },
-        "en": { "stringUnit": { "state": "translated", "value": "Take control of your finances with elegance and simplicity." } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Tegal sa loxo ci sa xaalis ak jàmm." } },
-        "ar": { "stringUnit": { "state": "translated", "value": "تحكم في أمورك المالية بأناقة وبساطة." } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prenez le contrôle de vos finances avec élégance et simplicité."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prenez le contrôle de vos finances avec élégance et simplicité."
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tegal sa loxo ci sa xaalis ak jàmm."
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تحكم في أمورك المالية بأناقة وبساطة."
+          }
+        }
       }
     },
     "trackTitle": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Suivi Intelligent" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Smart Tracking" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Topp bu bees" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "تتبع ذكي" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suivi Intelligent"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suivi Intelligent"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Topp bu bees"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تتبع ذكي"
+          }
+        }
       }
     },
     "trackDesc": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Visualisez vos dépenses par catégorie et maîtrisez votre budget." } },
-        "en": { "stringUnit": { "state": "translated", "value": "Visualize your spending by category and master your budget." } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Gis sa depaans yi te master sa budge." } },
-        "ar": { "stringUnit": { "state": "translated", "value": "تصور مصروفاتك حسب الفئة وتحكم في ميزانيتك." } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Visualisez vos dépenses par catégorie et maîtrisez votre budget."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Visualisez vos dépenses par catégorie et maîtrisez votre budget."
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gis sa depaans yi te master sa budge."
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تصور مصروفاتك حسب الفئة وتحكم في ميزانيتك."
+          }
+        }
       }
     },
     "securityTitle": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Sécurité Maximale" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Maximum Security" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Aar bu mbooleem" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "أقصى درجات الأمان" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sécurité Maximale"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sécurité Maximale"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aar bu mbooleem"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "أقصى درجات الأمان"
+          }
+        }
       }
     },
     "securityDesc": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Vos données sont chiffrées et protégées par biométrie." } },
-        "en": { "stringUnit": { "state": "translated", "value": "Your data is encrypted and protected by biometrics." } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Sa njoxe yi dañu ñu aar ci biir." } },
-        "ar": { "stringUnit": { "state": "translated", "value": "بياناتك مشفرة ومحمية بالقياسات الحيوية." } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vos données sont chiffrées et protégées par biométrie."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vos données sont chiffrées et protégées par biométrie."
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sa njoxe yi dañu ñu aar ci biir."
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "بياناتك مشفرة ومحمية بالقياسات الحيوية."
+          }
+        }
       }
     },
     "skip": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Passer" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Skip" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Jálla" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "تخطي" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passer"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passer"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jálla"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تخطي"
+          }
+        }
       }
     },
     "start": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Commencer" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Start" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Tàmbali" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "ابدأ" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Commencer"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Commencer"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tàmbali"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ابدأ"
+          }
+        }
       }
     },
     "continueButton": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Continuer" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Continue" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Wéy" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "متابعة" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continuer"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continuer"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wéy"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "متابعة"
+          }
+        }
       }
     },
     "incomeType": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Revenu" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Income" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Xaalis bu ñëw" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "دخل" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Revenu"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Revenu"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xaalis bu ñëw"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "دخل"
+          }
+        }
       }
     },
     "expenseType": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Dépense" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Expense" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Depaans" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "مصروف" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dépense"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dépense"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Depaans"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مصروف"
+          }
+        }
       }
     },
     "copyAmount": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Copier le montant" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Copy amount" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Duppi jëmu bi" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "نسخ المبلغ" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copier le montant"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copier le montant"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Duppi jëmu bi"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نسخ المبلغ"
+          }
+        }
       }
     },
     "copyTitle": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Copier le titre" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Copy title" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Duppi sañ-sañ bi" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "نسخ العنوان" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copier le titre"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copier le titre"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Duppi sañ-sañ bi"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نسخ العنوان"
+          }
+        }
       }
     },
     "today": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Aujourd'hui" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Today" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Tey" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "اليوم" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aujourd'hui"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aujourd'hui"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tey"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اليوم"
+          }
+        }
       }
     },
     "yesterday": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Hier" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Yesterday" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Demb" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "أمس" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hier"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hier"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Demb"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "أمس"
+          }
+        }
       }
     },
     "daysAgo %lld": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Il y a %lld jours" } },
-        "en": { "stringUnit": { "state": "translated", "value": "%lld days ago" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Am na %lld fan" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "منذ %lld أيام" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il y a %lld jours"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il y a %lld jours"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Am na %lld fan"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "منذ %lld أيام"
+          }
+        }
       }
     },
     "Salaire": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Salaire" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Salary" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Paya" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "الراتب" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Salaire"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Salaire"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paya"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الراتب"
+          }
+        }
       }
     },
     "Freelance": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Freelance" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Freelance" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Kuru-kuru" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "عمل حر" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Freelance"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Freelance"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kuru-kuru"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "عمل حر"
+          }
+        }
       }
     },
     "Investissement": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Investissement" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Investment" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Tegal xaalis" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "الاستثمار" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Investissement"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Investissement"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tegal xaalis"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الاستثمار"
+          }
+        }
       }
     },
     "Alimentation": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Alimentation" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Food" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Lekk ak Naan" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "طعام" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alimentation"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alimentation"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lekk ak Naan"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "طعام"
+          }
+        }
       }
     },
     "Logement": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Logement" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Housing" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Kër" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "سكن" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Logement"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Logement"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kër"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سكن"
+          }
+        }
       }
     },
     "Transport": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Transport" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Transport" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Tuggal" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "نقل" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transport"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transport"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tuggal"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نقل"
+          }
+        }
       }
     },
     "Factures": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Factures" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Bills" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Faktir" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "فواتير" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Factures"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Factures"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Faktir"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "فواتير"
+          }
+        }
       }
     },
     "Loisirs": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Loisirs" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Entertainment" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Baanexu" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "ترفيه" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loisirs"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loisirs"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Baanexu"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ترفيه"
+          }
+        }
       }
     },
     "Shopping": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Shopping" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Shopping" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Jënd" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "تسوق" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shopping"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shopping"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jënd"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تسوق"
+          }
+        }
       }
     },
     "Santé": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Santé" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Health" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Wer-gi-yaram" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "صحة" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Santé"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Santé"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wer-gi-yaram"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "صحة"
+          }
+        }
       }
     },
     "Éducation": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Éducation" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Education" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Njang" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "تعليم" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Éducation"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Éducation"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Njang"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تعليم"
+          }
+        }
       }
     },
     "Épargne": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Épargne" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Savings" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Denc" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "ادخار" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Épargne"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Épargne"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Denc"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ادخار"
+          }
+        }
       }
     },
     "Autre": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Autre" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Other" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Leneen" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "آخر" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Autre"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Autre"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leneen"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "آخر"
+          }
+        }
       }
     },
     "Quotidien": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Quotidien" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Daily" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Bés bu nekk" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "يومي" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quotidien"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quotidien"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bés bu nekk"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "يومي"
+          }
+        }
       }
     },
     "Hebdomadaire": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Hebdomadaire" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Weekly" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Ayu bés" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "أسبوعي" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hebdomadaire"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hebdomadaire"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ayu bés"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "أسبوعي"
+          }
+        }
       }
     },
     "Mensuel": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Mensuel" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Monthly" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Weer bu nekk" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "شهري" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mensuel"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mensuel"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weer bu nekk"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "شهري"
+          }
+        }
       }
     },
     "Annuel": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Annuel" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Yearly" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "At bu nekk" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "سنوي" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Annuel"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Annuel"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "At bu nekk"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سنوي"
+          }
+        }
       }
     },
     "biometricUnavailable": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Biométrie indisponible" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Biometrics unavailable" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Biométrie amul" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "القياسات الحيوية غير متوفرة" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Biométrie indisponible"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Biométrie indisponible"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Biométrie amul"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "القياسات الحيوية غير متوفرة"
+          }
+        }
       }
     },
     "version": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Version" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Version" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Version" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "الإصدار" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Version"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Version"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Version"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الإصدار"
+          }
+        }
       }
     },
     "Semaine": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Semaine" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Week" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Ayu bés" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "أسبوع" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Semaine"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Semaine"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ayu bés"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "أسبوع"
+          }
+        }
       }
     },
     "Mois": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Mois" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Month" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Weer" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "شهر" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mois"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mois"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weer"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "شهر"
+          }
+        }
       }
     },
     "Année": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Année" } },
-        "en": { "stringUnit": { "state": "translated", "value": "Year" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "At" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "سنة" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Année"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Année"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "At"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سنة"
+          }
+        }
       }
     },
     "Tout": {
       "localizations": {
-        "fr": { "stringUnit": { "state": "translated", "value": "Tout" } },
-        "en": { "stringUnit": { "state": "translated", "value": "All" } },
-        "wo": { "stringUnit": { "state": "translated", "value": "Lépp" } },
-        "ar": { "stringUnit": { "state": "translated", "value": "الكل" } }
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tout"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tout"
+          }
+        },
+        "wo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lépp"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الكل"
+          }
+        }
       }
     }
   }
