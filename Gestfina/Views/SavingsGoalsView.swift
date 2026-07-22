@@ -165,7 +165,7 @@ struct SavingsGoalsView: View {
                     Spacer()
                     Text("\(viewModel.formatAmount(max(0, totalTarget - totalSaved))) restants")
                         .font(.system(size: 12, weight: .semibold))
-                        .foregroundStyle(.appGreen)
+                        .foregroundStyle(Color.appGreen)
                 }
             }
         }
