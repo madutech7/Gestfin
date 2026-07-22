@@ -17,10 +17,10 @@ enum Tab: String, CaseIterable {
     
     var title: String {
         switch self {
-        case .home: return "Accueil"
-        case .transactions: return "Transactions"
-        case .coach: return "SamaCoach"
-        case .budget: return "Budget"
+        case .home: return L10n.tabHome
+        case .transactions: return L10n.tabTransactions
+        case .coach: return L10n.tabCoach
+        case .budget: return L10n.tabBudget
         }
     }
 }
@@ -95,61 +95,17 @@ struct FloatingIslandTabBar: View {
     }
 }
 
-// MARK: - Integration Example (ZStack Layout)
-struct MainContainerView: View {
-    @State private var currentTab: Tab = .home
-    
-    var body: some View {
-        ZStack(alignment: .bottom) {
-            // 1. Content Layer
-            Group {
-                switch currentTab {
-                case .home:
-                    DashboardContent()
-                case .transactions:
-                    TransactionsContent()
-                case .coach:
-                    CoachContent()
-                case .budget:
-                    BudgetContent()
-                }
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            
-            // 2. Navigation Layer (Floating)
-            FloatingIslandTabBar(selectedTab: $currentTab) {
-                print("Action button tapped!")
-            }
-        }
-        .ignoresSafeArea(.keyboard) // Important for FAB UX
-    }
-}
-
-// MARK: - Placeholder Contents for Demo
-struct DashboardContent: View {
-    var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                Text("Tableau de Bord")
-                    .font(.largeTitle.bold())
-                    .padding(.top, 60)
-                
-                ForEach(1...20, id: \.self) { i in
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(Color.gray.opacity(0.1))
-                        .frame(height: 100)
-                        .overlay(Text("Transaction #\(i)").foregroundColor(.secondary))
-                }
-            }
-            .padding()
-        }
-    }
-}
-
-struct TransactionsContent: View { var body: some View { Text("Historique").font(.title) } }
-struct CoachContent: View { var body: some View { Text("SamaCoach AI").font(.title) } }
-struct BudgetContent: View { var body: some View { Text("Budgets").font(.title) } }
 
 #Preview {
-    MainContainerView()
+    struct PreviewWrapper: View {
+        @State var tab: Tab = .home
+        var body: some View {
+            ZStack(alignment: .bottom) {
+                Color(.systemGroupedBackground).ignoresSafeArea()
+                FloatingIslandTabBar(selectedTab: $tab) {}
+            }
+        }
+    }
+    return PreviewWrapper()
 }
+
