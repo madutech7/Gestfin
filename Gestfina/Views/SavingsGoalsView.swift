@@ -353,17 +353,7 @@ struct SavingsGoalsView: View {
                 Section {
                     HStack(spacing: 14) {
                         ForEach(availableColors, id: \.self) { colorHex in
-                            Circle()
-                                .fill(Color(hex: colorHex))
-                                .frame(width: 34, height: 34)
-                                .overlay(
-                                    Circle()
-                                        .stroke(Color.primary, lineWidth: newSelectedColor == colorHex ? 2.5 : 0)
-                                )
-                                .onTapGesture {
-                                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                                    newSelectedColor = colorHex
-                                }
+                            colorCircleView(colorHex)
                         }
                     }
                     .padding(.vertical, 4)
@@ -401,6 +391,21 @@ struct SavingsGoalsView: View {
                 }
             }
         }
+    }
+    
+    private func colorCircleView(_ colorHex: String) -> some View {
+        let isSelected = (newSelectedColor == colorHex)
+        return Circle()
+            .fill(Color(hex: colorHex))
+            .frame(width: 34, height: 34)
+            .overlay(
+                Circle()
+                    .stroke(Color.primary, lineWidth: isSelected ? 2.5 : 0)
+            )
+            .onTapGesture {
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                newSelectedColor = colorHex
+            }
     }
     
     private func depositSheet(for goal: SavingsGoal) -> some View {
