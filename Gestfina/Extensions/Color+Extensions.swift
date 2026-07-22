@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// MARK: - Extension Color
+
 extension Color {
     
     // MARK: - Couleurs système Apple exactes
@@ -44,42 +46,8 @@ extension Color {
     static let textSecondary = Color(hex: "475569")
     static let textTertiary = Color(hex: "94A3B8")
     
-    // MARK: - Gradients premium
+    // MARK: - Gradients premium (accessibles via Color.gradientPrimary)
     
-    static let gradientPrimary = LinearGradient(
-        colors: [Color(hex: "6366F1"), Color(hex: "8B5CF6"), Color(hex: "A855F7")],
-        startPoint: .topLeading, endPoint: .bottomTrailing
-    )
-    
-    static let gradientGreen = LinearGradient(
-        colors: [Color(hex: "34D399"), Color(hex: "06B6D4")],
-        startPoint: .topLeading, endPoint: .bottomTrailing
-    )
-    
-    static let gradientRed = LinearGradient(
-        colors: [Color(hex: "FB7185"), Color(hex: "F43F5E")],
-        startPoint: .topLeading, endPoint: .bottomTrailing
-    )
-    
-    static let gradientGold = LinearGradient(
-        colors: [Color(hex: "F59E0B"), Color(hex: "EF4444")],
-        startPoint: .topLeading, endPoint: .bottomTrailing
-    )
-    
-    static let gradientMesh = LinearGradient(
-        colors: [Color(hex: "6366F1"), Color(hex: "EC4899"), Color(hex: "F59E0B")],
-        startPoint: .topLeading, endPoint: .bottomTrailing
-    )
-    
-    static let gradientCard = LinearGradient(
-        colors: [Color(hex: "141836"), Color(hex: "0C1022")],
-        startPoint: .top, endPoint: .bottom
-    )
-}
-
-// MARK: - Extensions LinearGradient
-
-extension LinearGradient {
     static let gradientPrimary = LinearGradient(
         colors: [Color(hex: "6366F1"), Color(hex: "8B5CF6"), Color(hex: "A855F7")],
         startPoint: .topLeading, endPoint: .bottomTrailing
@@ -135,4 +103,38 @@ extension LinearGradient {
             opacity: Double(a) / 255
         )
     }
+}
+
+// MARK: - Extension LinearGradient (accessibles via LinearGradient.gradientPrimary)
+
+extension LinearGradient {
+    static let gradientPrimary = LinearGradient(
+        colors: [Color(hex: "6366F1"), Color(hex: "8B5CF6"), Color(hex: "A855F7")],
+        startPoint: .topLeading, endPoint: .bottomTrailing
+    )
+    
+    static let gradientGreen = LinearGradient(
+        colors: [Color(hex: "34D399"), Color(hex: "06B6D4")],
+        startPoint: .topLeading, endPoint: .bottomTrailing
+    )
+    
+    static let gradientRed = LinearGradient(
+        colors: [Color(hex: "FB7185"), Color(hex: "F43F5E")],
+        startPoint: .topLeading, endPoint: .bottomTrailing
+    )
+    
+    static let gradientGold = LinearGradient(
+        colors: [Color(hex: "F59E0B"), Color(hex: "EF4444")],
+        startPoint: .topLeading, endPoint: .bottomTrailing
+    )
+    
+    static let gradientMesh = LinearGradient(
+        colors: [Color(hex: "6366F1"), Color(hex: "EC4899"), Color(hex: "F59E0B")],
+        startPoint: .topLeading, endPoint: .bottomTrailing
+    )
+    
+    static let gradientCard = LinearGradient(
+        colors: [Color(hex: "141836"), Color(hex: "0C1022")],
+        startPoint: .top, endPoint: .bottom
+    )
 }
