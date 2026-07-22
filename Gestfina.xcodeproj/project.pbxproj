@@ -106,7 +106,7 @@
 		FA00000000000000000076 /* ReceiptScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReceiptScannerView.swift"; sourceTree = "<group>"; };
 		FA00000000000000000077 /* PDFReportGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Utils/PDFReportGenerator.swift"; sourceTree = "<group>"; };
 		FA00000000000000000078 /* EncryptedStorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Utils/EncryptedStorageManager.swift"; sourceTree = "<group>"; };
-		FA00000000000000000079 /* AccountBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Components/AccountBadgeView.swift"; sourceTree = "<group>"; };
+		FA00000000000000000079 /* AccountBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AccountBadgeView.swift"; sourceTree = "<group>"; };
 		FA00000000000000000060 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Localizable.xcstrings"; sourceTree = "<group>"; };
 		FA00000000000000000040 /* chart.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "chart.json"; sourceTree = "<group>"; };
 		FA00000000000000000041 /* security.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "security.json"; sourceTree = "<group>"; };
