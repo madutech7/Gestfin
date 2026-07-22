@@ -61,7 +61,7 @@ struct FloatingIslandTabBar: View {
             .clipShape(Capsule())
             .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 5)
             
-            // MARK: - Detached FAB (+)
+            // MARK: - Detached FAB (+) — Liquid Glass Style (iOS 26)
             Button {
                 hapticFeedback(.medium)
                 withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
@@ -73,15 +73,16 @@ struct FloatingIslandTabBar: View {
                 }
             } label: {
                 Image(systemName: "plus")
-                    .font(.system(size: 24, weight: .bold))
-                    .foregroundColor(.white)
+                    .font(.system(size: 22, weight: .semibold))
+                    .foregroundStyle(.primary)
                     .frame(width: 60, height: 60)
-                    .background(
+                    .background(.ultraThinMaterial, in: Circle())
+                    .overlay(
                         Circle()
-                            .fill(LinearGradient(colors: [.accentColor, .accentColor.opacity(0.8)], startPoint: .topLeading, endPoint: .bottomTrailing))
+                            .stroke(Color.white.opacity(0.35), lineWidth: 0.5)
                     )
                     .scaleEffect(isPressed ? 0.85 : 1.0)
-                    .shadow(color: Color.accentColor.opacity(0.3), radius: 10, x: 0, y: 5)
+                    .shadow(color: Color.black.opacity(0.12), radius: 10, x: 0, y: 5)
             }
         }
         .padding(.horizontal, 16)
