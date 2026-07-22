@@ -75,6 +75,40 @@ extension Color {
         colors: [Color(hex: "141836"), Color(hex: "0C1022")],
         startPoint: .top, endPoint: .bottom
     )
+}
+
+// MARK: - Extensions LinearGradient
+
+extension LinearGradient {
+    static let gradientPrimary = LinearGradient(
+        colors: [Color(hex: "6366F1"), Color(hex: "8B5CF6"), Color(hex: "A855F7")],
+        startPoint: .topLeading, endPoint: .bottomTrailing
+    )
+    
+    static let gradientGreen = LinearGradient(
+        colors: [Color(hex: "34D399"), Color(hex: "06B6D4")],
+        startPoint: .topLeading, endPoint: .bottomTrailing
+    )
+    
+    static let gradientRed = LinearGradient(
+        colors: [Color(hex: "FB7185"), Color(hex: "F43F5E")],
+        startPoint: .topLeading, endPoint: .bottomTrailing
+    )
+    
+    static let gradientGold = LinearGradient(
+        colors: [Color(hex: "F59E0B"), Color(hex: "EF4444")],
+        startPoint: .topLeading, endPoint: .bottomTrailing
+    )
+    
+    static let gradientMesh = LinearGradient(
+        colors: [Color(hex: "6366F1"), Color(hex: "EC4899"), Color(hex: "F59E0B")],
+        startPoint: .topLeading, endPoint: .bottomTrailing
+    )
+    
+    static let gradientCard = LinearGradient(
+        colors: [Color(hex: "141836"), Color(hex: "0C1022")],
+        startPoint: .top, endPoint: .bottom
+    )
     
     // MARK: - Initialiseur Hex
     
