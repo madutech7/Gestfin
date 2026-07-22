@@ -147,8 +147,8 @@ struct AddTransactionView: View {
                     Picker("Compte", selection: $selectedAccountId) {
                         Text("Aucun (Par défaut)").tag(UUID?.none)
                         ForEach(viewModel.accounts) { acc in
-                            HStack {
-                                Image(systemName: acc.iconName)
+                            HStack(spacing: 10) {
+                                AccountBadgeView(type: acc.type, size: 22)
                                 Text(acc.name)
                             }
                             .tag(UUID?.some(acc.id))
