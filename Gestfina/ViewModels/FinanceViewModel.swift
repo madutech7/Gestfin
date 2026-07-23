@@ -5,6 +5,10 @@
 //  ViewModel principal gérant toute la logique financière
 //
 
+import Foundation
+import SwiftUI
+import Combine
+
 enum ActivityTimeframe: String, CaseIterable, Identifiable {
     case day = "Jour"
     case week = "Semaine"

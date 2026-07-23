@@ -111,8 +111,8 @@ struct SavingsGoalsView: View {
     private var savingsHeaderCard: some View {
         let totalSaved = viewModel.savingsGoals.reduce(0) { $0 + $1.currentAmount }
         let totalTarget = viewModel.savingsGoals.reduce(0) { $0 + $1.targetAmount }
-        let globalProgress = totalTarget > 0 ? min((totalSaved / totalTarget) * 100, 100) : 0
-        let remainingGlobal = max(0, totalTarget - totalSaved)
+        let globalProgress: Double = totalTarget > 0 ? min((totalSaved / totalTarget) * 100.0, 100.0) : 0.0
+        let remainingGlobal = max(0.0, totalTarget - totalSaved)
         
         return VStack(spacing: 16) {
             HStack(alignment: .top) {
