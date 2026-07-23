@@ -78,7 +78,7 @@ struct DashboardView: View {
                                 .font(.system(size: 18, weight: .bold))
                                 .foregroundStyle(.primary)
                             Spacer()
-                            Text(L10n.sevenDays)
+                            Text(viewModel.activityTimeframe.title)
                                 .font(.system(size: 13, weight: .medium))
                                 .foregroundStyle(.secondary)
                         }
@@ -426,23 +426,62 @@ struct SparklineChartCard: View {
     @ObservedObject var viewModel: FinanceViewModel
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            // Total for period
-            let total = viewModel.dailyExpenses.reduce(0) { $0 + $1.amount }
-            if total > 0 {
-                Text(viewModel.isBalanceVisible ? viewModel.formatAmount(total) : "••••")
-                    .font(.system(size: 24, weight: .bold, design: .rounded))
-                    .foregroundStyle(.primary)
+        VStack(alignment: .leading, spacing: 14) {
+            // Header Montant & Sélecteur de période épuré
+            HStack(alignment: .center) {
+                let points = viewModel.currentActivityPoints
+                let total = points.reduce(0) { $0 + $1.amount }
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Dépenses (\(viewModel.activityTimeframe.rawValue.lowercased()))")
+                        .font(.system(size: 11, weight: .bold))
+                        .foregroundStyle(.secondary)
+                        .textCase(.uppercase)
+                    
+                    Text(viewModel.isBalanceVisible ? viewModel.formatAmount(total) : "••••")
+                        .font(.system(size: 22, weight: .bold, design: .rounded))
+                        .foregroundStyle(.primary)
+                }
+                
+                Spacer()
+                
+                // Sélecteur de Période (J, S, M, A) — Style Apple Native
+                HStack(spacing: 4) {
+                    ForEach(ActivityTimeframe.allCases) { timeframe in
+                        Button {
+                            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                                viewModel.activityTimeframe = timeframe
+                            }
+                        } label: {
+                            Text(timeframe.shortTitle)
+                                .font(.system(size: 12, weight: viewModel.activityTimeframe == timeframe ? .bold : .medium))
+                                .foregroundStyle(viewModel.activityTimeframe == timeframe ? .white : .primary)
+                                .frame(width: 28, height: 28)
+                                .background(
+                                    Circle()
+                                        .fill(viewModel.activityTimeframe == timeframe ? Color.appBlue : Color.clear)
+                                )
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .padding(3)
+                .background(Color(UIColor.tertiarySystemGroupedBackground))
+                .clipShape(Capsule())
             }
 
-            Chart(viewModel.dailyExpenses, id: \.day) { item in
+            // Graphique Dynamique SwiftCharts
+            let points = viewModel.currentActivityPoints
+            
+            Chart(points) { item in
                 AreaMark(
-                    x: .value("Jour", item.day),
+                    x: .value("Période", item.label),
                     y: .value("Montant", item.amount)
                 )
                 .foregroundStyle(
                     LinearGradient(
-                        colors: [Color.appBlue.opacity(0.2), Color.appBlue.opacity(0.02)],
+                        colors: [Color.appBlue.opacity(0.25), Color.appBlue.opacity(0.02)],
                         startPoint: .top,
                         endPoint: .bottom
                     )
@@ -450,16 +489,10 @@ struct SparklineChartCard: View {
                 .interpolationMethod(.catmullRom)
 
                 LineMark(
-                    x: .value("Jour", item.day),
+                    x: .value("Période", item.label),
                     y: .value("Montant", item.amount)
                 )
-                .foregroundStyle(
-                    LinearGradient(
-                        colors: [.appBlue, .appCyan],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                )
+                .foregroundStyle(Color.appBlue)
                 .lineStyle(StrokeStyle(lineWidth: 2.5, lineCap: .round, lineJoin: .round))
                 .interpolationMethod(.catmullRom)
             }
@@ -473,7 +506,7 @@ struct SparklineChartCard: View {
             .chartYAxis(.hidden)
             .frame(height: 140)
         }
-        .padding(20)
+        .padding(18)
         .background(Color(UIColor.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
