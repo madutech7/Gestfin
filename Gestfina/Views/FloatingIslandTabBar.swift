@@ -17,10 +17,10 @@ enum Tab: String, CaseIterable {
     
     var title: String {
         switch self {
-        case .home: return L10n.tabHome
-        case .transactions: return L10n.tabTransactions
-        case .coach: return L10n.tabCoach
-        case .budget: return L10n.tabBudget
+        case .home: return "Accueil"
+        case .transactions: return "Transactions"
+        case .coach: return "SamaCoach"
+        case .budget: return "Budget"
         }
     }
 }
@@ -61,7 +61,7 @@ struct FloatingIslandTabBar: View {
             .clipShape(Capsule())
             .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 5)
             
-            // MARK: - Detached FAB (+) — Liquid Glass Style (iOS 26)
+            // MARK: - Detached FAB (+)
             Button {
                 hapticFeedback(.medium)
                 withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
@@ -73,16 +73,15 @@ struct FloatingIslandTabBar: View {
                 }
             } label: {
                 Image(systemName: "plus")
-                    .font(.system(size: 22, weight: .semibold))
-                    .foregroundStyle(.primary)
+                    .font(.system(size: 24, weight: .bold))
+                    .foregroundColor(.white)
                     .frame(width: 60, height: 60)
-                    .background(.ultraThinMaterial, in: Circle())
-                    .overlay(
+                    .background(
                         Circle()
-                            .stroke(Color.white.opacity(0.35), lineWidth: 0.5)
+                            .fill(LinearGradient(colors: [.accentColor, .accentColor.opacity(0.8)], startPoint: .topLeading, endPoint: .bottomTrailing))
                     )
                     .scaleEffect(isPressed ? 0.85 : 1.0)
-                    .shadow(color: Color.black.opacity(0.12), radius: 10, x: 0, y: 5)
+                    .shadow(color: Color.accentColor.opacity(0.3), radius: 10, x: 0, y: 5)
             }
         }
         .padding(.horizontal, 16)
@@ -95,17 +94,61 @@ struct FloatingIslandTabBar: View {
     }
 }
 
-
-#Preview {
-    struct PreviewWrapper: View {
-        @State var tab: Tab = .home
-        var body: some View {
-            ZStack(alignment: .bottom) {
-                Color(.systemGroupedBackground).ignoresSafeArea()
-                FloatingIslandTabBar(selectedTab: $tab) {}
+// MARK: - Integration Example (ZStack Layout)
+struct MainContainerView: View {
+    @State private var currentTab: Tab = .home
+    
+    var body: some View {
+        ZStack(alignment: .bottom) {
+            // 1. Content Layer
+            Group {
+                switch currentTab {
+                case .home:
+                    DashboardContent()
+                case .transactions:
+                    TransactionsContent()
+                case .coach:
+                    CoachContent()
+                case .budget:
+                    BudgetContent()
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            
+            // 2. Navigation Layer (Floating)
+            FloatingIslandTabBar(selectedTab: $currentTab) {
+                print("Action button tapped!")
             }
         }
+        .ignoresSafeArea(.keyboard) // Important for FAB UX
     }
-    return PreviewWrapper()
 }
 
+// MARK: - Placeholder Contents for Demo
+struct DashboardContent: View {
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                Text("Tableau de Bord")
+                    .font(.largeTitle.bold())
+                    .padding(.top, 60)
+                
+                ForEach(1...20, id: \.self) { i in
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(Color.gray.opacity(0.1))
+                        .frame(height: 100)
+                        .overlay(Text("Transaction #\(i)").foregroundColor(.secondary))
+                }
+            }
+            .padding()
+        }
+    }
+}
+
+struct TransactionsContent: View { var body: some View { Text("Historique").font(.title) } }
+struct CoachContent: View { var body: some View { Text("SamaCoach AI").font(.title) } }
+struct BudgetContent: View { var body: some View { Text("Budgets").font(.title) } }
+
+#Preview {
+    MainContainerView()
+}

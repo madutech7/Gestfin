@@ -550,6 +550,10 @@ class FinanceViewModel: ObservableObject {
         savingsGoals.append(goal)
     }
     
+    func deleteSavingsGoal(_ goal: SavingsGoal) {
+        savingsGoals.removeAll(where: { $0.id == goal.id })
+    }
+    
     func depositToSavingsGoal(goalId: UUID, amount: Double) {
         if let index = savingsGoals.firstIndex(where: { $0.id == goalId }) {
             savingsGoals[index].currentAmount += amount
