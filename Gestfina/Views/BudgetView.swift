@@ -2,7 +2,7 @@
 //  BudgetView.swift
 //  Gestfina
 //
-//  Gestion des budgets — Ultra-Premium Apple iOS Design
+//  Gestion des budgets — Design Native iOS Sobriété
 //
 
 import SwiftUI
@@ -19,37 +19,59 @@ struct BudgetView: View {
     var body: some View {
         NavigationView {
             List {
-                // ── OBJECTIFS D'ÉPARGNE (CAGNOTTES HERO BANNER) ──
+                // ── OBJECTIFS D'ÉPARGNE (CAGNOTTES) ──
                 Section {
-                    SavingsBannerHeroCard(viewModel: viewModel) {
+                    Button(action: {
+                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
                         showSavingsGoals = true
+                    }) {
+                        HStack(spacing: 12) {
+                            ZStack {
+                                Circle()
+                                    .fill(Color.appGreen.opacity(0.12))
+                                    .frame(width: 36, height: 36)
+                                
+                                Image(systemName: "target")
+                                    .font(.system(size: 16, weight: .semibold))
+                                    .foregroundColor(.appGreen)
+                            }
+                            
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Objectifs d'Épargne & Cagnottes")
+                                    .font(.system(size: 15, weight: .semibold))
+                                    .foregroundColor(.primary)
+                                
+                                let totalSaved = viewModel.savingsGoals.reduce(0) { $0 + $1.currentAmount }
+                                Text("\(viewModel.savingsGoals.count) cagnotte(s) • \(viewModel.formatAmount(totalSaved)) épargnés")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            
+                            Spacer()
+                            
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 13, weight: .semibold))
+                                .foregroundColor(.secondary)
+                        }
                     }
                 }
-                .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
-                .listRowBackground(Color.clear)
-                .listRowSeparator(.hidden)
 
-                // ── OVERVIEW RING (Apple Fitness Style) ──
+                // ── OVERVIEW RING ──
                 Section {
                     NativeOverviewCard(viewModel: viewModel)
-                        .padding(.vertical, 8)
+                        .padding(.vertical, 4)
                 }
                 .listRowBackground(Color(UIColor.secondarySystemGroupedBackground))
                 
                 // ── BUDGET LIST ──
                 if viewModel.budgets.isEmpty {
                     Section {
-                        VStack(spacing: 16) {
-                            ZStack {
-                                Circle()
-                                    .fill(Color.appBlue.opacity(0.12))
-                                    .frame(width: 72, height: 72)
-                                Image(systemName: "chart.pie.fill")
-                                    .font(.system(size: 32))
-                                    .foregroundStyle(Color.appBlue)
-                            }
+                        VStack(spacing: 12) {
+                            Image(systemName: "chart.pie")
+                                .font(.system(size: 36, weight: .light))
+                                .foregroundStyle(Color.appBlue)
                             Text(L10n.noBudget)
-                                .font(.system(size: 18, weight: .bold, design: .rounded))
+                                .font(.system(size: 16, weight: .semibold))
                             Text(L10n.createFirstBudget)
                                 .font(.system(size: 14))
                                 .foregroundStyle(.secondary)
@@ -57,41 +79,26 @@ struct BudgetView: View {
                                 .padding(.horizontal, 16)
                             
                             Button {
-                                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                                UIImpactFeedbackGenerator(style: .light).impactOccurred()
                                 showAddBudget = true
                             } label: {
-                                HStack(spacing: 6) {
-                                    Image(systemName: "plus.circle.fill")
-                                    Text("Définir un budget")
-                                }
-                                .font(.system(size: 14, weight: .bold))
-                                .foregroundColor(.white)
-                                .padding(.horizontal, 20)
-                                .padding(.vertical, 10)
-                                .background(
-                                    Capsule()
-                                        .fill(LinearGradient.gradientPrimary)
-                                        .shadow(color: Color.appBlue.opacity(0.3), radius: 8, y: 4)
-                                )
+                                Text("Créer un budget")
+                                    .font(.system(size: 14, weight: .semibold))
+                                    .foregroundColor(.white)
+                                    .padding(.horizontal, 18)
+                                    .padding(.vertical, 8)
+                                    .background(
+                                        Capsule()
+                                            .fill(Color.appBlue)
+                                    )
                             }
                             .padding(.top, 4)
                         }
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 28)
+                        .padding(.vertical, 24)
                     }
                 } else {
-                    Section(header: 
-                        HStack {
-                            Text(L10n.myBudgets)
-                                .font(.system(size: 14, weight: .bold))
-                                .foregroundColor(.primary)
-                            Spacer()
-                            Text("\(viewModel.budgets.count) actifs")
-                                .font(.system(size: 12, weight: .semibold))
-                                .foregroundColor(.secondary)
-                        }
-                        .textCase(nil)
-                    ) {
+                    Section(header: Text(L10n.myBudgets)) {
                         ForEach(viewModel.budgets) { budget in
                             NativeBudgetCard(
                                 budget: budget,
@@ -134,13 +141,9 @@ struct BudgetView: View {
                             showAddBudget = true
                         }
                     } label: {
-                        HStack(spacing: 4) {
-                            Image(systemName: "plus")
-                                .font(.system(size: 14, weight: .bold))
-                            Text("Budget")
-                                .font(.system(size: 14, weight: .bold))
-                        }
-                        .foregroundStyle(Color.appBlue)
+                        Image(systemName: "plus")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(Color.appBlue)
                     }
                 }
             }
@@ -160,96 +163,6 @@ struct BudgetView: View {
                 PaywallView()
             }
         }
-    }
-}
-
-// MARK: - Bannière Hero d'Épargne & Cagnottes
-
-struct SavingsBannerHeroCard: View {
-    @ObservedObject var viewModel: FinanceViewModel
-    let action: () -> Void
-    @Environment(\.colorScheme) var colorScheme
-
-    var body: some View {
-        Button(action: {
-            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-            action()
-        }) {
-            HStack(spacing: 16) {
-                // Icône Cibles animée avec halo
-                ZStack {
-                    Circle()
-                        .fill(Color.white.opacity(0.18))
-                        .frame(width: 48, height: 48)
-                    
-                    Image(systemName: "target")
-                        .font(.system(size: 24, weight: .bold))
-                        .foregroundColor(.white)
-                }
-                
-                VStack(alignment: .leading, spacing: 4) {
-                    HStack(spacing: 6) {
-                        Text("OBJECTIFS D'ÉPARGNE")
-                            .font(.system(size: 11, weight: .bold))
-                            .tracking(0.6)
-                            .foregroundStyle(Color.white.opacity(0.8))
-                        
-                        if !viewModel.savingsGoals.isEmpty {
-                            Text("\(viewModel.savingsGoals.count)")
-                                .font(.system(size: 10, weight: .bold, design: .rounded))
-                                .foregroundStyle(Color(hex: "#064E3B"))
-                                .padding(.horizontal, 6)
-                                .padding(.vertical, 2)
-                                .background(Color(hex: "#34D399"))
-                                .clipShape(Capsule())
-                        }
-                    }
-                    
-                    let totalSaved = viewModel.savingsGoals.reduce(0) { $0 + $1.currentAmount }
-                    Text(viewModel.savingsGoals.isEmpty ? "Créer vos cagnottes de projet" : "\(viewModel.formatAmount(totalSaved)) épargnés")
-                        .font(.system(size: 17, weight: .bold, design: .rounded))
-                        .foregroundColor(.white)
-                }
-                
-                Spacer()
-                
-                HStack(spacing: 4) {
-                    Text("Ouvrir")
-                        .font(.system(size: 12, weight: .bold, design: .rounded))
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 12, weight: .bold))
-                }
-                .foregroundColor(.white)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 6)
-                .background(Color.white.opacity(0.2))
-                .clipShape(Capsule())
-            }
-            .padding(18)
-            .background(
-                ZStack {
-                    LinearGradient(
-                        colors: [
-                            Color(hex: "#059669"),
-                            Color(hex: "#10B981"),
-                            Color(hex: "#06B6D4")
-                        ],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                    
-                    RadialGradient(
-                        colors: [Color.white.opacity(0.2), Color.clear],
-                        center: .topLeading,
-                        startRadius: 0,
-                        endRadius: 150
-                    )
-                }
-            )
-            .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
-            .shadow(color: Color(hex: "#10B981").opacity(colorScheme == .dark ? 0.3 : 0.2), radius: 12, x: 0, y: 6)
-        }
-        .buttonStyle(.plain)
     }
 }
 
@@ -279,59 +192,59 @@ struct NativeOverviewCard: View {
     }
 
     var body: some View {
-        HStack(spacing: 20) {
-            // Ring d'activité dynamique
+        HStack(spacing: 16) {
+            // Ring sobre
             ZStack {
                 Circle()
-                    .stroke(Color.secondary.opacity(0.15), lineWidth: 11)
-                    .frame(width: 76, height: 76)
+                    .stroke(Color.secondary.opacity(0.12), lineWidth: 10)
+                    .frame(width: 70, height: 70)
 
                 Circle()
                     .trim(from: 0, to: CGFloat(min(pct, 100)) / 100)
                     .stroke(
                         ringColor,
-                        style: StrokeStyle(lineWidth: 11, lineCap: .round)
+                        style: StrokeStyle(lineWidth: 10, lineCap: .round)
                     )
-                    .frame(width: 76, height: 76)
+                    .frame(width: 70, height: 70)
                     .rotationEffect(.degrees(-90))
-                    .animation(.spring(response: 0.9, dampingFraction: 0.7), value: pct)
+                    .animation(.spring(response: 0.8), value: pct)
 
                 VStack(spacing: 0) {
                     Text("\(Int(pct))%")
-                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .font(.system(size: 14, weight: .bold, design: .rounded))
                     Text(L10n.used)
-                        .font(.system(size: 10, weight: .medium))
+                        .font(.system(size: 9, weight: .medium))
                         .foregroundStyle(.secondary)
                 }
             }
 
-            // Infos globales
-            VStack(alignment: .leading, spacing: 8) {
+            // Infos
+            VStack(alignment: .leading, spacing: 6) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(L10n.globalBudget)
-                        .font(.system(size: 12, weight: .bold))
+                        .font(.system(size: 11, weight: .bold))
                         .foregroundStyle(.secondary)
                         .textCase(.uppercase)
                     Text(viewModel.isBalanceVisible ? viewModel.formatAmount(totalBudget) : "••••")
-                        .font(.system(size: 22, weight: .bold, design: .rounded))
+                        .font(.system(size: 20, weight: .bold, design: .rounded))
                 }
                 
-                HStack(spacing: 16) {
-                    VStack(alignment: .leading, spacing: 2) {
+                HStack(spacing: 14) {
+                    VStack(alignment: .leading, spacing: 1) {
                         Text(L10n.spent)
-                            .font(.system(size: 11, weight: .medium))
+                            .font(.system(size: 10, weight: .regular))
                             .foregroundStyle(.secondary)
                         Text(viewModel.isBalanceVisible ? viewModel.formatAmount(totalSpent) : "••••")
-                            .font(.system(size: 13, weight: .bold, design: .rounded))
+                            .font(.system(size: 12, weight: .semibold, design: .rounded))
                             .foregroundStyle(Color.appRed)
                     }
                     
-                    VStack(alignment: .leading, spacing: 2) {
+                    VStack(alignment: .leading, spacing: 1) {
                         Text(L10n.remaining)
-                            .font(.system(size: 11, weight: .medium))
+                            .font(.system(size: 10, weight: .regular))
                             .foregroundStyle(.secondary)
                         Text(viewModel.isBalanceVisible ? viewModel.formatAmount(remaining) : "••••")
-                            .font(.system(size: 13, weight: .bold, design: .rounded))
+                            .font(.system(size: 12, weight: .semibold, design: .rounded))
                             .foregroundStyle(Color.appBlue)
                     }
                 }
@@ -341,7 +254,7 @@ struct NativeOverviewCard: View {
     }
 }
 
-// MARK: - Carte de Budget Enrichie avec Badge de Statut
+// MARK: - Native Budget Card Sobre
 
 struct NativeBudgetCard: View {
     let budget: Budget
@@ -352,46 +265,25 @@ struct NativeBudgetCard: View {
         progress.percentage > 90 ? Color.appRed : progress.percentage > 70 ? Color.appOrange : budget.category.color
     }
 
-    private var statusBadge: (text: String, color: Color) {
-        if progress.percentage > 100 {
-            return ("Dépassement !", Color.appRed)
-        } else if progress.percentage > 85 {
-            return ("Attention", Color.appOrange)
-        } else {
-            return ("En sécurité", Color.appGreen)
-        }
-    }
-
     var body: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 10) {
             HStack(alignment: .center, spacing: 12) {
-                // Icône avec fond teinté
+                // Icône
                 ZStack {
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .fill(budget.category.color.opacity(0.15))
-                        .frame(width: 42, height: 42)
+                    Circle()
+                        .fill(budget.category.color.opacity(0.12))
+                        .frame(width: 36, height: 36)
                     Image(systemName: budget.category.icon)
-                        .font(.system(size: 18, weight: .semibold))
+                        .font(.system(size: 15, weight: .semibold))
                         .foregroundStyle(budget.category.color)
                 }
 
-                // Titre & Période
-                VStack(alignment: .leading, spacing: 3) {
-                    HStack(spacing: 6) {
-                        Text(L10n.categoryName(budget.category))
-                            .font(.system(size: 16, weight: .bold))
-                        
-                        Text(statusBadge.text)
-                            .font(.system(size: 10, weight: .bold, design: .rounded))
-                            .foregroundStyle(statusBadge.color)
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 2)
-                            .background(statusBadge.color.opacity(0.12))
-                            .clipShape(Capsule())
-                    }
-                    
+                // Titre
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(L10n.categoryName(budget.category))
+                        .font(.system(size: 15, weight: .semibold))
                     Text(L10n.budgetPeriodName(budget.period))
-                        .font(.system(size: 12, weight: .medium))
+                        .font(.system(size: 12, weight: .regular))
                         .foregroundStyle(.secondary)
                 }
 
@@ -400,46 +292,45 @@ struct NativeBudgetCard: View {
                 // Montants
                 VStack(alignment: .trailing, spacing: 2) {
                     Text(viewModel.isBalanceVisible ? viewModel.formatAmount(progress.spent) : "••••")
-                        .font(.system(size: 16, weight: .bold, design: .rounded))
-                        .foregroundStyle(progress.percentage > 90 ? Color.appRed : .primary)
+                        .font(.system(size: 15, weight: .semibold, design: .rounded))
                     Text(L10n.ofLimit(viewModel.isBalanceVisible ? budget.formattedLimit : "••••"))
-                        .font(.system(size: 12, weight: .medium))
+                        .font(.system(size: 12, weight: .regular))
                         .foregroundStyle(.secondary)
                 }
             }
 
-            // Barre de progression dégradée
-            VStack(spacing: 6) {
+            // Barre de progression
+            VStack(spacing: 4) {
                 GeometryReader { geo in
                     ZStack(alignment: .leading) {
                         Capsule()
                             .fill(Color.secondary.opacity(0.12))
-                            .frame(height: 7)
+                            .frame(height: 5)
                         
                         Capsule()
                             .fill(progressColor)
-                            .frame(width: geo.size.width * CGFloat(min(progress.percentage, 100) / 100), height: 7)
-                            .animation(.spring(response: 0.6), value: progress.percentage)
+                            .frame(width: geo.size.width * CGFloat(min(progress.percentage, 100) / 100), height: 5)
+                            .animation(.spring(response: 0.5), value: progress.percentage)
                     }
                 }
-                .frame(height: 7)
+                .frame(height: 5)
 
                 // Footer
                 HStack {
                     Text(L10n.usedPercent(Int(progress.percentage)))
-                        .font(.system(size: 12, weight: .semibold, design: .rounded))
+                        .font(.system(size: 11, weight: .regular))
                         .foregroundStyle(progress.percentage > 90 ? Color.appRed : .secondary)
                     
                     Spacer()
                     
                     let remainingAmount = max(budget.limit - progress.spent, 0)
                     Text(L10n.remainsAmount(viewModel.isBalanceVisible ? viewModel.formatAmount(remainingAmount) : "••••"))
-                        .font(.system(size: 12, weight: .medium, design: .rounded))
+                        .font(.system(size: 11, weight: .regular))
                         .foregroundStyle(.secondary)
                 }
             }
         }
-        .padding(.vertical, 6)
+        .padding(.vertical, 4)
     }
 }
 
@@ -478,10 +369,8 @@ struct NativeBudgetFormSheet: View {
                 Section(header: Text(L10n.spendingLimit)) {
                     HStack {
                         Text(viewModel.currencySymbol)
-                            .font(.headline)
-                            .foregroundStyle(Color.appBlue)
+                            .foregroundStyle(.secondary)
                         TextField("0,00", text: $limitText)
-                            .font(.system(size: 20, weight: .bold, design: .rounded))
                             .keyboardType(.decimalPad)
                             .focused($limitFocused)
                     }
@@ -518,7 +407,7 @@ struct NativeBudgetFormSheet: View {
                         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                         dismiss()
                     }
-                    .fontWeight(.bold)
+                    .fontWeight(.semibold)
                     .disabled(!canSave)
                 }
                 ToolbarItemGroup(placement: .keyboard) {
